@@ -1,18 +1,31 @@
 ---
 name: 3D Model Task
-about: Create a 3D modeling or asset task
+about: 3D model or asset work
 title: '[3D] '
 labels: 3d-model
 assignees: ''
 ---
 
-## Task Description
-Brief description of the 3D model or asset that needs to be created or modified.
+## What needs to be made?
 
-## Goals
-- [ ] Goal 1
-- [ ] Goal 2
-- [ ] Goal 3
-      
-## Additional Notes
-Any other relevant information or considerations.
+
+## Type
+- [ ] Character/Object
+- [ ] Environment/Props
+- [ ] Animation
+- [ ] Other: ___________
+
+## Tasks
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Technical specs
+- Poly count: 
+- Texture size:
+- File format:
+
+## Reference images
+
+
+## Notes
