@@ -1,27 +1,24 @@
 ---
 name: Backend Task
-about: Create a backend task or feature
+about: Backend feature or API work
 title: '[BACKEND] '
 labels: backend
 assignees: ''
 ---
 
-## Task Description
-Brief description of what needs to be built or implemented.
+## What needs to be done?
 
-## Goals
-- [ ] Goal 1
-- [ ] Goal 2
-- [ ] Goal 3
 
-## Scope
-### Endpoints/Services Affected
-- Endpoint 1: [e.g. POST /api/v1/users]
-- Endpoint 2: [e.g. GET /api/v1/users/:id]
-- Services: [e.g. Authentication Service, Email Service]
+## Endpoints/Services affected
 
-### Database Changes
-- [ ] New tables/collections
-- [ ] Schema modifications
-- [ ] Migrations required
 
+## Tasks
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Database changes needed?
+- [ ] Yes
+- [ ] No
+
+## Notes
