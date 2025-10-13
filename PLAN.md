@@ -22,7 +22,12 @@
 - [ ] Initialize Next.js project with TypeScript
 - [ ] Install and configure Three.js dependencies
 - [ ] Create basic routing structure (`/login`, `/dashboard`, `/designer`)
-- [ ] Set up API client with base configuration
+- [ ] Set up API client with base configuration (what does this mean?)
+
+### 3D Scene Foundation
+- [ ] Create basic Three.js scene with camera and lighting
+- [ ] Render simple wall geometry (flat plane)
+- [ ] Add mouse/touch camera controls (zoom, pan)
 
 ### Database Schema V1
 - [ ] Create User table (id, email, password_hash, created_at)
@@ -79,13 +84,10 @@
 ## 🎮 CORE 3D PHASE (Week 3 - MVP TARGET)
 **Theme: Basic 3D Scene & Picture Placement**
 
-### 3D Scene Foundation
-- [ ] Create basic Three.js scene with camera and lighting
-- [ ] Render simple wall geometry (flat plane)
-- [ ] Add mouse/touch camera controls (zoom, pan)
+### 3D Scene Foundation - vecka 2?
 - [ ] Create coordinate system for wall placement
 
-### Picture System V1
+### Picture System V1 - vecka 2?
 - [ ] Create simple rectangular picture geometry
 - [ ] Implement click-to-place pictures on wall
 - [ ] Add basic picture removal functionality
@@ -111,13 +113,13 @@
 ## 🪑 FURNITURE PHASE (Week 4)
 **Theme: Room Context & Basic Furniture**
 
-### Room Enhancement
+### Room Enhancement - vecka 3?
 - [ ] Add floor plane to 3D scene
 - [ ] Create adjustable wall dimensions (height/width controls)
 - [ ] Add room depth visualization
 - [ ] Implement wall color customization
 
-### Sofa System
+### Sofa System - vecka 3=
 - [ ] Create basic sofa geometry (rectangular prism)
 - [ ] Add sofa placement functionality (floor positioning)
 - [ ] Implement sofa size adjustment (width, height, depth)
