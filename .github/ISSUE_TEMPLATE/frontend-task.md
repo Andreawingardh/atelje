@@ -1,18 +1,23 @@
 ---
 name: Frontend Task
-about: Create a frontend task or feature
+about: Frontend feature or improvement
 title: '[FRONTEND] '
 labels: frontend
 assignees: ''
 ---
 
-## Task Description
-Brief description of what needs to be built or implemented.
+## What needs to be done?
 
-## Goals
-- [ ] Goal 1
-- [ ] Goal 2
-- [ ] Goal 3
 
-## Component/Page Affected
-Which components, pages, or sections will be modified or created?
+## Which page/component?
+
+
+## Tasks
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Design/mockup
+Link or screenshot:
+
+## Notes
