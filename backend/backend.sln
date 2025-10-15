@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atelje", "Atelje\Atelje.csproj", "{2960FE5D-A510-4574-8D42-B6F293640E9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atelje.Tests", "Atelje.Tests\Atelje.Tests.csproj", "{FC34D023-6AD6-43B0-998B-974D3312880F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{2960FE5D-A510-4574-8D42-B6F293640E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2960FE5D-A510-4574-8D42-B6F293640E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2960FE5D-A510-4574-8D42-B6F293640E9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC34D023-6AD6-43B0-998B-974D3312880F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC34D023-6AD6-43B0-998B-974D3312880F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC34D023-6AD6-43B0-998B-974D3312880F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC34D023-6AD6-43B0-998B-974D3312880F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
