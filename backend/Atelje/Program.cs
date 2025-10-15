@@ -1,3 +1,6 @@
+using Atelje.Data;
+using Atelje.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +16,21 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+//---DATABASE CONFIGURATION----
+
+// Build configuration to read app±settings.json
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile("appsettings.Development.json", optional: true)  // Overrides appsettings.json
+    .Build();
+using var db = new AppDbContext(configuration);
+
+db.TestUsers.Add(new TestUser { Username = "test", Email = "test@test.com" });
+db.SaveChanges();
+
+//--END DATABASE TESTING---
 
 app.UseHttpsRedirection();
 
