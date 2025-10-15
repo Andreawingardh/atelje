@@ -96,12 +96,25 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# Vercel
-.vercel
-
 # Typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ============================================
+# Deployment
+# ============================================
+
+# Railway
+.railway/
+
+# Environment variables (Railway injects these)
+.env
+.env*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
 # ============================================
 # General
