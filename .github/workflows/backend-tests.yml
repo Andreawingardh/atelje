@@ -20,10 +20,10 @@ jobs:
         dotnet-version: '9.0.x'
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet .backend/backend.sln restore
     
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet .backend/backend.sln build --no-restore
     
     - name: Run tests
-      run: dotnet test --no-build --verbosity normal --filter "Category!=LocalOnly"
+      run: dotnet .backend/backend.sln test --no-build --verbosity normal --filter "Category!=LocalOnly"
