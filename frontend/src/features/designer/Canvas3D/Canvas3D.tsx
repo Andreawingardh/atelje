@@ -1,7 +1,7 @@
 import styles from "./Canvas3D.module.css";
-import React, { useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Box, Sphere, Plane } from '@react-three/drei'
+import React from 'react'
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls, Sphere } from '@react-three/drei'
 import * as THREE from 'three'
 
 
@@ -24,6 +24,12 @@ export default function Canvas3D() {
         <Sphere args={[1, 32, 32]} position={[1.5, 0, 0]} castShadow>
           <meshStandardMaterial color="#E3DCD3" metalness={0.7} roughness={0.2} />
         </Sphere>
+        
+        <OrbitControls 
+          enablePan={true}
+          enableZoom={true}
+          enableRotate={true}
+        />
       </Canvas>
     </section>
   )
