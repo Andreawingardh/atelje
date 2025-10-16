@@ -1,5 +1,10 @@
+using System.Text.Json;
 using Atelje.Data;
+using Atelje.HealthChecks;
 using Atelje.Models;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,33 +14,45 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("TestDatabase")));
+
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>("TestDatabase");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.OpenApiRoutePattern = "/openapi/v1.json";
+    });
 }
-
-//---DATABASE CONFIGURATION----
-
-// Build configuration to read app±settings.json
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .AddJsonFile("appsettings.Development.json", optional: true)  // Overrides appsettings.json
-    .Build();
-using var db = new AppDbContext(configuration);
-
-db.TestUsers.Add(new TestUser { Username = "test", Email = "test@test.com" });
-db.SaveChanges();
-
-//--END DATABASE TESTING---
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.MapHealthChecks("/health", new HealthCheckOptions
+    {
+        ResponseWriter = async (context, report) =>
+        {
+            var json = JsonSerializer.Serialize(new
+            {
+                status = report.Status.ToString(),
+                checks = report.Entries.ToDictionary(
+                    e => e.Key,
+                    e => e.Value.Status.ToString())
+            });
+        
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(json);
+        }
+    })
+    .WithOpenApi();
 app.MapControllers();
 
 app.Run();
