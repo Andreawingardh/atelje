@@ -15,6 +15,7 @@ public class DatabaseConnectionTests : IClassFixture<TestFixture>
     }
 
     [Fact]
+    [Trait("Category", "LocalOnly")]
     public async Task CanConnectToLocalDatabase()
     {
         await using var db = _serviceProvider.GetRequiredService<AppDbContext>();
