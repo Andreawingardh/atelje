@@ -3,7 +3,7 @@ name: Run Tests
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, bug/bug-dependencies-doesnt-work-on-github-action-workflow ]
   pull_request:
     branches: [ main, dev ]
 
