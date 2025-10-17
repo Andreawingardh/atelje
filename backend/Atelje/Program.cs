@@ -16,9 +16,22 @@ builder.Services.AddOpenApi();
 //Sets up database to check if the Railway database URL is available, otherwise the fallback is the local environment.
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var connectionString = builder.Configuration["DATABASE_URL"] ?? 
-                           builder.Configuration.GetConnectionString("TestDatabase");
-    
+    var connectionString = builder.Configuration.GetConnectionString("TestDatabase");
+
+    var pgHost = builder.Configuration["PGHOST"];
+    if (!string.IsNullOrEmpty(pgHost))
+    {
+        connectionString = $"Host={pgHost};" + $"Port={builder.Configuration["PGPORT"] ?? "5432"};" +
+                           $"Database={builder.Configuration["PGDATABASE"]};" +
+                           $"Username={builder.Configuration["PGUSER"]};" +
+                           $"Password={builder.Configuration["PGPASSWORD"]};" +
+                           $"SSL Mode=Require;Tust Server Certificate=true";
+    }
+
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("No database connection string found.");
+    }
     options.UseNpgsql(connectionString);
 });
 
@@ -85,9 +98,9 @@ app.MapControllers();
 
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
-if (!string.IsNullOrEmpty(builder.Configuration["DATABASE_URL"]))
+if (!string.IsNullOrEmpty(builder.Configuration["PGHOST"]))
 {
-    logger.LogInformation("🚀 Using Railway DATABASE_URL for database connection");
+    logger.LogInformation("🚀 Using Railway database configuration (PGHOST: {Host})", builder.Configuration["PGHOST"]);
 }
 else
 {
