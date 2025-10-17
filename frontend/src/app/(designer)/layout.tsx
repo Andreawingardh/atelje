@@ -1,4 +1,4 @@
-export default function AuthLayout({
+export default function DesignerLayout({
     children,
   }: Readonly<{
     children: React.ReactNode;
@@ -8,5 +8,4 @@ export default function AuthLayout({
         {children}
       </section>
     );
-  }
-  
+}
