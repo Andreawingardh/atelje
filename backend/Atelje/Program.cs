@@ -19,13 +19,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("TestDatabase");
 
     var pgHost = builder.Configuration["PGHOST"];
+    Console.WriteLine(pgHost);
+    
     if (!string.IsNullOrEmpty(pgHost))
     {
         connectionString = $"Host={pgHost};" + $"Port={builder.Configuration["PGPORT"] ?? "5432"};" +
                            $"Database={builder.Configuration["PGDATABASE"]};" +
                            $"Username={builder.Configuration["PGUSER"]};" +
                            $"Password={builder.Configuration["PGPASSWORD"]};" +
-                           $"SSL Mode=Require;Tust Server Certificate=true";
+                           $"SSL Mode=Require;Trust Server Certificate=true";
     }
 
     if (string.IsNullOrEmpty(connectionString))
