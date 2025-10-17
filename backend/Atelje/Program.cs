@@ -44,10 +44,17 @@ if (app.Environment.IsProduction())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var loggerProd = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
-    loggerProd.LogInformation("Starting database migration...");
-    dbContext.Database.Migrate();
-    loggerProd.LogInformation("Database migration completed");
-}
+    try
+    {
+        loggerProd.LogInformation("Starting database migration...");
+        await dbContext.Database.MigrateAsync();
+        loggerProd.LogInformation("Database migration completed");
+    }
+    catch (Exception ex)
+    {
+        loggerProd.LogError(ex, "Database migration failed");
+        throw;
+    }}
 
 
 app.UseHttpsRedirection();
