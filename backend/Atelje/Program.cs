@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Atelje.Data;
 using Atelje.HealthChecks;
-using Atelje.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -14,15 +13,21 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+//Sets up database to check if the Railway database URL is available, otherwise the fallback is the local environment.
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("TestDatabase")));
+{
+    var connectionString = builder.Configuration["DATABASE_URL"] ?? 
+                           builder.Configuration.GetConnectionString("TestDatabase");
+    
+    options.UseNpgsql(connectionString);
+});
 
 builder.Services.AddHealthChecks()
     .AddCheck<DatabaseHealthCheck>("TestDatabase");
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//--HTTP REQUEST PIPELINE--//
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -32,10 +37,24 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+if (app.Environment.IsProduction())
+{
+    using var scope = app.Services.CreateScope();
+    //@TODO: Check if it's really necessary to define these again
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var loggerProd = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    
+    loggerProd.LogInformation("Starting database migration...");
+    dbContext.Database.Migrate();
+    loggerProd.LogInformation("Database migration completed");
+}
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+//--HEALTHCHECK ENDPOINT--//
 app.MapHealthChecks("/health", new HealthCheckOptions
     {
         ResponseWriter = async (context, report) =>
@@ -54,5 +73,18 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     })
     .WithOpenApi();
 app.MapControllers();
+
+//---LOGS---//
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+if (!string.IsNullOrEmpty(builder.Configuration["DATABASE_URL"]))
+{
+    logger.LogInformation("🚀 Using Railway DATABASE_URL for database connection");
+}
+else
+{
+    logger.LogInformation("💻 Using local TestDatabase connection from appsettings.json");
+}
 
 app.Run();
