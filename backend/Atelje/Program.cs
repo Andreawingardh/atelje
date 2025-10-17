@@ -3,6 +3,7 @@ using Atelje.Data;
 using Atelje.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("TestDatabase");
 
     var pgHost = builder.Configuration["PGHOST"];
-    Console.WriteLine(pgHost);
     
     if (!string.IsNullOrEmpty(pgHost))
     {
@@ -81,9 +81,18 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     {
         ResponseWriter = async (context, report) =>
         {
+            
+            context.Response.StatusCode = report.Status switch
+            {
+                HealthStatus.Healthy or HealthStatus.Degraded => StatusCodes.Status200OK,
+                HealthStatus.Unhealthy => StatusCodes.Status503ServiceUnavailable,
+                _ => StatusCodes.Status500InternalServerError
+            };
+            
             var json = JsonSerializer.Serialize(new
             {
                 status = report.Status.ToString(),
+                statusCode = context.Response.StatusCode,
                 checks = report.Entries.ToDictionary(
                     e => e.Key,
                     e => e.Value.Status.ToString())
