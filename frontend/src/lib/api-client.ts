@@ -11,6 +11,7 @@ export async function apiClient<T>(endpoint: string): Promise<T> {
     try {
       return await response.json();
     } catch (error) {
+      console.log('Error parsing JSON response:', error);
       throw new Error('Failed to parse response as JSON');
     }
   }
