@@ -2,7 +2,6 @@ import styles from "./Canvas3D.module.css";
 import React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Sphere } from '@react-three/drei'
-import * as THREE from 'three'
 
 
 export default function Canvas3D() {

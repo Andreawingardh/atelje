@@ -2,6 +2,15 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { apiClient } from "@/lib/api-client";
 
+type HealthResponse = {
+  status: string;
+  statusCode: number;
+  checks: any[];
+};
+
+
+const data = await apiClient<HealthResponse>("/health");
+
 export default function Home() {
   return (
     <div className={styles.page}>
@@ -14,7 +23,7 @@ export default function Home() {
           height={38}
           priority
         />
-        <p>{apiClient("/health")}</p>
+        <p>Status: {data.status}</p>
         <ol>
           <li>
             Get started by editing <code>src/app/page.tsx</code>.
