@@ -1,12 +1,11 @@
 using Atelje.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Atelje.Data;
 using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
-
-    public DbSet<User> Users { get; set; }
+    
     public DbSet<Design> Designs { get; set; }
-    public DbSet<TestUser> TestUsers { get; set; }
 }

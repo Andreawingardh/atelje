@@ -1,7 +1,10 @@
 using System.Text.Json;
 using Atelje.Data;
 using Atelje.HealthChecks;
+using Atelje.Models;
+using Atelje.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
@@ -11,8 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUserService, UserService>(); 
 
 //Sets up database to check if the Railway database URL is available, otherwise the fallback is the local environment.
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -74,6 +84,7 @@ if (app.Environment.IsProduction())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 //--HEALTHCHECK ENDPOINT--//
@@ -104,6 +115,10 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     })
     .WithOpenApi();
 app.MapControllers();
+
+app.MapGet("/test", () => "Hello from test endpoint")
+    .WithName("TestEndpoint")
+    .WithOpenApi();
 
 //---LOGS---//
 
