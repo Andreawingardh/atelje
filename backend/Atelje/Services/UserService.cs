@@ -18,7 +18,7 @@ public class UserService(AppDbContext context, UserManager<User> userManager) : 
             {
                 Id = u.Id,
                 Email = u.Email,
-                Username = u.UserName,
+                UserName = u.UserName,
                 CreatedAt = u.CreatedAt
             })
             .ToListAsync();
@@ -34,7 +34,7 @@ public class UserService(AppDbContext context, UserManager<User> userManager) : 
         {
             Id = user.Id,
             Email = user.Email,
-            Username = user.UserName,
+            UserName = user.UserName,
             CreatedAt = user.CreatedAt,
             DisplayName = user.DisplayName
         };
@@ -61,10 +61,42 @@ public class UserService(AppDbContext context, UserManager<User> userManager) : 
         {
             Id = user.Id,
             Email = user.Email,
-            Username = user.UserName,
+            UserName = user.UserName,
             DisplayName = user.DisplayName,
             CreatedAt = user.CreatedAt
         };
+
+    }
+
+    public async Task<UserDto> UpdateUserAsync(string id, UpdateUserDto dto)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null) return null;
+
+        user.DisplayName = dto.DisplayName;
+
+        await _context.SaveChangesAsync();
+
+        return new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            UserName = user.UserName,
+            DisplayName = user.DisplayName,
+            CreatedAt = user.CreatedAt
+        };
+    }
+
+    public async Task<bool> DeleteUserAsync(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+
+        if (user == null) return false;
+
+        var result = await _userManager.DeleteAsync(user);
+
+        return result.Succeeded;
 
     }
 }
