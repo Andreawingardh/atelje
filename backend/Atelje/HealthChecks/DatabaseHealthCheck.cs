@@ -1,4 +1,5 @@
 namespace Atelje.HealthChecks;
+
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Data;
@@ -11,16 +12,20 @@ public class DatabaseHealthCheck(AppDbContext context) : IHealthCheck
         try
         {
             await context.Database.CanConnectAsync(cancellationToken);
-            
-            var testQuery = await context.TestUsers
-                .Select(u => 1)
-                .FirstOrDefaultAsync(cancellationToken);
-            
+            var data = new Dictionary<string, object>
+            {
+                { "database", context.Database.GetDbConnection().Database },
+                { "state", context.Database.GetDbConnection().State.ToString() }
+            };
+
+            return HealthCheckResult.Healthy(
+                description: "Database is responsive",
+                data: data);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return HealthCheckResult.Unhealthy(
-                description: $"Database connection failed: {e.Message}", 
+                description: $"Database connection failed: {e.Message}",
                 exception: e,
                 data: new Dictionary<string, object>
                 {
@@ -28,15 +33,5 @@ public class DatabaseHealthCheck(AppDbContext context) : IHealthCheck
                     { "innerException", e.InnerException?.Message ?? "none" }
                 });
         }
-        
-        var data = new Dictionary<string, object>
-        {
-            { "database", context.Database.GetDbConnection().Database },
-            { "state", context.Database.GetDbConnection().State.ToString() }
-        };
-        
-        return HealthCheckResult.Healthy(
-            description: "Database is responsive",
-            data: data);
     }
 }
