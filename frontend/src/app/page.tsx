@@ -5,7 +5,7 @@ import { apiClient } from "@/lib/api-client";
 type HealthResponse = {
   status: string;
   statusCode: number;
-  checks: any[];
+  checks: { name: string; status: string }[];
 };
 
 
