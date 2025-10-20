@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Atelje.Controllers;
 
 
-[ApiController]  // ← ADD THIS
+[ApiController]
 [Route("api/[controller]")]
 public class UserController(IUserService userService) : ControllerBase
 {
@@ -29,5 +29,23 @@ public class UserController(IUserService userService) : ControllerBase
     {
         var user = await userService.CreateUserAsync(dto);
         return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UserDto>> UpdateUser(string id, UpdateUserDto dto)
+    {
+        var user = await userService.UpdateUserAsync(id, dto);
+        if (user == null) return NotFound();
+        return user;
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        var deleted = await userService.DeleteUserAsync(id);
+
+        if (!deleted) return NotFound();
+
+        return NoContent();
     }
 }
