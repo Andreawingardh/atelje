@@ -1,15 +1,13 @@
 ﻿using Atelje.Data;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;  // Make sure Xunit is referenced
 
 namespace Atelje.Tests;
 
-public class DatabaseConnectionTests : IClassFixture<TestFixture>
+public class DatabaseConnectionTests : IClassFixture<DatabaseFixture>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    // Single constructor that takes the fixture
-    public DatabaseConnectionTests(TestFixture fixture)
+    public DatabaseConnectionTests(DatabaseFixture fixture)
     {
         _serviceProvider = fixture.ServiceProvider;
     }
