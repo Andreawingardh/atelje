@@ -6,11 +6,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-    </PropertyGroup>
+      <UserSecretsId>84a758fe-cde1-46cd-9654-4797ff2f49b3</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.10" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
         <PackageReference Include="Moq" Version="4.20.72" />
         <PackageReference Include="xunit" Version="2.9.2" />
