@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Atelje.Controllers;
 
-public class UserController(IUserService userService) : Controller
+
+[ApiController]  // ← ADD THIS
+[Route("api/[controller]")]
+public class UserController(IUserService userService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<UserDto>>> GetUsers()

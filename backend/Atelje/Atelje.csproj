@@ -23,4 +23,8 @@
       <None Include="appsettings.Development.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>
