@@ -6,15 +6,21 @@ namespace Atelje.Tests;
 
 public class DatabaseConnectionMockTests
 {
-    [Fact]
-    public async Task CanConnectToInMemoryDatabase()
+    private static AppDbContext CreateInMemoryDbContext()
     {
-        // Arrange
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: "TestDatabase_" + Guid.NewGuid())
             .Options;
-        
-        using var db = new AppDbContext(options);
+
+        return new AppDbContext(options);
+    }
+    
+    [Fact]
+    [Trait("Category", "Unit")]
+    public async Task CanConnectToInMemoryDatabase()
+    {
+        // Arrange
+        await using var db = CreateInMemoryDbContext();
         
         // Act
         var canConnect = await db.Database.CanConnectAsync();
@@ -24,15 +30,12 @@ public class DatabaseConnectionMockTests
     }
     
     [Fact]
+    [Trait("Category", "Unit")]
     public async Task CanAddAndRetrieveTestUser()
     {
         // Arrange
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDatabase_" + Guid.NewGuid())
-            .Options;
-        
-        using var db = new AppDbContext(options);
-        
+        await using var db = CreateInMemoryDbContext();
+
         var testUser = new TestUser 
         { 
             Username = "John Doe",
