@@ -11,7 +11,8 @@ public class DatabaseConnectionTests
     public DatabaseConnectionTests()
     {
         _configuration = new ConfigurationBuilder()
-            .AddUserSecrets<DatabaseConnectionTests>() // for local
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.Development.json")
             .AddEnvironmentVariables()                 // for prod
             .Build();
     }
@@ -20,8 +21,8 @@ public class DatabaseConnectionTests
     [Trait("Category", "LocalOnly")]
     public async Task CanConnectToLocalDatabase()
     {
-        var connectionString = _configuration.GetConnectionString("LocalDatabase");
-        Assert.NotNull(connectionString);
+        var connectionString = _configuration.GetConnectionString("TestDatabase");
+        Assert.False(string.IsNullOrWhiteSpace(connectionString), "TestDatabase connection string is missing.");
 
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
@@ -58,40 +59,4 @@ public class DatabaseConnectionTests
 
         Assert.Equal(System.Data.ConnectionState.Open, connection.State);
     }
-    
-    /*
-    [Fact]
-    [Trait("Category", "Deployed")]
-    public async Task CanConnectToDeployedDatabase()
-    {
-        var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-        Assert.False(string.IsNullOrWhiteSpace(databaseUrl));
-
-        // Npgsql can handle postgres:// URIs directly
-        var builder = new NpgsqlConnectionStringBuilder(databaseUrl)
-        {
-            SslMode = SslMode.Require
-        };
-
-        await using var connection = new NpgsqlConnection(builder.ConnectionString);
-        await connection.OpenAsync();
-
-        Assert.Equal(System.Data.ConnectionState.Open, connection.State);
-    }
-    */
-
-    /*
-    [Fact]
-    [Trait("Category", "Deployed")]
-    public async Task CanConnectToDeployedDatabase()
-    {
-        var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
-        Assert.False(string.IsNullOrWhiteSpace(connectionString));
-
-        await using var connection = new NpgsqlConnection(connectionString);
-        await connection.OpenAsync();
-
-        Assert.Equal(System.Data.ConnectionState.Open, connection.State);
-    }
-    */
 }
