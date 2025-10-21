@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using Microsoft.Extensions.Configuration;
+using Xunit.Abstractions;
 using Xunit;  // Make sure Xunit is referenced
 
 namespace Atelje.Tests;
@@ -7,14 +8,17 @@ namespace Atelje.Tests;
 public class DatabaseConnectionTests
 {
     private readonly IConfiguration _configuration;
+    private readonly ITestOutputHelper _output;
     
-    public DatabaseConnectionTests()
+    public DatabaseConnectionTests(ITestOutputHelper output)
     {
         _configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.Development.json")
             .AddEnvironmentVariables()                 // for prod
             .Build();
+        
+        _output = output;
     }
     
     [Fact]
@@ -39,7 +43,8 @@ public class DatabaseConnectionTests
                           ?? Environment.GetEnvironmentVariable("DATABASE_URL");
         Assert.False(string.IsNullOrWhiteSpace(databaseUrl));
 
-        Console.WriteLine($"Connecting using: {(Environment.GetEnvironmentVariable("DATABASE_PUBLIC_URL") != null ? "PUBLIC" : "INTERNAL")} URL");
+        // Use ITestOutputHelper to avoid xUnit warnings and focus only on this test
+        _output.WriteLine($"Connecting using: {(Environment.GetEnvironmentVariable("DATABASE_PUBLIC_URL") != null ? "PUBLIC" : "INTERNAL")} URL");
 
         string connectionString;
     
