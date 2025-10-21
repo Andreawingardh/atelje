@@ -9,13 +9,13 @@ namespace Atelje.Controllers;
 [Route("api/[controller]")]
 public class UserController(IUserService userService) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet(Name = "GetAllUsers")]
     public async Task<ActionResult<List<UserDto>>> GetUsers()
     {
         var users = await userService.GetAllUsersAsync();
         return users;
     }
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetUserById")]
     public async Task<ActionResult<UserDto>> GetUser(string id)
     {
         var user = await userService.GetUserByIdAsync(id);
@@ -24,23 +24,23 @@ public class UserController(IUserService userService) : ControllerBase
         return user;
     }
 
-    [HttpPost]
+    [HttpPost(Name = "CreateUser")]
     public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto dto)
     {
         var user = await userService.CreateUserAsync(dto);
         return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult<UserDto>> UpdateUser(string id, UpdateUserDto dto)
+    [HttpPut("{id}", Name = "UpdateUserById")]
+    public async Task<ActionResult<UserDto>> UpdateUserById(string id, UpdateUserDto dto)
     {
         var user = await userService.UpdateUserAsync(id, dto);
         if (user == null) return NotFound();
         return user;
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(string id)
+    [HttpDelete("{id}", Name = "DeleteUserById")]
+    public async Task<IActionResult> DeleteUserById(string id)
     {
         var deleted = await userService.DeleteUserAsync(id);
 

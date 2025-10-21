@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:api": "openapi --input http://localhost:5225/openapi/v1.json --output ./src/api/generated --client fetch"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.6",
