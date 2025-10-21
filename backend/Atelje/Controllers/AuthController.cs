@@ -1,3 +1,4 @@
+using Atelje.DTOs;
 using Atelje.DTOs.Auth;
 using Atelje.Models;
 using Atelje.Services;
@@ -34,9 +35,9 @@ public class AuthController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return BadRequest(new
+            return BadRequest(new ErrorResponseDto
             {
-                errors = result.Errors.Select(e => e.Description)
+                Errors = result.Errors.Select(e => e.Description)
             });
         }
 
