@@ -52,4 +52,28 @@ public class AuthController : ControllerBase
         });
     }
 
+    [HttpPost("login")]
+    public async Task<ActionResult<AuthResponseDto>> Login(LoginDto dto)
+    {
+        var user = await _userManager.FindByEmailAsync(dto.Email);
+
+        if (user == null) return Unauthorized( new {message = "Invalid email or password"});
+
+        var isPasswordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
+        
+        if(!isPasswordValid) return Unauthorized(new { message = "Invalid email or password" });
+
+        var token = _tokenService.GenerateToken(user.Id, user.Email!);
+        
+        return Ok(new AuthResponseDto
+        {
+            Token = token,
+            UserId = user.Id,
+            Email = user.Email!,
+            UserName = user.UserName!,
+            DisplayName = user.DisplayName
+        });
+
+    }
+
 }
