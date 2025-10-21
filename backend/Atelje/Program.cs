@@ -24,6 +24,18 @@ builder.Services.AddOpenApi();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Require unique email
+    options.User.RequireUniqueEmail = true;
+    
+    // Password settings (optional, but good to be explicit)
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 6;
+});
 builder.Services.AddScoped<IUserService, UserService>(); 
 builder.Services.AddScoped<ITokenService, TokenService>();
 
