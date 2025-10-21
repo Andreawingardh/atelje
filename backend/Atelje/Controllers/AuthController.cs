@@ -58,11 +58,11 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
 
-        if (user == null) return Unauthorized( new {message = "Invalid email or password"});
+        if (user == null) return Unauthorized( new ErrorResponseDto { Errors = ["Invalid email or password"] });
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
         
-        if(!isPasswordValid) return Unauthorized(new ErrorResponseDto { Errors = "Invalid email or password" });
+        if(!isPasswordValid) return Unauthorized(new ErrorResponseDto { Errors = ["Invalid email or password"] });
 
         var token = _tokenService.GenerateToken(user.Id, user.Email!);
         

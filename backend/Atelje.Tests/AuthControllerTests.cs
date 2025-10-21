@@ -93,6 +93,7 @@ public class AuthControllerTests
 
     }
 
+    [Fact]
     public async Task Login_ValidCredentials_ReturnsOkWithToken()
     {
         // Arrange
@@ -137,7 +138,7 @@ public class AuthControllerTests
         Assert.Equal("email@email.com", response.Email);
         Assert.Equal("testuser", response.UserName);
     }
-    
+    [Fact]
     public async Task Login_InvalidCredentials_ReturnsUnauthorized()
     {
         // Arrange
@@ -176,7 +177,7 @@ public class AuthControllerTests
         var result = await mockAuthController.Login(loginDto);
         
         //Assert
-        var badResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        var badResult = Assert.IsType<UnauthorizedObjectResult>(result.Result);
         var errorResponse = Assert.IsType<ErrorResponseDto>(badResult.Value);
         Assert.NotNull(errorResponse.Errors);
         Assert.NotEmpty(errorResponse.Errors);
