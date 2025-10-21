@@ -5,12 +5,18 @@ type WallProps = {
     wallWidth: number;
     roofHeight: number;
     wallPlacement: 'front' | 'left' | 'right';
+    floorSize: number;
     gridCellSize: number;
 }
 
-export const Wall: React.FC<WallProps> =({wallColor, wallWidth, roofHeight, wallPlacement, gridCellSize}) => {
+export const Wall: React.FC<WallProps> =({wallColor, wallWidth, roofHeight, wallPlacement, gridCellSize, floorSize}) => {
     const width = wallWidth * gridCellSize; // convert cm to Three.js units
     const height = roofHeight * gridCellSize; // convert cm to Three.js units
+    const floorDimension = floorSize * gridCellSize; // floor size in Three.js units
+    
+    // Calculate positions dynamically based on floor size
+    const halfFloor = floorDimension / 2;
+    const halfHeight = height / 2;
 
     const rotation: [number, number, number] = (() => {
         switch (wallPlacement) {
@@ -26,13 +32,14 @@ export const Wall: React.FC<WallProps> =({wallColor, wallWidth, roofHeight, wall
     const position: [number, number, number] = (() => {
         switch (wallPlacement) {
         case 'left':
-            return [-2.5, 1.5, 0];
+            return [-halfFloor, halfHeight, 0];
         case 'right':
-            return [2.5, 1.5, 0];
+            return [halfFloor, halfHeight, 0];
         default: // 'front'
-            return [0, 1.5, -2.5];
+            return [0, halfHeight, -halfFloor];
         }
     })();
+
 
     return (
       <mesh

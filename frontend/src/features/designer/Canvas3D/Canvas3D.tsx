@@ -6,6 +6,7 @@ import { Floor } from "../scene-components/structural/Floor";
 import { Wall } from "../scene-components/structural/Wall";
 
 const cellSize = 0.01; // 1 cm
+const floorSize = 500;
 
 // Wall component with invisible 1cm grid structure
 const BackWall = () => {
@@ -88,11 +89,10 @@ export default function Canvas3D() {
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
-
-        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='left' gridCellSize={cellSize}/>
-        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='front' gridCellSize={cellSize}/>
-        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='right' gridCellSize={cellSize}/>
-        <Floor floorColor="#000000" gridSize={500} gridCellSize={cellSize} />
+        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Floor floorColor="#000000" gridSize={floorSize} gridCellSize={cellSize} />
         
         <OrbitControls 
           enablePan={true}
