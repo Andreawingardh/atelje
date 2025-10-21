@@ -92,6 +92,96 @@ public class AuthControllerTests
 
 
     }
+
+    public async Task Login_ValidCredentials_ReturnsOkWithToken()
+    {
+        // Arrange
+        var testUser = new User 
+        { 
+            Id = "test-user-id", 
+            Email = "email@email.com",
+            UserName = "testuser",
+        };
+
+        var loginDto = new LoginDto
+        {
+            Email = "email@email.com",
+            Password = "P@ssword1"
+        };
+
+        var mockUserManager = MockUserManager<User>();
+
+        mockUserManager.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync(testUser);
+
+        mockUserManager.Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(true);
+
+        // Create a mock of ITokenService
+        var mockTokenService = new Mock<ITokenService>();
+
+        // Tell the mock what to return when GenerateToken is called
+        mockTokenService
+            .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns("fake-jwt-token");
+
+        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
+        // Act
+        var result = await mockAuthController.Login(loginDto);
+        
+        //Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var response = Assert.IsType<AuthResponseDto>(okResult.Value);
+        
+        Assert.Equal("fake-jwt-token", response.Token);
+        Assert.Equal("email@email.com", response.Email);
+        Assert.Equal("testuser", response.UserName);
+    }
+    
+    public async Task Login_InvalidCredentials_ReturnsUnauthorized()
+    {
+        // Arrange
+        var testUser = new User 
+        { 
+            Id = "test-user-id", 
+            Email = "email@email.com",
+            UserName = "testuser",
+        };
+
+        var loginDto = new LoginDto
+        {
+            Email = "email@email.com",
+            Password = "P@ssword1"
+        };
+
+        var mockUserManager = MockUserManager<User>();
+
+        mockUserManager.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync(testUser);
+
+        mockUserManager.Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(false);
+
+        // Create a mock of ITokenService
+        var mockTokenService = new Mock<ITokenService>();
+
+        // Tell the mock what to return when GenerateToken is called
+        mockTokenService
+            .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns("fake-jwt-token");
+
+        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
+        
+        //Act
+        var result = await mockAuthController.Login(loginDto);
+        
+        //Assert
+        var badResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        var errorResponse = Assert.IsType<ErrorResponseDto>(badResult.Value);
+        Assert.NotNull(errorResponse.Errors);
+        Assert.NotEmpty(errorResponse.Errors);
+        
+    }
     private static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
     {
         var store = new Mock<IUserStore<TUser>>();
