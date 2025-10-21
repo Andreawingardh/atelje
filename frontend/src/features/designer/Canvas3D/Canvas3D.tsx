@@ -3,6 +3,7 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Floor } from "../scene-components/structural/Floor";
+import { Wall } from "../scene-components/structural/Wall";
 
 const cellSize = 0.01; // 1 cm
 
@@ -88,9 +89,9 @@ export default function Canvas3D() {
           shadow-mapSize-height={1024}
         />
 
-        <BackWall />
-        <LeftWall />
-        <RightWall />
+        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='left' gridCellSize={cellSize}/>
+        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='front' gridCellSize={cellSize}/>
+        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='right' gridCellSize={cellSize}/>
         <Floor floorColor="#000000" gridSize={500} gridCellSize={cellSize} />
         
         <OrbitControls 
