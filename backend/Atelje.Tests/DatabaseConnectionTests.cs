@@ -35,7 +35,7 @@ public class DatabaseConnectionTests
     }
     
     [Fact]
-    [Trait("Category", "Deployed")]
+    [Trait("Category", "LocalOnly")]
     public async Task CanConnectToDeployedDatabase()
     {
         // Use public URL for local testing, internal URL for deployed environment
