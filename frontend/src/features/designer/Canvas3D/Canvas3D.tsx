@@ -7,13 +7,16 @@ import { Wall } from "../scene-components/structural/Wall";
 
 const cellSize = 0.01; // 1 cm
 const floorSize = 500;
+const minDistanceZoom = Math.max(2, floorSize / 200);
+const maxDistanceZoom = Math.max(5, floorSize / 80);
+
 
 export default function Canvas3D() {
   return (
     <section className={styles.designerWindow}>
       <Canvas
         camera={{ 
-          position: [0, 0, 3], 
+          position: [0, 0, 3],
           fov: 30,
           near: 1,
           far: 100
@@ -38,12 +41,14 @@ export default function Canvas3D() {
           enablePan={true}
           enableZoom={true}
           enableRotate={true}
-          minDistance={1}
-          maxDistance={15}
+          minDistance={minDistanceZoom}
+          maxDistance={maxDistanceZoom}
           maxPolarAngle={Math.PI / 2 - 0.1} // Prevent camera from going below floor
           minAzimuthAngle={-Math.PI / 6}      // limit left rotation (~-30°)
           maxAzimuthAngle={Math.PI / 6}       // limit right rotation (~+30°)
           target={[0, 1.5, 0]}
+          rotateSpeed={0.2}
+          zoomSpeed={0.2}
         />
       </Canvas>
     </section>
