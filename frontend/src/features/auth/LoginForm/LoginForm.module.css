@@ -1,0 +1,11 @@
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 0 auto;
+    gap: 1rem;
+}
+
+.title {
+    text-align: center;
+}

@@ -1,9 +1,9 @@
-"use client";
+import RegisterForm from "@/features/auth/RegisterForm/RegisterForm";
 
 export default function RegisterPage() {
   return (
     <>
-    <h1>Register for an account here</h1>
+    <RegisterForm />
     </>
   );
 }
