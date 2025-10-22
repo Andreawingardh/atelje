@@ -1,5 +1,6 @@
 using Atelje.DTOs.User;
 using Atelje.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Atelje.Controllers;
@@ -7,6 +8,7 @@ namespace Atelje.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UserController(IUserService userService) : ControllerBase
 {
     [HttpGet(Name = "GetAllUsers")]
