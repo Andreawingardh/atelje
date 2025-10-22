@@ -39,4 +39,14 @@ export class AuthService {
             mediaType: 'application/json',
         });
     }
+    /**
+     * @returns AuthResponseDto OK
+     * @throws ApiError
+     */
+    public static getApiAuthMe(): CancelablePromise<AuthResponseDto> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Auth/me',
+        });
+    }
 }

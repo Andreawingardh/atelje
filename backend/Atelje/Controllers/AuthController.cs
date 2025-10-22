@@ -1,7 +1,9 @@
+using System.Security.Claims;
 using Atelje.DTOs;
 using Atelje.DTOs.Auth;
 using Atelje.Models;
 using Atelje.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -75,6 +77,28 @@ public class AuthController : ControllerBase
             DisplayName = user.DisplayName
         });
 
+    }
+    
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<AuthResponseDto>> GetCurrentUser()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var email = User.FindFirstValue(ClaimTypes.Email);
+    
+        var user = await _userManager.FindByIdAsync(userId!);
+    
+        if (user == null)
+            return NotFound();
+    
+        return Ok(new AuthResponseDto
+        {
+            Token = "",
+            UserId = user.Id,
+            Email = user.Email!,
+            UserName = user.UserName!,
+            DisplayName = user.DisplayName
+        });
     }
 
 }
