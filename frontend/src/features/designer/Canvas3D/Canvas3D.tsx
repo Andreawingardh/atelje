@@ -13,9 +13,9 @@ const minDistanceZoom = Math.max(2, floorSize / 200);
 const maxDistanceZoom = Math.max(5, floorSize / 80);
 
 const YPosition = ceilingHeight * cellSize;
-const pointLightHeight = YPosition * 1.0;    // same as current 3
-const directionalLightHeight = YPosition * 3.33; // same as current 10
-const cameraDistance = YPosition * 1.67;     // same as current 5
+const pointLightHeight = YPosition * 1.0;
+const directionalLightHeight = YPosition * 3.33;
+const cameraDistance = YPosition * 1.67;
 
 
 export default function Canvas3D() {
