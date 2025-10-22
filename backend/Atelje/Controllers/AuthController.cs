@@ -1,3 +1,4 @@
+using Atelje.DTOs;
 using Atelje.DTOs.Auth;
 using Atelje.Models;
 using Atelje.Services;
@@ -34,9 +35,9 @@ public class AuthController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return BadRequest(new
+            return BadRequest(new ErrorResponseDto
             {
-                errors = result.Errors.Select(e => e.Description)
+                Errors = result.Errors.Select(e => e.Description)
             });
         }
 
@@ -57,11 +58,11 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
 
-        if (user == null) return Unauthorized( new {message = "Invalid email or password"});
+        if (user == null) return Unauthorized( new ErrorResponseDto { Errors = ["Invalid email or password"] });
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
         
-        if(!isPasswordValid) return Unauthorized(new { message = "Invalid email or password" });
+        if(!isPasswordValid) return Unauthorized(new ErrorResponseDto { Errors = ["Invalid email or password"] });
 
         var token = _tokenService.GenerateToken(user.Id, user.Email!);
         
