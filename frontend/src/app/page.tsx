@@ -1,6 +1,8 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import { apiClient } from "@/lib/api-client";
+import LoginForm from "@/features/auth/LoginForm/LoginForm";
+import RegisterForm from "@/features/auth/RegisterForm/RegisterForm";
 
 type HealthResponse = {
   status: string;
@@ -101,6 +103,8 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+      <LoginForm />
+      <RegisterForm />
     </div>
   );
 }
