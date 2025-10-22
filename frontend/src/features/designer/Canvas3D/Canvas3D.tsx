@@ -8,66 +8,6 @@ import { Wall } from "../scene-components/structural/Wall";
 const cellSize = 0.01; // 1 cm
 const floorSize = 500;
 
-// Wall component with invisible 1cm grid structure
-const BackWall = () => {
-  // Grid structure for wall - 5m wide x 3m tall
-  const gridWidth = 500; // 500 cm
-  const gridHeight = 300; // 300 cm
-  const cellSize = 0.01; // 1 cm
-  
-  return (
-    <mesh
-      position={[0, 1.5, -2.5]} 
-      receiveShadow
-    >
-      <planeGeometry args={[5, 3]} />
-      <meshStandardMaterial 
-        color="#F9F6F3"
-        roughness={0.9}
-        metalness={0}
-      />
-    </mesh>
-  );
-};
-
-// Left wall component
-const LeftWall = () => {
-
-  return (
-    <mesh 
-      position={[-2.5, 1.5, 0]}
-      rotation={[0, Math.PI / 2, 0]}
-      receiveShadow
-    >
-      <planeGeometry args={[5, 3]} />
-      <meshStandardMaterial 
-        color="#F9F6F3"
-        roughness={0.9}
-        metalness={0}
-      />
-    </mesh>
-  );
-};
-
-// Right wall component
-const RightWall = () => {
-  
-  return (
-    <mesh 
-      position={[2.5, 1.5, 0]}
-      rotation={[0, -Math.PI / 2, 0]}
-      receiveShadow
-    >
-      <planeGeometry args={[5, 3]} />
-      <meshStandardMaterial 
-        color="#F9F6F3"
-        roughness={0.9}
-        metalness={0}
-      />
-    </mesh>
-  );
-};
-
 export default function Canvas3D() {
   return (
     <section className={styles.designerWindow}>
