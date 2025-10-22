@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Floor } from "../scene-components/structural/Floor";
 import { Wall } from "../scene-components/structural/Wall";
+import { Ceiling } from "../scene-components/structural/Ceiling";
 
 const cellSize = 0.01; // 1 cm
 const floorSize = 500;
@@ -32,10 +33,11 @@ export default function Canvas3D() {
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
-        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
-        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
-        <Wall wallColor="#3939390" wallWidth={500} roofHeight={300} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={500} ceilingHeight={300} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={500} ceilingHeight={300} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={500} ceilingHeight={300} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
         <Floor floorColor="#000000" gridSize={floorSize} gridCellSize={cellSize} />
+        <Ceiling ceilingHeight={300} gridSize={floorSize} gridCellSize={cellSize} />
         
         <OrbitControls 
           enablePan={true}

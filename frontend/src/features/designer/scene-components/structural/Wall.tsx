@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 type WallProps = {
     wallColor: string;
     wallWidth: number;
-    roofHeight: number;
+    ceilingHeight: number;
     wallPlacement: 'front' | 'left' | 'right';
     floorSize: number;
     gridCellSize: number;
 }
 
-export const Wall: React.FC<WallProps> =({wallColor, wallWidth, roofHeight, wallPlacement, gridCellSize, floorSize}) => {
+export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, wallPlacement, gridCellSize, floorSize}) => {
     const width = wallWidth * gridCellSize; // convert cm to Three.js units
-    const height = roofHeight * gridCellSize; // convert cm to Three.js units
+    const height = ceilingHeight * gridCellSize; // convert cm to Three.js units
     const floorDimension = floorSize * gridCellSize; // floor size in Three.js units
     
     // Calculate positions dynamically based on floor size
