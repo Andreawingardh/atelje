@@ -26,12 +26,12 @@ jobs:
       run: dotnet build ./backend/backend.sln --no-restore
     
     - name: Run tests
-      run: dotnet test ./backend/backend.sln --no-build --verbosity normal --filter "Category!=LocalOnly --logger "trx;LogFileName=test-results.trx"
+      run: dotnet test ./backend/backend.sln --no-build --verbosity normal --filter "Category!=LocalOnly" --logger "trx;LogFileName=../test-results.trx"
 
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: always()
       with:
         name: .NET Test Results
-        path: '**/test-results.trx'
+        path: 'backend/test-results.trx'
         reporter: dotnet-trx
