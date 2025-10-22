@@ -1,0 +1,7 @@
+.modal {
+    background-color: cornflowerblue;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: fit-content;
+    height: fit-content;
+}

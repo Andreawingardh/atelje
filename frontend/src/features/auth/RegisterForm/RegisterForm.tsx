@@ -5,7 +5,7 @@ export default function RegisterForm() {
 
     return (
     <>
-      <h2 className={styles.title}>Sign up</h2>
+      <h1 className={styles.title}>Sign up</h1>
       <form className={styles.registerForm}>
         <label className={styles.registerLabel} htmlFor="username">Username</label>
         <input className={styles.registerInput} type="text" id="username" name="username" required />

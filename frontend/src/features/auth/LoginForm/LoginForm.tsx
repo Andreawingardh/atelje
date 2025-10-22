@@ -5,7 +5,7 @@ export default function LoginForm() {
 
     return (
     <>
-      <h2 className={styles.title} >Login</h2>
+      <h1 className={styles.title} >Login</h1>
       <form className={styles.loginForm}>
         <label className={styles.loginLabel} htmlFor="username">Username</label>
         <input className={styles.loginInput} type="text" id="username" name="username" required />

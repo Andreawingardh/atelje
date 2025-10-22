@@ -1,9 +1,9 @@
-"use client";
+import LoginForm from "@/features/auth/LoginForm/LoginForm";
 
 export default function LoginPage() {
   return (
     <>
-    <h1>Log in here</h1>
+    <LoginForm />
     </>
   );
 }
