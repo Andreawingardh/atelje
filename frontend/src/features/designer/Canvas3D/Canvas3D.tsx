@@ -45,6 +45,7 @@ export default function Canvas3D() {
           maxAzimuthAngle={Math.PI / 6}       // limit right rotation (~+30°)
           target={[0, 1.5, 0]}
           rotateSpeed={0.2}
+          zoomSpeed={0.2}
         />
       </Canvas>
     </section>
