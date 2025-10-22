@@ -28,10 +28,9 @@ jobs:
     - name: Run tests
       run: dotnet test ./backend/backend.sln --no-build --verbosity normal --filter "Category!=LocalOnly" --logger "trx;LogFileName=../test-results.trx"
 
-    - name: Test Report
-      uses: dorny/test-reporter@v1
-      if: always()
-      with:
-        name: .NET Test Results
-        path: 'backend/test-results.trx'
-        reporter: dotnet-trx
+    - name: Debug - List files
+      run: |
+        echo "Looking for test results..."
+        find . -name "*.trx" -type f
+        echo "---"
+        ls -la backend/ || echo "backend directory structure:"
