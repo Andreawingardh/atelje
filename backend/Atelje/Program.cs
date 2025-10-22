@@ -37,6 +37,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6;
 });
 builder.Services.AddScoped<IUserService, UserService>(); 
+builder.Services.AddScoped<IDesignService, DesignService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 //Sets up JWT authentication
