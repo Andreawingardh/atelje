@@ -9,11 +9,12 @@ type CeilingProps = {
 
 export const Ceiling: React.FC<CeilingProps> = ({ceilingHeight, gridSize, gridCellSize}) => {
     const floorSize = gridSize * gridCellSize; // convert cm to Three.js units
+    const ceilingYPosition = ceilingHeight * gridCellSize; // convert cm to Three.js units
 
   return (
     <mesh 
       rotation={[Math.PI / 2, 0, 0]} 
-      position={[0, 3, 0]}
+      position={[0, ceilingYPosition, 0]}
       receiveShadow
     >
       <planeGeometry args={[floorSize, floorSize]} />
