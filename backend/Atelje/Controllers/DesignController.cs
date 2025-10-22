@@ -1,5 +1,5 @@
-// using Atelje.DTOs.Design;
-// using Atelje.Services;
+using Atelje.DTOs.Design;
+using Atelje.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Atelje.Controllers;
@@ -7,21 +7,21 @@ namespace Atelje.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DesignController : ControllerBase
+public class DesignController(IDesignService designService) : ControllerBase
 {
-    // public DesignController(IDesignService designService)
-    // {
-    // }
-    
     [HttpGet(Name = "GetAllDesigns")]
-    public async Task<ActionResult<List<object>>> GetDesigns()
+    public async Task<ActionResult<List<DesignDto>>> GetDesigns()
     {
-        throw new NotImplementedException();
+        var designs = await designService.GetAllDesignsAsync();
+        return designs;
     }
 
-    [HttpGet("{id}", Name = "GetDesignByID")]
-    public async Task<ActionResult<object>> GetDesign(string id)
+    [HttpGet("{id}", Name = "GetDesignById")]
+    public async Task<ActionResult<DesignDto>> GetDesign(int id)
     {
-        throw new NotImplementedException();
+        var design = await designService.GetDesignByIdAsync(id);
+
+        if (design == null) return NotFound();
+        return design;
     }
 }
