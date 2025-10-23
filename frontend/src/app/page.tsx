@@ -1,13 +1,13 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import { apiClient } from "@/lib/api-client";
+import LogOutButton from "@/features/auth/LogOutButton/LogOutButton";
 
 type HealthResponse = {
   status: string;
   statusCode: number;
   checks: { name: string; status: string }[];
 };
-
 
 const data = await apiClient<HealthResponse>("/health");
 
@@ -23,6 +23,7 @@ export default function Home() {
           height={38}
           priority
         />
+        <LogOutButton />
         <p>Status: {data.status}</p>
         <ol>
           <li>

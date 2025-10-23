@@ -1,20 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./LoginForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { ApiError } from "@/api/generated";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const { user, login, isLoading, setIsLoading } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+useEffect(() => {
   if (user) {
     router.push("/new");
   }
-
+}, [user, router]);
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -25,7 +26,6 @@ export default function LoginForm() {
     try {
       setIsLoading(true);
       await login(email, password);
-      router.push("/new");
     } catch (error) {
       if (error instanceof ApiError) {
         setError(error.body.errors[0]);
@@ -52,6 +52,7 @@ export default function LoginForm() {
           name="email"
           required
           key="email"
+          autoComplete="email"
         />
 
         <label className={styles.loginLabel} htmlFor="password">
@@ -63,6 +64,7 @@ export default function LoginForm() {
           id="password"
           key="password"
           name="password"
+          autoComplete="current-password"
           required
         />
 

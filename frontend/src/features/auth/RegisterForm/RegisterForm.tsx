@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./RegisterForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { ApiError, RegisterDto } from "@/api/generated";
@@ -11,9 +11,11 @@ export default function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  if (user) {
-    router.push("/new");
-  }
+  useEffect(() => {
+    if (user) {
+      router.push("/new");
+    }
+  });
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,7 +37,6 @@ export default function RegisterForm() {
     try {
       setIsLoading(true);
       await register(user);
-      router.push("/new");
     } catch (error) {
       if (error instanceof ApiError) {
         setError(error.body.errors[0]);
@@ -61,6 +62,7 @@ export default function RegisterForm() {
           id="userName"
           name="userName"
           key="userName"
+          autoComplete="userName"
           required
         />
 
@@ -84,6 +86,7 @@ export default function RegisterForm() {
           id="email"
           name="email"
           key="email"
+          autoComplete="email"
           required
         />
 
@@ -96,6 +99,7 @@ export default function RegisterForm() {
           id="password"
           name="password"
           key="password"
+          autoComplete="new-password"
           required
         />
 
