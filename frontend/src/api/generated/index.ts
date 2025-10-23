@@ -8,9 +8,12 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AuthResponseDto } from './models/AuthResponseDto';
+export type { CreateDesignDto } from './models/CreateDesignDto';
 export type { CreateUserDto } from './models/CreateUserDto';
+export type { DesignDto } from './models/DesignDto';
 export type { LoginDto } from './models/LoginDto';
 export type { RegisterDto } from './models/RegisterDto';
+export type { UpdateDesignDto } from './models/UpdateDesignDto';
 export type { UpdateUserDto } from './models/UpdateUserDto';
 export type { UserDto } from './models/UserDto';
 
