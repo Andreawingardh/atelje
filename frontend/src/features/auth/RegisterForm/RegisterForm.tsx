@@ -11,7 +11,9 @@ export default function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  router.push("/new");
+  if (user) {
+    router.push("/new");
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,7 +34,6 @@ export default function RegisterForm() {
 
     try {
       setIsLoading(true);
-      console.log("After setIsLoading(true), isLoading is:", isLoading);
       await register(user);
       router.push("/new");
     } catch (error) {
@@ -42,7 +43,6 @@ export default function RegisterForm() {
         setError("An unexpected error occurred");
       }
     } finally {
-      console.log("In finally block");
       setIsLoading(false);
     }
   }
