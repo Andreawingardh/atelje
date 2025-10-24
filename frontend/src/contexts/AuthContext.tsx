@@ -8,7 +8,7 @@ import {
   OpenAPI,
 } from "@/api/generated";
 
-interface AuthContextType {
+export interface AuthContextType {
   user: AuthResponseDto | null; //
   isLoading: boolean,
   setIsLoading: Dispatch<SetStateAction<boolean>>,
