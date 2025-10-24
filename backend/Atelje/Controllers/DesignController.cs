@@ -1,6 +1,6 @@
 using Atelje.DTOs.Design;
 using Atelje.Services;
-using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Atelje.Controllers;
@@ -8,7 +8,7 @@ namespace Atelje.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class DesignController(IDesignService designService) : ControllerBase
 {
     [HttpGet(Name = "GetAllDesigns")]

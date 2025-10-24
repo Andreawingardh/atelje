@@ -10,4 +10,8 @@ public class UpdateDesignDto
     [Required]
     [MaxLength(50)]
     public required string Name { get; set; }
+    
+    [Required]
+    [MinLength(3)]
+    public required string DesignData { get; set; }
 }

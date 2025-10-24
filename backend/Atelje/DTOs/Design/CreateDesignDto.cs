@@ -11,6 +11,11 @@ public class CreateDesignDto
     [MinLength(3)]
     public required string Name { get; set; }
     
+    [Required]
     [MaxLength(100)]
-    public string? UserId { get; set; }
+    public required string UserId { get; set; }
+    
+    [Required]
+    [MinLength(3)]
+    public required string DesignData { get; set; }
 }
