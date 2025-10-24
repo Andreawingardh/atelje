@@ -25,6 +25,7 @@ public class DesignServiceTests
             { 
                 Id = 1, 
                 Name = "Design One",
+                DesignData = "Json One",
                 UserId = "001",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -33,6 +34,7 @@ public class DesignServiceTests
             { 
                 Id = 2, 
                 Name = "Design Two",
+                DesignData = "Json Two",
                 UserId = "002",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -41,6 +43,7 @@ public class DesignServiceTests
             { 
                 Id = 3, 
                 Name = "Design Three",
+                DesignData = "Json Three",
                 UserId = "003",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -58,9 +61,9 @@ public class DesignServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(3, result.Count);
-        Assert.Contains(result, d => d.Name == "Design One");
-        Assert.Contains(result, d => d.Name == "Design Two");
-        Assert.Contains(result, d => d.Name == "Design Three");
+        Assert.Contains(result, d => d.Name == "Design One" && d.DesignData  == "Json One");
+        Assert.Contains(result, d => d.Name == "Design Two" && d.DesignData  == "Json Two");
+        Assert.Contains(result, d => d.Name == "Design Three" && d.DesignData  == "Json Three");
     }
     
     [Fact]
@@ -77,6 +80,7 @@ public class DesignServiceTests
         { 
             Id = 1, 
             Name = "Test Design",
+            DesignData = "Design One",
             UserId = "001",
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -93,6 +97,7 @@ public class DesignServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal("Test Design", result.Name);
+        Assert.Equal("Design One", result.DesignData);
         Assert.Equal("001", result.UserId);
     }
     
@@ -128,6 +133,7 @@ public class DesignServiceTests
         var createDto = new CreateDesignDto
         {
             Name = "New Design",
+            DesignData = "Json string",
             UserId = "001"
         };
 
@@ -157,6 +163,7 @@ public class DesignServiceTests
         { 
             Id = 1, 
             Name = "Original Name",
+            DesignData = "Original Design Data",
             UserId = "001",
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -169,7 +176,8 @@ public class DesignServiceTests
 
         var updateDto = new UpdateDesignDto
         {
-            Name = "Updated Name"
+            Name = "Updated Name",
+            DesignData = "Updated  Design Data",
         };
 
         // Act
@@ -178,6 +186,7 @@ public class DesignServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal("Updated Name", result.Name);
+        Assert.Equal("Updated  Design Data", result.DesignData);
         Assert.Equal("001", result.UserId);
         Assert.True(result.UpdatedAt >= design.CreatedAt);
     }
@@ -195,7 +204,8 @@ public class DesignServiceTests
 
         var updateDto = new UpdateDesignDto
         {
-            Name = "Updated Name"
+            Name = "Updated Name",
+            DesignData  = "Json string"
         };
 
         // Act
@@ -219,6 +229,7 @@ public class DesignServiceTests
         { 
             Id = 1, 
             Name = "Design To Delete",
+            DesignData = "Json string",
             UserId = "001",
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
