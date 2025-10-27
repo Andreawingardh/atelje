@@ -6,19 +6,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const getSceneData = (): string => {
-    return JSON.stringify({
-        mockScene: true,
-        walls: [{ id: 1, color: '#ffffff' }],
-        floor: { color: '#55412C' },
-        pictures: [],
-        timestamp: Date.now()
-    });
+  // Simple JSON string for testing
+  return JSON.stringify({ message: "hello world", timestamp: Date.now() });
 };
 
 const loadSceneData = (jsonString: string): void => {
+  console.log('Mock: Received data from backend:', jsonString);
+  try {
     const data = JSON.parse(jsonString);
-    console.log('Mock: Loading scene data:', data);
-    // Real implementation will rebuild the 3D scene
+    console.log('Mock: Parsed successfully:', data);
+  } catch (error) {
+    console.error('Mock: Failed to parse scene data:', error);
+  }
 };
 
 
@@ -29,29 +28,29 @@ export function useDesign() {
     const [error, setError] = useState<string>();
     const [succeeded, setSucceeded] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     if (!user) {
-    //         router.push('/login')
-    //     }
+    useEffect(() => {
+        if (!user) {
+            router.push('/login')
+        }
 
-    // }, [])
+    },)
 
     async function createDesign(name: string) {
         const designData = getSceneData();
 
         const createDesignDto: CreateDesignDto = {
             name: name,
-            userId: user?.userId,
+            userId: user!.userId,
             designData: designData
         }
         try {
             setSucceeded(false)
             setIsLoading(true);
-            await DesignService.createDesign(createDesignDto)
-            setSucceeded(true)
+            const result = await DesignService.createDesign(createDesignDto);
+            return result
         } catch (error) {
             if (error instanceof ApiError) {
-                setError(error.body.errors[0])
+                  setError(error.body?.errors?.[0] || "An error occurred")
             } else {
                 setError("An unexpected error occurred");
             }
@@ -74,7 +73,7 @@ export function useDesign() {
             await DesignService.updateDesign(designId, updateDesignDto)
         } catch (error) {
             if (error instanceof ApiError) {
-                setError(error.body.errors[0])
+                  setError(error.body?.errors?.[0] || "An error occurred")
             } else {
                 setError("An unexpected error occurred");
             }
@@ -95,7 +94,7 @@ export function useDesign() {
             }
         } catch (error) {
             if (error instanceof ApiError) {
-                setError(error.body.errors[0])
+                  setError(error.body?.errors?.[0] || "An error occurred")
             } else {
                 setError("An unexpected error occurred");
             }
