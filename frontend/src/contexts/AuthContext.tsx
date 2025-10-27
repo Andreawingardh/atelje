@@ -25,7 +25,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
-    console.log("Token from localStorage:", token);
     if (!token) {
       return;
     }
@@ -36,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async function getUser() {
       try {
         const authorizedUser = await AuthService.getApiAuthMe();
-        console.log("User data received:", authorizedUser);
         setUser(authorizedUser);
       } catch (error) {
         console.error("Failed to get user:", error);
