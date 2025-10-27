@@ -46,7 +46,7 @@ export default function Canvas3D() {
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         
         <OrbitControls 
-          enablePan={true}
+          enablePan={false}
           enableZoom={true}
           enableRotate={true}
           minDistance={minDistanceZoom}
