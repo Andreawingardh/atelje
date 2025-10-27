@@ -7,19 +7,22 @@ import { Wall } from "../scene-components/structural/Wall";
 import { Ceiling } from "../scene-components/structural/Ceiling";
 import { Sofa } from "../scene-components/furniture/Sofa";
 
+interface Canvas3DProps {
+  wallWidth: number;
+  ceilingHeight: number;
+}
+
+export default function Canvas3D({ wallWidth, ceilingHeight} : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
-const floorSize = 500;
-const ceilingHeight = 300;
+const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
 const maxDistanceZoom = Math.max(5, floorSize / 80);
 
 const YPosition = ceilingHeight * cellSize;
 const pointLightHeight = YPosition * 1.0;
 const directionalLightHeight = YPosition * 3.33;
-const cameraDistance = YPosition * 1.67;
+const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
 
-
-export default function Canvas3D() {
   return (
     <section className={styles.designerWindow}>
       <Canvas
@@ -40,9 +43,9 @@ export default function Canvas3D() {
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
-        <Wall wallColor="#3939390" wallWidth={500} ceilingHeight={ceilingHeight} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
-        <Wall wallColor="#3939390" wallWidth={500} ceilingHeight={ceilingHeight} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
-        <Wall wallColor="#3939390" wallWidth={500} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor="#3939390" wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor="#8B4513" sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
