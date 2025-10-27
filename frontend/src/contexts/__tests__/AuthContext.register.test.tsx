@@ -1,18 +1,10 @@
-import {
-  AuthResponseDto,
-  AuthService,
-  OpenAPI,
-} from "@/api/generated";
+import { AuthResponseDto, AuthService, OpenAPI } from "@/api/generated";
 import { AuthProvider, useAuth, AuthContextType } from "../AuthContext";
-import {
-  renderHook,
-  RenderHookResult,
-  act,
-} from "@testing-library/react";
+import { renderHook, RenderHookResult, act } from "@testing-library/react";
 
 jest.mock("@/api/generated");
 
-describe("AuthContext login function", () => {
+describe("AuthContext register function", () => {
   let authResult: RenderHookResult<AuthContextType, unknown>;
   let fakeUser: AuthResponseDto;
   beforeEach(() => {
@@ -22,11 +14,11 @@ describe("AuthContext login function", () => {
       email: "test@test.com",
       userName: "Test user",
     };
-      
+
     OpenAPI.TOKEN = undefined;
     localStorage.clear();
 
-    const mockApiLoginFunction = jest.mocked(AuthService.postApiAuthLogin);
+    const mockApiLoginFunction = jest.mocked(AuthService.postApiAuthRegister);
     mockApiLoginFunction.mockResolvedValue(fakeUser);
 
     authResult = renderHook(() => useAuth(), { wrapper: AuthProvider });
@@ -36,7 +28,11 @@ describe("AuthContext login function", () => {
   test("sets OpenAPI.Token", async () => {
     //Act
     await act(async () => {
-      await authResult.result.current.login(fakeUser.email!, "test-password");
+      await authResult.result.current.register({
+        email: fakeUser.email!,
+        password: "test-password",
+        userName: fakeUser.userName!,
+      });
     });
 
     //Assert
@@ -44,7 +40,11 @@ describe("AuthContext login function", () => {
   });
   test("stores token in localStorage", async () => {
     await act(async () => {
-      await authResult.result.current.login(fakeUser.email!, "test-password");
+      await authResult.result.current.register({
+        email: fakeUser.email!,
+        password: "test-password",
+        userName: fakeUser.userName!,
+      });
     });
     const token = localStorage.getItem("auth-token");
 
@@ -52,7 +52,11 @@ describe("AuthContext login function", () => {
   });
   test("updates user state in context", async () => {
     await act(async () => {
-      await authResult.result.current.login(fakeUser.email!, "test-password");
+      await authResult.result.current.register({
+        email: fakeUser.email!,
+        password: "test-password",
+        userName: fakeUser.userName!,
+      });
     });
     const user = authResult.result.current.user;
 
