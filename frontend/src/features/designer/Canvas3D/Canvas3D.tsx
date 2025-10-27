@@ -13,15 +13,13 @@ interface Canvas3DProps {
 
 export default function Canvas3D({ wallWidth, ceilingHeight} : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
-const floorSize = Math.max(wallWidth, 500); // Calcultae floor size based on wall width
-//const ceilingHeight = 300;
+const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
 const maxDistanceZoom = Math.max(5, floorSize / 80);
 
 const YPosition = ceilingHeight * cellSize;
 const pointLightHeight = YPosition * 1.0;
 const directionalLightHeight = YPosition * 3.33;
-//const cameraDistance = YPosition * 1.67;
 const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
 
   return (
