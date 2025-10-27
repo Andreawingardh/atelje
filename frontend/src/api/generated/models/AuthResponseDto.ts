@@ -3,10 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AuthResponseDto = {
-    token?: string;
-    userId?: string;
-    email?: string;
-    userName?: string;
+    token: string;
+    userId: string;
+    email: string;
+    userName: string;
     displayName?: string | null;
 };
 
