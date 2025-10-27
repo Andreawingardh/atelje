@@ -8,5 +8,6 @@ export type DesignDto = {
     createdAt?: string;
     updatedAt?: string;
     userId?: string;
+    designData: string;
 };
 

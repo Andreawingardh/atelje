@@ -4,6 +4,7 @@
 /* eslint-disable */
 export type CreateDesignDto = {
     name: string;
-    userId?: string | null;
+    userId: string;
+    designData: string;
 };
 

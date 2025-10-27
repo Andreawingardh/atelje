@@ -4,5 +4,6 @@
 /* eslint-disable */
 export type UpdateDesignDto = {
     name: string;
+    designData: string;
 };
 
