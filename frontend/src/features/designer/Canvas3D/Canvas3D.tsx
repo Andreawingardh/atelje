@@ -50,7 +50,7 @@ const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor="#8B4513" sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
-        <Frame frameColor="#ac924f" frameSize="70x100" sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
+        <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} gridCellSize={cellSize} />
 
         <OrbitControls 
           enablePan={false}

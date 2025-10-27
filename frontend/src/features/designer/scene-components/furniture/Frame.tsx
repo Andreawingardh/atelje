@@ -3,12 +3,12 @@ import React from 'react';
 type FrameProps = {
     frameColor: string;
     frameSize: string;
-    sofaDepth: number;
+    frameOrientation: 'portrait' | 'landscape';
     floorSize: number;
     gridCellSize: number;
 }
 
-export const Frame: React.FC<FrameProps> = ({frameColor, frameSize, floorSize, gridCellSize}) => {
+export const Frame: React.FC<FrameProps> = ({frameColor, frameSize, frameOrientation, floorSize, gridCellSize}) => {
     const frameThickness = 3 * gridCellSize; // 3 cm thickness
 
     //calculating Y-position based on floor size
