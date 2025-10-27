@@ -5,6 +5,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Floor } from "../scene-components/structural/Floor";
 import { Wall } from "../scene-components/structural/Wall";
 import { Ceiling } from "../scene-components/structural/Ceiling";
+import { Sofa } from "../scene-components/furniture/Sofa";
 
 const cellSize = 0.01; // 1 cm
 const floorSize = 500;
@@ -44,7 +45,8 @@ export default function Canvas3D() {
         <Wall wallColor="#3939390" wallWidth={500} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
-        
+        <Sofa sofaColor="#8B4513" sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
+
         <OrbitControls 
           enablePan={false}
           enableZoom={true}
