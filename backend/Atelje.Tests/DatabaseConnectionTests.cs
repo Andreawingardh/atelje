@@ -34,7 +34,6 @@ public class DatabaseConnectionTests
         Assert.Equal(System.Data.ConnectionState.Open, connection.State);
     }
     
-    [Fact]
     [Trait("Category", "LocalOnly")]
     public async Task CanConnectToDeployedDatabase()
     {

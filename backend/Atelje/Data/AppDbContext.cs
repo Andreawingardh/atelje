@@ -8,4 +8,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 {
     
     public DbSet<Design> Designs { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);  // Keeps Identity configuration
+        
+        modelBuilder.Entity<Design>()
+            .Property(d => d.DesignData)
+            .HasColumnType("jsonb");
+    }
 }

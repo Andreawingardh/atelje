@@ -16,6 +16,7 @@ public class DesignService(AppDbContext context) : IDesignService
             {
                 Id = d.Id,
                 Name = d.Name,
+                DesignData = d.DesignData,
                 CreatedAt = d.CreatedAt,
                 UpdatedAt = d.UpdatedAt,
                 UserId = d.UserId
@@ -33,6 +34,7 @@ public class DesignService(AppDbContext context) : IDesignService
         {
             Id = design.Id,
             Name = design.Name,
+            DesignData = design.DesignData,
             CreatedAt = design.CreatedAt,
             UpdatedAt = design.UpdatedAt,
             UserId = design.UserId
@@ -44,6 +46,7 @@ public class DesignService(AppDbContext context) : IDesignService
         var design = new Design
         {
             Name = createDesignDto.Name,
+            DesignData = createDesignDto.DesignData,
             UserId = createDesignDto.UserId,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -56,6 +59,7 @@ public class DesignService(AppDbContext context) : IDesignService
         {
             Id = design.Id,
             Name = design.Name,
+            DesignData = design.DesignData,
             CreatedAt = design.CreatedAt,
             UpdatedAt = design.UpdatedAt,
             UserId = design.UserId
@@ -69,6 +73,7 @@ public class DesignService(AppDbContext context) : IDesignService
         if (design == null) return null;
 
         design.Name = updateDesignDto.Name;
+        design.DesignData = updateDesignDto.DesignData;
         design.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
@@ -77,6 +82,7 @@ public class DesignService(AppDbContext context) : IDesignService
         {
             Id = design.Id,
             Name = design.Name,
+            DesignData = design.DesignData,
             CreatedAt = design.CreatedAt,
             UpdatedAt = design.UpdatedAt,
             UserId = design.UserId

@@ -8,4 +8,6 @@ public class Design
     public DateTime UpdatedAt { get; set; }
     public string UserId { get; set; }
     public User User { get; set; }
+    
+    public string DesignData { get; set; }
 }
