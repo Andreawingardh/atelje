@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import StructuralForm from "@/features/designer/StructuralForm/StructuralForm";
 import FurnitureForm from "@/features/designer/FurnitureForm/FurnitureForm";
+import { OpenAPI } from "@/api/generated";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function DesignerPage() {
   const params = useParams();
@@ -23,15 +25,29 @@ export default function DesignerPage() {
     setCeilingHeight,
     setWallColor,
     setFurnitureColor,
+    loadSceneData,
+    getSceneData,
   } = useCustomDesign();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     console.log("useEffect running, id is:", id);
-    if (id) {
-      console.log("About to call loadDesign");
-      loadDesign(id);
-    }
-  }, [id, loadDesign]);
+    console.log("=== loadDesign useEffect running ===");
+    console.log("user:", user);
+    console.log("OpenAPI.TOKEN:", OpenAPI.TOKEN);
+    console.log("id:", id);
+    const fetchAndLoad = async () => {
+      if (id) {
+        const loadedDesign = await loadDesign(id);
+        if (loadedDesign) {
+          loadSceneData(loadedDesign.designData);
+        }
+      }
+    };
+
+    fetchAndLoad(); // Call it
+  }, [id, loadDesign, loadSceneData, user]);
 
   useEffect(() => {
     if (currentDesign?.name) {
@@ -40,10 +56,11 @@ export default function DesignerPage() {
   }, [currentDesign]);
 
   async function handleSave() {
+    const sceneData = getSceneData();
     if (!id) {
       throw new Error("couldn't find Id");
     }
-    await saveDesign(id, designName);
+    await saveDesign(id, designName, sceneData);
     console.log("design saved");
   }
 

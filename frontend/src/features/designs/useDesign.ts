@@ -1,53 +1,22 @@
 'use client'
 
-import { ApiError, CreateDesignDto, DesignDto, DesignService, UpdateDesignDto} from "@/api/generated";
+import { ApiError, DesignDto, DesignService } from "@/api/generated";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
-
-const getSceneData = (): string => {
-    // Simple JSON string for testing
-    return JSON.stringify({ message: "hello world", timestamp: Date.now() });
-};
-
-const loadSceneData = (jsonString: string): void => {
-    console.log('Mock: Received data from backend:', jsonString);
-    try {
-        const data = JSON.parse(jsonString);
-        console.log('Mock: Parsed successfully:', data);
-    } catch (error) {
-        console.error('Mock: Failed to parse scene data:', error);
-    }
-};
-
+import { useState, useCallback } from "react";
 
 export function useDesign() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { user } = useAuth();
-    const router = useRouter();
     const [error, setError] = useState<string>();
     const [succeeded, setSucceeded] = useState<boolean>(false);
     const [currentDesign, setCurrentDesign] = useState<DesignDto | undefined>(undefined);
 
-    useEffect(() => {
-        if (!user) {
-            router.push('/login')
-        }
+    async function createDesign(name: string, sceneData: string): Promise<DesignDto | undefined> {
 
-    },)
-
-    async function createDesign(name: string): Promise<DesignDto | undefined> {
-        const designData = getSceneData();
-
-        const createDesignDto: CreateDesignDto = {
-            name: name,
-            userId: user!.userId,
-            designData: designData
-        }
         try {
             setSucceeded(false)
             setIsLoading(true);
-            const result = await DesignService.createDesign(createDesignDto);
+            const result = await DesignService.createDesign({name, userId: user!.userId, designData: sceneData});
             return result
         } catch (error) {
             if (error instanceof ApiError) {
@@ -60,18 +29,11 @@ export function useDesign() {
         }
     }
 
-    async function saveDesign(designId: number, name: string) {
-
-        const designData = getSceneData();
-
-        const updateDesignDto: UpdateDesignDto = {
-            name: name,
-            designData: designData
-        }
+    async function saveDesign(designId: number, name: string, designData: string) {
 
         try {
             setIsLoading(true)
-            await DesignService.updateDesign(designId, updateDesignDto)
+            await DesignService.updateDesign(designId, {name, designData})
         } catch (error) {
             if (error instanceof ApiError) {
                 setError(error.body?.errors?.[0] || "An error occurred")
@@ -90,10 +52,7 @@ export function useDesign() {
         try {
             setIsLoading(true)
             const response = await DesignService.getDesignById(designId)
-            if (response) {
-                loadSceneData(response.designData)
-                setCurrentDesign(response);
-            }
+            return response;
         } catch (error) {
             if (error instanceof ApiError) {
                 setError(error.body?.errors?.[0] || "An error occurred")
