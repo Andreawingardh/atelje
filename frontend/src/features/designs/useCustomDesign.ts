@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { FurnitureColor } from "../designer/FurnitureForm/FurnitureForm";
 
 export interface CustomDesign {
@@ -7,6 +7,21 @@ export interface CustomDesign {
   wallColor: string;
   furnitureColor: FurnitureColor;
 }
+
+export type DesignData = {
+  sofa: {
+    color: FurnitureColor;
+  };
+
+  wall: {
+    color: string;
+    width: number;
+    height: number;
+  };
+
+//   frames: { frameColor: string; frameSize: string }[];
+};
+
 
 export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
   const [customDesign, setCustomDesign] = useState<CustomDesign>({
@@ -33,6 +48,30 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCustomDesign((prev) => ({ ...prev, furnitureColor: value }));
   };
 
+  // Inside useCustomDesign:
+const getSceneData = (): string => {
+  const data: DesignData = {
+    wall: {
+    color: customDesign.wallColor,
+    width: customDesign.wallWidth,
+    height: customDesign.ceilingHeight
+    },
+    sofa: {
+      color: customDesign.furnitureColor
+    }
+  };
+  return JSON.stringify(data);
+};
+
+  const loadSceneData = useCallback((jsonString: string): void => {
+    const currentDesign: DesignData = JSON.parse(jsonString)
+    setWallWidth(currentDesign.wall.width);
+    setCeilingHeight(currentDesign.wall.height)
+    setWallColor(currentDesign.wall.color)
+    setFurnitureColor(currentDesign.sofa.color)
+}, [])
+
+
   return {
     customDesign,
     setCustomDesign,
@@ -40,5 +79,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCeilingHeight,
     setWallColor,
     setFurnitureColor,
+    getSceneData,
+    loadSceneData
   };
 }
