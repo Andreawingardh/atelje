@@ -5,6 +5,9 @@ import { useDesign } from "@/features/designs/useDesign";
 import Canvas3D from "@/features/designer/Canvas3D/Canvas3D";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import { useState, useEffect } from "react";
+import { useCustomDesign } from "@/features/designs/useCustomDesign";
+import StructuralForm from "@/features/designer/StructuralForm/StructuralForm";
+import FurnitureForm from "@/features/designer/FurnitureForm/FurnitureForm";
 
 export default function DesignerPage() {
   const params = useParams();
@@ -13,6 +16,14 @@ export default function DesignerPage() {
   const { saveDesign, loadDesign, currentDesign, error, isLoading } =
     useDesign();
   const [designName, setDesignName] = useState("");
+
+  const {
+    customDesign,
+    setWallWidth,
+    setCeilingHeight,
+    setWallColor,
+    setFurnitureColor,
+  } = useCustomDesign();
 
   useEffect(() => {
     console.log("useEffect running, id is:", id);
@@ -40,7 +51,24 @@ export default function DesignerPage() {
     <ProtectedRoute>
       <p>This is the ID page</p>
       <h1>Designer 3D-tool</h1>
-      <Canvas3D />
+      <StructuralForm
+        wallWidth={customDesign.wallWidth}
+        setWallWidth={setWallWidth}
+        ceilingHeight={customDesign.ceilingHeight}
+        setCeilingHeight={setCeilingHeight}
+        wallColor={customDesign.wallColor}
+        setWallColor={setWallColor}
+      />
+      <FurnitureForm
+        furnitureColor={customDesign.furnitureColor}
+        setFurnitureColor={setFurnitureColor}
+      />
+      <Canvas3D
+        wallWidth={customDesign.wallWidth}
+        ceilingHeight={customDesign.ceilingHeight}
+        wallColor={customDesign.wallColor}
+        furnitureColor={customDesign.furnitureColor}
+      />
       <div>
         <input
           value={designName}
