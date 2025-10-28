@@ -11,7 +11,7 @@ type WallProps = {
 }
 
 export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, wallPlacement, gridCellSize, floorSize}) => {
-    const meshRef = React.useRef<THREE.Mesh>(null);
+    const meshRef = React.useRef<THREE.Mesh>(null!);
     
     const width = wallWidth * gridCellSize; // convert cm to Three.js units
     const height = ceilingHeight * gridCellSize; // convert cm to Three.js units
@@ -20,6 +20,7 @@ export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, w
     // Calculate positions dynamically based on floor size
     const halfFloor = floorDimension / 2;
     const halfHeight = height / 2;
+    const halfWidth = width / 2;
 
     const rotation: [number, number, number] = (() => {
         switch (wallPlacement) {
@@ -42,6 +43,26 @@ export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, w
             return [0, halfHeight, -halfFloor];
         }
     })();
+
+    // Function to convert world position to wall-relative position in cm
+    const worldToWallPosition = (worldPos: THREE.Vector3 ): { x: number; y: number } | null => {
+        if (!meshRef.current) return null;
+
+        // Get the wall's world matrix
+        const wallMatrix = meshRef.current.matrixWorld;
+        const wallMatrixInverse = wallMatrix.clone().invert();
+
+        // Transform world position to wall's local space
+        const localPos = worldPos.clone().applyMatrix4(wallMatrixInverse);
+
+        // Convert from Three.js units back to cm
+        // The wall's local coordinate system has origin at center, so we adjust to bottom-left corner
+        const xCm = (localPos.x + halfWidth) / gridCellSize;
+        const yCm = (localPos.y + height / 2) / gridCellSize;
+
+        return { x: xCm, y: yCm };
+    };
+    
 
 
     return (
