@@ -38,7 +38,7 @@ export default function DesignerPage() {
     console.log("OpenAPI.TOKEN:", OpenAPI.TOKEN);
     console.log("id:", id);
     const fetchAndLoad = async () => {
-      if (id) {
+      if (id && user) {
         const loadedDesign = await loadDesign(id);
         if (loadedDesign) {
           loadSceneData(loadedDesign.designData);
