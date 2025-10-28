@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as THREE from 'three';
 
 type WallProps = {
     wallColor: string;
@@ -10,6 +11,8 @@ type WallProps = {
 }
 
 export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, wallPlacement, gridCellSize, floorSize}) => {
+    const meshRef = React.useRef<THREE.Mesh>(null);
+    
     const width = wallWidth * gridCellSize; // convert cm to Three.js units
     const height = ceilingHeight * gridCellSize; // convert cm to Three.js units
     const floorDimension = floorSize * gridCellSize; // floor size in Three.js units
@@ -43,6 +46,7 @@ export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, w
 
     return (
       <mesh
+      ref={meshRef}
       position={position}
       rotation={rotation}
       receiveShadow
