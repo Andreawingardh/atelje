@@ -1,5 +1,5 @@
 import styles from "./StructuralForm.module.css";
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 interface StructuralFormProps {
   wallWidth: number;
@@ -27,21 +27,65 @@ export default function StructuralForm({
   // Keep values within limits
   const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
 
+  // Local state to keep track of input values
+  const [wallWidthInput, setWallWidthInput] = useState(wallWidth.toString());
+  const [ceilingHeightInput, setCeilingHeightInput] = useState(ceilingHeight.toString());
+
+  const wallWidthTimeout = useRef<NodeJS.Timeout | null>(null);
+  const ceilingHeightTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setWallWidthInput(wallWidth.toString());
+  }, [wallWidth]);
+
+  useEffect(() => {
+    setCeilingHeightInput(ceilingHeight.toString());
+  }, [ceilingHeight]);
+
   const handleWallWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = parseInt(e.target.value, 10);
-    if (isNaN(raw)) return;
-    setWallWidth(clamp(raw, MIN_WALL, MAX_WALL));
+    const value = e.target.value;
+    setWallWidthInput(value);
+
+    // Clear existing and set new timeout
+    if (wallWidthTimeout.current) {
+      clearTimeout(wallWidthTimeout.current);
+    }
+    
+    wallWidthTimeout.current = setTimeout(() => {
+      const parsed = parseInt(value, 10);
+      if (!isNaN(parsed)) {
+        setWallWidth(clamp(parsed, MIN_WALL, MAX_WALL));
+      }
+    }, 600);
   };
 
   const handleCeilingHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = parseInt(e.target.value, 10);
-    if (isNaN(raw)) return;
-    setCeilingHeight(clamp(raw, MIN_CEILING, MAX_CEILING));
+    const value = e.target.value;
+    setCeilingHeightInput(value);
+
+    // Clear existing and set new timeout
+    if (ceilingHeightTimeout.current) {
+      clearTimeout(ceilingHeightTimeout.current);
+    }
+    
+    ceilingHeightTimeout.current = setTimeout(() => {
+      const parsed = parseInt(value, 10);
+      if (!isNaN(parsed)) {
+        setCeilingHeight(clamp(parsed, MIN_CEILING, MAX_CEILING));
+      }
+    }, 600);
   };
 
   const handleWallColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWallColor(e.target.value);
   };
+
+  useEffect(() => {
+    return () => {
+      if (wallWidthTimeout.current) clearTimeout(wallWidthTimeout.current);
+      if (ceilingHeightTimeout.current) clearTimeout(ceilingHeightTimeout.current);
+    };
+  }, []);
 
   return (
     <form className={styles.structuralForm}>
@@ -52,7 +96,7 @@ export default function StructuralForm({
           type="number"
           min={MIN_WALL}
           max={MAX_WALL}
-          value={wallWidth}
+          value={wallWidthInput}
           onChange={handleWallWidthChange}
           className={styles.input}
         />
@@ -65,7 +109,7 @@ export default function StructuralForm({
           type="number"
           min={MIN_CEILING}
           max={MAX_CEILING}
-          value={ceilingHeight}
+          value={ceilingHeightInput}
           onChange={handleCeilingHeightChange}
           className={styles.input}
         />
