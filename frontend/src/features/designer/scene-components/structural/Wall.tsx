@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 type WallProps = {
     wallColor: string;
@@ -61,6 +62,22 @@ export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, w
         const yCm = (localPos.y + height / 2) / gridCellSize;
 
         return { x: xCm, y: yCm };
+    };
+
+
+    // Function to convert wall-relative position (in cm) to world position
+    const wallToWorldPosition = (xCm: number, yCm: number): THREE.Vector3 | null => {
+    if (!meshRef.current) return null;
+
+    // Convert cm to Three.js units and adjust for wall's local coordinate system
+    // (0,0) in cm is bottom-left corner of wall
+    const localX = (xCm * gridCellSize) - halfWidth;
+    const localY = (yCm * gridCellSize) - height / 2;
+    const localPos = new Vector3(localX, localY, 0.001); // Small offset to prevent z-fighting
+
+    // Transform from wall's local space to world space
+    const worldPos = localPos.clone().applyMatrix4(meshRef.current.matrixWorld);
+    return worldPos;
     };
     
 
