@@ -11,10 +11,11 @@ import { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 interface Canvas3DProps {
   wallWidth: number;
   ceilingHeight: number;
+  wallColor: string;
   furnitureColor: FurnitureColor;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, furnitureColor} : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor} : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
@@ -45,9 +46,9 @@ const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
-        <Wall wallColor="#3939390" wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
-        <Wall wallColor="#3939390" wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
-        <Wall wallColor="#3939390" wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />

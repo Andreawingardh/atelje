@@ -6,6 +6,8 @@ interface StructuralFormProps {
   setWallWidth: (value: number) => void;
   ceilingHeight: number;
   setCeilingHeight: (value: number) => void;
+  wallColor: string;
+  setWallColor: (value: string) => void;
 }
 
 export default function StructuralForm({
@@ -13,6 +15,8 @@ export default function StructuralForm({
   setWallWidth,
   ceilingHeight,
   setCeilingHeight,
+  wallColor,
+  setWallColor,
 }: StructuralFormProps) {
   // Define min and max values
   const MIN_WALL = 500;
@@ -33,6 +37,10 @@ export default function StructuralForm({
     const raw = parseInt(e.target.value, 10);
     if (isNaN(raw)) return;
     setCeilingHeight(clamp(raw, MIN_CEILING, MAX_CEILING));
+  };
+
+  const handleWallColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWallColor(e.target.value);
   };
 
   return (
@@ -61,6 +69,20 @@ export default function StructuralForm({
           onChange={handleCeilingHeightChange}
           className={styles.input}
         />
+      </div>
+
+      <div className={styles.formGroup}>
+        <label htmlFor="wallColor">Wall Color:</label>
+        <div className={styles.colorPickerContainer}>
+          <input 
+            id="wallColor"
+            type="color"
+            value={wallColor}
+            onChange={handleWallColorChange}
+            className={styles.colorInput}
+          />
+          <span className={styles.hexCode}>{wallColor}</span>
+        </div>
       </div>
     </form>
   );

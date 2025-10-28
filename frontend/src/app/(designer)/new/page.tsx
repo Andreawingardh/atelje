@@ -8,6 +8,7 @@ import FurnitureForm, { FurnitureColor } from "@/features/designer/FurnitureForm
 export default function DesignerPage() {
   const [wallWidth, setWallWidth] = useState(500);
   const [ceilingHeight, setCeilingHeight] = useState(300);
+  const [wallColor, setWallColor] = useState("#DEDEDE");
   const [furnitureColor, setFurnitureColor] = useState<FurnitureColor>({
     sofa: "#8B4513",
   });
@@ -21,12 +22,14 @@ export default function DesignerPage() {
         setWallWidth={setWallWidth}
         ceilingHeight={ceilingHeight}
         setCeilingHeight={setCeilingHeight}
+        wallColor={wallColor}
+        setWallColor={setWallColor}
       />
       <FurnitureForm
         furnitureColor={furnitureColor}
         setFurnitureColor={setFurnitureColor}
       />
-      <Canvas3D wallWidth={wallWidth} ceilingHeight={ceilingHeight} furnitureColor={furnitureColor} />
+      <Canvas3D wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallColor={wallColor} furnitureColor={furnitureColor} />
       {/* </ProtectedRoute> */}
     </>
   );
