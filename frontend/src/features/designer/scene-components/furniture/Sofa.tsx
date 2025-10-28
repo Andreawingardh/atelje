@@ -32,6 +32,7 @@ export const Sofa: React.FC<SofaProps> = ({sofaColor, sofaWidth, sofaDepth, floo
                 radius={0.05}
                 smoothness={4}
                 position={[-(convertedWidth / 2) + (convertedArmrestWidth / 2), convertedHeight / 2, sofaYPlacement]}
+                castShadow
             >
                 <meshStandardMaterial color={sofaColor} />
             </RoundedBox>
@@ -42,6 +43,7 @@ export const Sofa: React.FC<SofaProps> = ({sofaColor, sofaWidth, sofaDepth, floo
                 radius={0.05}
                 smoothness={4}
                 position={[(convertedWidth / 2) - (convertedArmrestWidth / 2), convertedHeight / 2, sofaYPlacement]}
+                castShadow
             >
                 <meshStandardMaterial color={sofaColor} />
             </RoundedBox>
@@ -52,6 +54,7 @@ export const Sofa: React.FC<SofaProps> = ({sofaColor, sofaWidth, sofaDepth, floo
                 radius={0.05}
                 smoothness={4}
                 position={[0, convertedSeatHeight / 2, sofaYPlacement]}
+                castShadow
             >
                 <meshStandardMaterial color={sofaColor} />
             </RoundedBox>
@@ -62,6 +65,7 @@ export const Sofa: React.FC<SofaProps> = ({sofaColor, sofaWidth, sofaDepth, floo
                 radius={0.05}
                 smoothness={4}
                 position={[0, convertedSeatHeight + (convertedBackHeight / 2), sofaYPlacement - (convertedDepth / 2) + (convertedDepth * 0.3 / 2)]}
+                castShadow
             >
                 <meshStandardMaterial color={sofaColor} />
             </RoundedBox>

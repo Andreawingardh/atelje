@@ -7,6 +7,7 @@ import { Wall } from "../scene-components/structural/Wall";
 import { Ceiling } from "../scene-components/structural/Ceiling";
 import { Sofa } from "../scene-components/furniture/Sofa";
 import { FurnitureColor } from "../FurnitureForm/FurnitureForm";
+import { Frame } from "../scene-components/furniture/Frame";
 
 interface Canvas3DProps {
   wallWidth: number;
@@ -52,6 +53,7 @@ const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
+        <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} gridCellSize={cellSize} />
 
         <OrbitControls 
           enablePan={false}

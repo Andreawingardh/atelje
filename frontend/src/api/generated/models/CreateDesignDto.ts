@@ -2,11 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type AuthResponseDto = {
-    token: string;
+export type CreateDesignDto = {
+    name: string;
     userId: string;
-    email: string;
-    userName: string;
-    displayName?: string | null;
+    designData: string;
 };
 
