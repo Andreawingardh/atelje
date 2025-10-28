@@ -4,15 +4,13 @@ import { useParams } from "next/navigation";
 import { useDesign } from "@/features/designs/useDesign";
 import Canvas3D from "@/features/designer/Canvas3D/Canvas3D";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function DesignerPage() {
   const params = useParams();
-  const router = useRouter();
   const id = params.id ? Number(params.id) : null;
 
-  const { createDesign, saveDesign, loadDesign, error, isLoading } =
+  const { saveDesign, loadDesign, currentDesign, error, isLoading } =
     useDesign();
   const [designName, setDesignName] = useState("");
 
@@ -22,33 +20,35 @@ export default function DesignerPage() {
       console.log("About to call loadDesign");
       loadDesign(id);
     }
-  }, [id]);
+  }, [id, loadDesign]);
+
+  useEffect(() => {
+    if (currentDesign?.name) {
+      setDesignName(currentDesign.name);
+    }
+  }, [currentDesign]);
 
   async function handleSave() {
-    if (id) {
-      await saveDesign(id, "test save name");
-      console.log("design saved");
+    if (!id) {
+      throw new Error("couldn't find Id");
     }
-
-    await createDesign("test create name");
-    console.log("design created");
-    const newDesign = await createDesign("test");
-    router.push(`/designer/${newDesign!.id}`);
+    await saveDesign(id, designName);
+    console.log("design saved");
   }
-  // TODO: Save button that's smart about create vs update
 
   return (
     <ProtectedRoute>
+      <p>This is the ID page</p>
       <h1>Designer 3D-tool</h1>
       <Canvas3D />
       <div>
         <input
           value={designName}
           onChange={(e) => setDesignName(e.target.value)}
-          placeholder="Design name"
+          placeholder={currentDesign?.name || "Design name"}
         />
-        <button onClick={handleSave}>Save</button>
-        {/* TODO: Show loading/error states */}
+        <button onClick={handleSave}>{isLoading ? "Saving" : "Save"}</button>
+        {error && <p>{error}</p>}
       </div>
     </ProtectedRoute>
   );
