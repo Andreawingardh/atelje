@@ -20,11 +20,13 @@ export default function NewDesignPage() {
     setCeilingHeight,
     setWallColor,
     setFurnitureColor,
+    getSceneData
   } = useCustomDesign();
 
   async function handleSave() {
+    const sceneData = getSceneData()
     try {
-      const newDesign = await createDesign(designName);
+      const newDesign = await createDesign(designName, sceneData);
       if (newDesign) {
         router.push(`/designer/${newDesign.id}`);
       }
