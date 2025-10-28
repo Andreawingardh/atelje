@@ -18,7 +18,7 @@ public class DesignController(IDesignService designService) : ControllerBase
         return designs;
     }
 
-    [HttpGet("{id}", Name = "GetDesignById")]
+    [HttpGet("{id:int}", Name = "GetDesignById")]
     public async Task<ActionResult<DesignDto>> GetDesign(int id)
     {
         var design = await designService.GetDesignByIdAsync(id);
@@ -34,7 +34,7 @@ public class DesignController(IDesignService designService) : ControllerBase
         return CreatedAtAction(nameof(GetDesign), new { id = design.Id }, design);
     }
 
-    [HttpPut("{id}", Name = "UpdateDesign")]
+    [HttpPut("{id:int}", Name = "UpdateDesign")]
     public async Task<ActionResult<DesignDto>> UpdateDesign(int id, UpdateDesignDto updateDesignDto)
     {
         var design = await designService.UpdateDesignAsync(id, updateDesignDto);
@@ -44,7 +44,7 @@ public class DesignController(IDesignService designService) : ControllerBase
         return design;
     }
 
-    [HttpDelete("{id}", Name = "DeleteDesign")]
+    [HttpDelete("{id:int}", Name = "DeleteDesign")]
     public async Task<ActionResult<DesignDto>> DeleteDesign(int id)
     {
         var deleted = await designService.DeleteDesignAsync(id);

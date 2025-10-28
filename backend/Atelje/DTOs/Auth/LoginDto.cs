@@ -4,7 +4,7 @@ namespace Atelje.DTOs.Auth;
 
 public class LoginDto
 {
-    [Required] [EmailAddress] public required string Email { get; set; }
-    [Required] public required string Password { get; set; } = string.Empty;
+    [Required] [EmailAddress] public required string Email { get; init; }
+    [Required] public required string Password { get; init; } = string.Empty;
 
 }   

@@ -13,7 +13,7 @@ public class CreateDesignDto
     
     [Required]
     [MaxLength(100)]
-    public required string UserId { get; set; }
+    public required string UserId { get; init; }
     
     [Required]
     [MinLength(3)]

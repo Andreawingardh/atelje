@@ -7,11 +7,9 @@ namespace Atelje.Services;
 
 public class DesignService(AppDbContext context) : IDesignService
 {
-    private readonly AppDbContext _context = context;
-
     public async Task<List<DesignDto>> GetAllDesignsAsync()
     {
-        return await _context.Designs
+        return await context.Designs
             .Select(d => new DesignDto
             {
                 Id = d.Id,
@@ -26,7 +24,7 @@ public class DesignService(AppDbContext context) : IDesignService
 
     public async Task<DesignDto?> GetDesignByIdAsync(int id)
     {
-        var design = await _context.Designs.FindAsync(id);
+        var design = await context.Designs.FindAsync(id);
         
         if (design == null) return null;
         
@@ -52,8 +50,8 @@ public class DesignService(AppDbContext context) : IDesignService
             UpdatedAt = DateTime.UtcNow
         };
 
-        _context.Designs.Add(design);
-        await _context.SaveChangesAsync();
+        context.Designs.Add(design);
+        await context.SaveChangesAsync();
 
         return new DesignDto
         {
@@ -68,7 +66,7 @@ public class DesignService(AppDbContext context) : IDesignService
     
     public async Task<DesignDto?> UpdateDesignAsync(int id, UpdateDesignDto updateDesignDto)
     {
-        var design = await _context.Designs.FindAsync(id);
+        var design = await context.Designs.FindAsync(id);
         
         if (design == null) return null;
 
@@ -76,7 +74,7 @@ public class DesignService(AppDbContext context) : IDesignService
         design.DesignData = updateDesignDto.DesignData;
         design.UpdatedAt = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return new DesignDto
         {
@@ -91,12 +89,12 @@ public class DesignService(AppDbContext context) : IDesignService
     
     public async Task<bool> DeleteDesignAsync(int id)
     {
-        var design = await _context.Designs.FindAsync(id);
+        var design = await context.Designs.FindAsync(id);
         
         if (design == null) return false;
 
-        _context.Designs.Remove(design);
-        await _context.SaveChangesAsync();
+        context.Designs.Remove(design);
+        await context.SaveChangesAsync();
         
         return true;
     }

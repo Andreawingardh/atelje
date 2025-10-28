@@ -8,17 +8,14 @@ namespace Atelje.Services;
 
 public class UserService(AppDbContext context, UserManager<User> userManager) : IUserService
 {
-    private readonly AppDbContext _context = context;
-    private readonly UserManager<User> _userManager = userManager;
-
     public async Task<List<UserDto>> GetAllUsersAsync()
     {
-        return await _context.Users
-            .Select(u => new UserDto()
+        return await context.Users
+            .Select(u => new UserDto
             {
                 Id = u.Id,
-                Email = u.Email,
-                UserName = u.UserName,
+                Email = u.Email ?? string.Empty,
+                UserName = u.UserName ?? string.Empty,
                 CreatedAt = u.CreatedAt
             })
             .ToListAsync();
@@ -26,15 +23,15 @@ public class UserService(AppDbContext context, UserManager<User> userManager) : 
 
     public async Task<UserDto?> GetUserByIdAsync(string id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await context.Users.FindAsync(id);
 
         if (user == null) return null;
 
         return new UserDto
         {
             Id = user.Id,
-            Email = user.Email,
-            UserName = user.UserName,
+            Email = user.Email ?? string.Empty,
+            UserName = user.UserName ?? string.Empty,
             CreatedAt = user.CreatedAt,
             DisplayName = user.DisplayName
         };
@@ -50,13 +47,13 @@ public class UserService(AppDbContext context, UserManager<User> userManager) : 
             CreatedAt = DateTime.UtcNow
         };
 
-        var result = await _userManager.CreateAsync(user, dto.Password);
-        
+        var result = await userManager.CreateAsync(user, dto.Password);
+
         if (!result.Succeeded)
         {
             throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
         }
-        
+
         return new UserDto
         {
             Id = user.Id,
@@ -65,24 +62,23 @@ public class UserService(AppDbContext context, UserManager<User> userManager) : 
             DisplayName = user.DisplayName,
             CreatedAt = user.CreatedAt
         };
-
     }
 
-    public async Task<UserDto> UpdateUserAsync(string id, UpdateUserDto dto)
+    public async Task<UserDto?> UpdateUserAsync(string id, UpdateUserDto dto)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await context.Users.FindAsync(id);
 
         if (user == null) return null;
 
         user.DisplayName = dto.DisplayName;
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return new UserDto
         {
             Id = user.Id,
-            Email = user.Email,
-            UserName = user.UserName,
+            Email = user.Email ?? string.Empty,
+            UserName = user.UserName ?? string.Empty,
             DisplayName = user.DisplayName,
             CreatedAt = user.CreatedAt
         };
@@ -90,13 +86,12 @@ public class UserService(AppDbContext context, UserManager<User> userManager) : 
 
     public async Task<bool> DeleteUserAsync(string id)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await userManager.FindByIdAsync(id);
 
         if (user == null) return false;
 
-        var result = await _userManager.DeleteAsync(user);
+        var result = await userManager.DeleteAsync(user);
 
         return result.Succeeded;
-
     }
 }

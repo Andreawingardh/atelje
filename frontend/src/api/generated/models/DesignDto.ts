@@ -7,7 +7,7 @@ export type DesignDto = {
     name?: string | null;
     createdAt?: string;
     updatedAt?: string;
-    userId?: string;
+    userId: string;
     designData: string;
 };
 

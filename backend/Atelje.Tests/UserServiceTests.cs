@@ -19,42 +19,42 @@ public class UserServiceTests
             .Options;
 
         await using var context = new AppDbContext(options);
-        
+
         // Seed test data
         var users = new List<User>
         {
-            new User 
-            { 
-                Id = "1", 
-                Email = "user1@test.com", 
+            new()
+            {
+                Id = "1",
+                Email = "user1@test.com",
                 UserName = "user1",
                 DisplayName = "User One",
-                CreatedAt = DateTime.UtcNow 
+                CreatedAt = DateTime.UtcNow
             },
-            new User 
-            { 
-                Id = "2", 
-                Email = "user2@test.com", 
+            new()
+            {
+                Id = "2",
+                Email = "user2@test.com",
                 UserName = "user2",
                 DisplayName = "User Two",
-                CreatedAt = DateTime.UtcNow 
+                CreatedAt = DateTime.UtcNow
             },
-            new User 
-            { 
-                Id = "3", 
-                Email = "user3@test.com", 
+            new()
+            {
+                Id = "3",
+                Email = "user3@test.com",
                 UserName = "user3",
                 DisplayName = "User Three",
-                CreatedAt = DateTime.UtcNow 
+                CreatedAt = DateTime.UtcNow
             }
         };
-        
+
         context.Users.AddRange(users);
         await context.SaveChangesAsync();
 
         // Create mock UserManager (not needed for this test, but required by service)
         var mockUserManager = MockUserManager<User>();
-        
+
         var userService = new UserService(context, mockUserManager.Object);
 
         // Act
@@ -67,7 +67,7 @@ public class UserServiceTests
         Assert.Contains(result, u => u.Email == "user2@test.com");
         Assert.Contains(result, u => u.Email == "user3@test.com");
     }
-    
+
     [Fact]
     public async Task GetUserByIdAsync_WhenUserExists_ReturnsUser()
     {
@@ -77,16 +77,16 @@ public class UserServiceTests
             .Options;
 
         await using var context = new AppDbContext(options);
-    
-        var user = new User 
-        { 
-            Id = "1", 
-            Email = "user1@test.com", 
+
+        var user = new User
+        {
+            Id = "1",
+            Email = "user1@test.com",
             UserName = "user1",
             DisplayName = "User One",
-            CreatedAt = DateTime.UtcNow 
+            CreatedAt = DateTime.UtcNow
         };
-    
+
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
@@ -102,7 +102,7 @@ public class UserServiceTests
         Assert.Equal("user1@test.com", result.Email);
         Assert.Equal("user1", result.UserName);
     }
-    
+
     [Fact]
     public async Task GetUserByIdAsync_WhenUserDoesNotExist_ReturnsNull()
     {
@@ -112,7 +112,7 @@ public class UserServiceTests
             .Options;
 
         await using var context = new AppDbContext(options);
-    
+
         var mockUserManager = MockUserManager<User>();
         var userService = new UserService(context, mockUserManager.Object);
 
@@ -122,7 +122,7 @@ public class UserServiceTests
         // Assert
         Assert.Null(result);
     }
-    
+
     [Fact]
     public async Task UpdateUserAsync_WhenUserExists_UpdatesAndReturnsUser()
     {
@@ -132,16 +132,16 @@ public class UserServiceTests
             .Options;
 
         await using var context = new AppDbContext(options);
-    
-        var user = new User 
-        { 
-            Id = "1", 
-            Email = "user1@test.com", 
+
+        var user = new User
+        {
+            Id = "1",
+            Email = "user1@test.com",
             UserName = "user1",
             DisplayName = "Original Name",
-            CreatedAt = DateTime.UtcNow 
+            CreatedAt = DateTime.UtcNow
         };
-    
+
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
@@ -158,11 +158,11 @@ public class UserServiceTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Updated Name", result.DisplayName);  // What value should this be?
+        Assert.Equal("Updated Name", result.DisplayName); // What value should this be?
         Assert.Equal("user1@test.com", result.Email);
-        Assert.Equal("user1", result.UserName); 
+        Assert.Equal("user1", result.UserName);
     }
-    
+
     [Fact]
     public async Task UpdateUserAsync_WhenUserDoesNotExist_ReturnsNull()
     {
@@ -172,7 +172,7 @@ public class UserServiceTests
             .Options;
 
         await using var context = new AppDbContext(options);
-    
+
         var mockUserManager = MockUserManager<User>();
         var userService = new UserService(context, mockUserManager.Object);
 
@@ -187,7 +187,7 @@ public class UserServiceTests
         // Assert
         Assert.Null(result);
     }
-    
+
     [Fact]
     public async Task CreateUserAsync_WithValidData_CreatesAndReturnsUser()
     {
@@ -197,13 +197,13 @@ public class UserServiceTests
             .Options;
 
         await using var context = new AppDbContext(options);
-    
+
         var mockUserManager = MockUserManager<User>();
-        
+
         mockUserManager
             .Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
             .ReturnsAsync(IdentityResult.Success);
-    
+
         var userService = new UserService(context, mockUserManager.Object);
 
         var createDto = new CreateUserDto
@@ -220,10 +220,10 @@ public class UserServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal("newuser@test.com", result.Email);
-        Assert.Equal("newuser", result.UserName);   
+        Assert.Equal("newuser", result.UserName);
         Assert.Equal("New User", result.DisplayName);
     }
-    
+
     [Fact]
     public async Task DeleteUserAsync_WhenUserExists_DeletesAndReturnsTrue()
     {
@@ -233,31 +233,31 @@ public class UserServiceTests
             .Options;
 
         await using var context = new AppDbContext(options);
-    
-        var user = new User 
-        { 
-            Id = "1", 
-            Email = "user1@test.com", 
+
+        var user = new User
+        {
+            Id = "1",
+            Email = "user1@test.com",
             UserName = "user1",
             DisplayName = "User One",
-            CreatedAt = DateTime.UtcNow 
+            CreatedAt = DateTime.UtcNow
         };
-    
+
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
         var mockUserManager = MockUserManager<User>();
-    
+
         // Mock FindByIdAsync to return the user
         mockUserManager
             .Setup(x => x.FindByIdAsync("1"))
             .ReturnsAsync(user);
-    
+
         // Mock DeleteAsync to return success
         mockUserManager
             .Setup(x => x.DeleteAsync(user))
             .ReturnsAsync(IdentityResult.Success);
-    
+
         var userService = new UserService(context, mockUserManager.Object);
 
         // Act
@@ -266,7 +266,7 @@ public class UserServiceTests
         // Assert
         Assert.True(result);
     }
-    
+
     [Fact]
     public async Task DeleteUserAsync_WhenUserDoesNotExist_ReturnsFalse()
     {
@@ -278,11 +278,11 @@ public class UserServiceTests
         await using var context = new AppDbContext(options);
 
         var mockUserManager = MockUserManager<User>();
-    
+
         mockUserManager
             .Setup(x => x.FindByIdAsync("nonexistent-id"))
-            .ReturnsAsync((User?)null);  // User not found
-    
+            .ReturnsAsync((User?)null); // User not found
+
         var userService = new UserService(context, mockUserManager.Object);
 
         // Act
@@ -291,8 +291,9 @@ public class UserServiceTests
         // Assert
         Assert.False(result);
     }
-    
+
     // Helper method to mock UserManager
+#pragma warning disable CS8625
     private static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
     {
         var store = new Mock<IUserStore<TUser>>();

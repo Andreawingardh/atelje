@@ -21,49 +21,30 @@ public class DesignServiceTests
         // Seed test data
         var designs = new List<Design>
         {
-            new Design 
-            { 
-                Id = 1, 
-                Name = "Design One",
-                DesignData = "Json One",
-                UserId = "001",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            },
-            new Design 
-            { 
-                Id = 2, 
-                Name = "Design Two",
-                DesignData = "Json Two",
-                UserId = "002",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            },
-            new Design 
-            { 
-                Id = 3, 
-                Name = "Design Three",
-                DesignData = "Json Three",
-                UserId = "003",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            }
+            new(id: 1, name: "Design One", designData: "Json One", userId: "001", createdAt: DateTime.UtcNow,
+                updatedAt: DateTime.UtcNow),
+            new(id: 2, name: "Design Two", designData: "Json Two", userId: "002", createdAt: DateTime.UtcNow,
+                updatedAt: DateTime.UtcNow),
+            new(id: 3, name: "Design Three", designData: "Json Three", userId: "003", createdAt: DateTime.UtcNow,
+                updatedAt: DateTime.UtcNow)
         };
-        
-        context.Designs.AddRange(designs);
-        await context.SaveChangesAsync();
-        
-        var designService = new DesignService(context);
 
-        // Act
-        var result = await designService.GetAllDesignsAsync();
+        {
+            context.Designs.AddRange(designs);
+            await context.SaveChangesAsync();
 
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(3, result.Count);
-        Assert.Contains(result, d => d.Name == "Design One" && d.DesignData  == "Json One");
-        Assert.Contains(result, d => d.Name == "Design Two" && d.DesignData  == "Json Two");
-        Assert.Contains(result, d => d.Name == "Design Three" && d.DesignData  == "Json Three");
+            var designService = new DesignService(context);
+
+            // Act
+            var result = await designService.GetAllDesignsAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(3, result.Count);
+            Assert.Contains(result, d => d is { Name: "Design One", DesignData: "Json One" });
+            Assert.Contains(result, d => d is { Name: "Design Two", DesignData: "Json Two" });
+            Assert.Contains(result, d => d is { Name: "Design Three", DesignData: "Json Three" });
+        }
     }
     
     [Fact]
@@ -177,7 +158,7 @@ public class DesignServiceTests
         var updateDto = new UpdateDesignDto
         {
             Name = "Updated Name",
-            DesignData = "Updated  Design Data",
+            DesignData = "Updated  Design Data"
         };
 
         // Act

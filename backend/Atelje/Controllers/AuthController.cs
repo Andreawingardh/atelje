@@ -44,13 +44,13 @@ public class AuthController : ControllerBase
         }
 
         var token = _tokenService.GenerateToken(user.Id, user.Email);
-        
+
         return Ok(new AuthResponseDto
         {
             Token = token,
             UserId = user.Id,
-            Email = user.Email!,
-            UserName = user.UserName!,
+            Email = user.Email,
+            UserName = user.UserName,
             DisplayName = user.DisplayName
         });
     }
@@ -60,14 +60,14 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
 
-        if (user == null) return Unauthorized( new ErrorResponseDto { Errors = ["Invalid email or password"] });
+        if (user == null) return Unauthorized(new ErrorResponseDto { Errors = ["Invalid email or password"] });
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
-        
-        if(!isPasswordValid) return Unauthorized(new ErrorResponseDto { Errors = ["Invalid email or password"] });
+
+        if (!isPasswordValid) return Unauthorized(new ErrorResponseDto { Errors = ["Invalid email or password"] });
 
         var token = _tokenService.GenerateToken(user.Id, user.Email!);
-        
+
         return Ok(new AuthResponseDto
         {
             Token = token,
@@ -76,29 +76,26 @@ public class AuthController : ControllerBase
             UserName = user.UserName!,
             DisplayName = user.DisplayName
         });
-
     }
-    
+
     [HttpGet("me")]
     [Authorize]
     public async Task<ActionResult<AuthResponseDto>> GetCurrentUser()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var email = User.FindFirstValue(ClaimTypes.Email);
-    
-        var user = await _userManager.FindByIdAsync(userId!);
-    
-        if (user == null)
-            return NotFound();
-    
+        // var email = User.FindFirstValue(ClaimTypes.Email);
+
+        if (userId == null) return NotFound();
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return NotFound();
+
         return Ok(new AuthResponseDto
         {
             Token = "",
             UserId = user.Id,
-            Email = user.Email!,
-            UserName = user.UserName!,
+            Email = user.Email ?? string.Empty,
+            UserName = user.UserName ?? string.Empty,
             DisplayName = user.DisplayName
         });
     }
-
 }

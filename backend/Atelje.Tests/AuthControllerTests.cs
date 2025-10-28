@@ -1,17 +1,10 @@
-using System.Runtime.InteropServices.JavaScript;
 using Atelje.Controllers;
-using Atelje.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Moq;
-using Atelje.Data;
 using Atelje.DTOs;
 using Atelje.DTOs.Auth;
-using Atelje.DTOs.User;
 using Atelje.Models;
 using Atelje.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -49,7 +42,7 @@ public class AuthControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var response = Assert.IsType<AuthResponseDto>(okResult.Value);
-        
+
         Assert.Equal("fake-jwt-token", response.Token);
         Assert.Equal("email@email.com", response.Email);
         Assert.Equal("Testuser", response.UserName);
@@ -65,43 +58,41 @@ public class AuthControllerTests
             UserName = "Testuser",
             Password = "P@ssword1"
         };
-        
+
         var mockTokenService = new Mock<ITokenService>();
-        
+
         mockTokenService
             .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>()))
             .Returns("fake-jwt-token");
-        
+
         var mockUserManager = MockUserManager<User>();
 
         mockUserManager.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
-            .ReturnsAsync(IdentityResult.Failed(new IdentityError 
-            { 
-                Description = "Email is already taken" 
+            .ReturnsAsync(IdentityResult.Failed(new IdentityError
+            {
+                Description = "Email is already taken"
             }));
-        
+
         var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
         // Act
         var result = await mockAuthController.Register(user);
-    
+
         // Assert
         var badResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         var errorResponse = Assert.IsType<ErrorResponseDto>(badResult.Value);
         Assert.NotNull(errorResponse.Errors);
         Assert.NotEmpty(errorResponse.Errors);
-
-
     }
 
     [Fact]
     public async Task Login_ValidCredentials_ReturnsOkWithToken()
     {
         // Arrange
-        var testUser = new User 
-        { 
-            Id = "test-user-id", 
+        var testUser = new User
+        {
+            Id = "test-user-id",
             Email = "email@email.com",
-            UserName = "testuser",
+            UserName = "testuser"
         };
 
         var loginDto = new LoginDto
@@ -129,24 +120,25 @@ public class AuthControllerTests
         var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
         // Act
         var result = await mockAuthController.Login(loginDto);
-        
+
         //Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var response = Assert.IsType<AuthResponseDto>(okResult.Value);
-        
+
         Assert.Equal("fake-jwt-token", response.Token);
         Assert.Equal("email@email.com", response.Email);
         Assert.Equal("testuser", response.UserName);
     }
+
     [Fact]
     public async Task Login_InvalidCredentials_ReturnsUnauthorized()
     {
         // Arrange
-        var testUser = new User 
-        { 
-            Id = "test-user-id", 
+        var testUser = new User
+        {
+            Id = "test-user-id",
             Email = "email@email.com",
-            UserName = "testuser",
+            UserName = "testuser"
         };
 
         var loginDto = new LoginDto
@@ -172,17 +164,17 @@ public class AuthControllerTests
             .Returns("fake-jwt-token");
 
         var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
-        
+
         //Act
         var result = await mockAuthController.Login(loginDto);
-        
+
         //Assert
         var badResult = Assert.IsType<UnauthorizedObjectResult>(result.Result);
         var errorResponse = Assert.IsType<ErrorResponseDto>(badResult.Value);
         Assert.NotNull(errorResponse.Errors);
         Assert.NotEmpty(errorResponse.Errors);
-        
     }
+#pragma warning disable CS8625
     private static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
     {
         var store = new Mock<IUserStore<TUser>>();
