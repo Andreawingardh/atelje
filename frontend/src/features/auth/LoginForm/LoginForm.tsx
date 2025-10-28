@@ -13,7 +13,7 @@ export default function LoginForm() {
 
 useEffect(() => {
   if (user) {
-    router.push("/new");
+    router.push("/designer");
   }
 }, [user, router]);
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
