@@ -52,6 +52,7 @@ export function useDesign() {
         try {
             setIsLoading(true)
             const response = await DesignService.getDesignById(designId)
+            setCurrentDesign(response)
             return response;
         } catch (error) {
             if (error instanceof ApiError) {
