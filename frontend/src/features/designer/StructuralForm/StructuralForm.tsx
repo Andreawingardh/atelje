@@ -34,17 +34,25 @@ export default function StructuralForm({
   const wallWidthTimeout = useRef<NodeJS.Timeout | null>(null);
   const ceilingHeightTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  const isTypingWall = useRef(false);
+  const isTypingCeiling = useRef(false);
+
   useEffect(() => {
-    setWallWidthInput(wallWidth.toString());
+    if (!isTypingWall.current) {
+      setWallWidthInput(wallWidth.toString());
+    }
   }, [wallWidth]);
 
   useEffect(() => {
-    setCeilingHeightInput(ceilingHeight.toString());
+    if (!isTypingCeiling.current) {
+      setCeilingHeightInput(ceilingHeight.toString());
+    }
   }, [ceilingHeight]);
 
   const handleWallWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setWallWidthInput(value);
+    isTypingWall.current = true;
 
     // Clear existing and set new timeout
     if (wallWidthTimeout.current) {
@@ -54,25 +62,32 @@ export default function StructuralForm({
     wallWidthTimeout.current = setTimeout(() => {
       const parsed = parseInt(value, 10);
       if (!isNaN(parsed)) {
-        setWallWidth(clamp(parsed, MIN_WALL, MAX_WALL));
+        const clamped = clamp(parsed, MIN_WALL, MAX_WALL);
+        setWallWidth(clamped);
+        setWallWidthInput(clamped.toString());
       }
+      isTypingWall.current = false;
     }, 600);
   };
 
   const handleCeilingHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCeilingHeightInput(value);
+    isTypingCeiling.current = true;
 
     // Clear existing and set new timeout
     if (ceilingHeightTimeout.current) {
       clearTimeout(ceilingHeightTimeout.current);
     }
-    
+
     ceilingHeightTimeout.current = setTimeout(() => {
       const parsed = parseInt(value, 10);
       if (!isNaN(parsed)) {
-        setCeilingHeight(clamp(parsed, MIN_CEILING, MAX_CEILING));
+        const clamped = clamp(parsed, MIN_CEILING, MAX_CEILING);
+        setCeilingHeight(clamped);
+        setCeilingHeightInput(clamped.toString());
       }
+      isTypingCeiling.current = false;
     }, 600);
   };
 
