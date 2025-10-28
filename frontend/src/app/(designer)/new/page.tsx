@@ -3,10 +3,15 @@
 import { useState } from "react";
 import Canvas3D from "@/features/designer/Canvas3D/Canvas3D";
 import StructuralForm from "@/features/designer/StructuralForm/StructuralForm";
+import FurnitureForm, { FurnitureColor } from "@/features/designer/FurnitureForm/FurnitureForm";
 
 export default function DesignerPage() {
   const [wallWidth, setWallWidth] = useState(500);
   const [ceilingHeight, setCeilingHeight] = useState(300);
+  const [wallColor, setWallColor] = useState("#DEDEDE");
+  const [furnitureColor, setFurnitureColor] = useState<FurnitureColor>({
+    sofa: "#8B4513",
+  });
 
   return (
     <>
@@ -17,8 +22,14 @@ export default function DesignerPage() {
         setWallWidth={setWallWidth}
         ceilingHeight={ceilingHeight}
         setCeilingHeight={setCeilingHeight}
+        wallColor={wallColor}
+        setWallColor={setWallColor}
       />
-      <Canvas3D wallWidth={wallWidth} ceilingHeight={ceilingHeight} />
+      <FurnitureForm
+        furnitureColor={furnitureColor}
+        setFurnitureColor={setFurnitureColor}
+      />
+      <Canvas3D wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallColor={wallColor} furnitureColor={furnitureColor} />
       {/* </ProtectedRoute> */}
     </>
   );
