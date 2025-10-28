@@ -6,13 +6,15 @@ import { Floor } from "../scene-components/structural/Floor";
 import { Wall } from "../scene-components/structural/Wall";
 import { Ceiling } from "../scene-components/structural/Ceiling";
 import { Sofa } from "../scene-components/furniture/Sofa";
+import { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 
 interface Canvas3DProps {
   wallWidth: number;
   ceilingHeight: number;
+  furnitureColor: FurnitureColor;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight} : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, furnitureColor} : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
@@ -48,7 +50,7 @@ const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
         <Wall wallColor="#3939390" wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
-        <Sofa sofaColor="#8B4513" sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
+        <Sofa sofaColor={furnitureColor.sofa} sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
 
         <OrbitControls 
           enablePan={false}
