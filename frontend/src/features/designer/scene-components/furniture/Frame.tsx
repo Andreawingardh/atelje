@@ -14,6 +14,7 @@ export const Frame: React.FC<FrameProps> = ({frameColor, frameSize, frameOrienta
     const meshRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [wallMesh, setWallMesh] = useState<THREE.Mesh | null>(null);
+    
 
     //calculating Y-position based on floor size
     const floorDimension = floorSize * gridCellSize; // floor size in Three.js units
@@ -43,10 +44,22 @@ export const Frame: React.FC<FrameProps> = ({frameColor, frameSize, frameOrienta
         }
     })();
 
-   
+
+    const handlePointerDown = (e: any) => {
+        e.stopPropagation();
+        setIsDragging(true);
+    };
+
+    const handlePointerUp = () => {
+        setIsDragging(false);
+    };
     
     return (
-        <group>
+        <group
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        >
             <mesh position={[0, 1.5, frameYPlacement]}
                 castShadow>
                 <boxGeometry 
