@@ -14,9 +14,11 @@ interface Canvas3DProps {
   ceilingHeight: number;
   wallColor: string;
   furnitureColor: FurnitureColor;
+  furnitureWidth: number;
+  furnitureDepth: number;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor} : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth = 210, furnitureDepth = 80} : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
@@ -52,7 +54,7 @@ const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
-        <Sofa sofaColor={furnitureColor.sofa} sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
+        <Sofa sofaColor={furnitureColor.sofa} sofaWidth={furnitureWidth} sofaDepth={furnitureDepth} floorSize={floorSize} gridCellSize={cellSize} />
         <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} gridCellSize={cellSize} />
 
         <OrbitControls 
