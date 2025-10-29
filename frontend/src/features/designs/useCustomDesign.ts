@@ -7,14 +7,16 @@ export interface CustomDesign {
   wallColor: string;
   furnitureColor: FurnitureColor;
   furnitureWidth: number,
-  furnitureDepth: number
+  furnitureDepth: number,
+  furnitureHeight: number
 }
 
 export type DesignData = {
   sofa: {
     color: FurnitureColor;
     width: number,
-    depth: number
+    depth: number,
+    height: number
   };
 
   wall: {
@@ -23,7 +25,7 @@ export type DesignData = {
     height: number;
   };
 
-//   frames: { frameColor: string; frameSize: string }[];
+  //   frames: { frameColor: string; frameSize: string }[];
 };
 
 
@@ -34,8 +36,9 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     wallColor: initialDesign?.wallColor ?? "#DEDEDE",
     furnitureColor: initialDesign?.furnitureColor ?? { sofa: "#8B4513" },
     furnitureDepth: initialDesign?.furnitureDepth ?? 80,
-    furnitureWidth: initialDesign?.furnitureWidth ?? 210
-    
+    furnitureWidth: initialDesign?.furnitureWidth ?? 210,
+    furnitureHeight: initialDesign?.furnitureHeight ?? 85
+
   });
 
   // Helper functions
@@ -55,29 +58,34 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCustomDesign((prev) => ({ ...prev, furnitureColor: value }));
   };
 
-    const setFurnitureWidth = (value: number) => {
+  const setFurnitureWidth = (value: number) => {
     setCustomDesign((prev) => ({ ...prev, furnitureWidth: value }));
   };
-    const setFurnitureDepth = (value: number) => {
+  const setFurnitureDepth = (value: number) => {
     setCustomDesign((prev) => ({ ...prev, furnitureDepth: value }));
   };
 
-  // Inside useCustomDesign:
-const getSceneData = (): string => {
-  const data: DesignData = {
-    wall: {
-    color: customDesign.wallColor,
-    width: customDesign.wallWidth,
-    height: customDesign.ceilingHeight
-    },
-    sofa: {
-      color: customDesign.furnitureColor,
-      width: customDesign.furnitureWidth,
-      depth: customDesign.furnitureDepth
-    }
+  const setFurnitureHeight = (value: number) => {
+    setCustomDesign((prev) => ({ ...prev, furnitureHeight: value }));
   };
-  return JSON.stringify(data);
-};
+
+  // Inside useCustomDesign:
+  const getSceneData = (): string => {
+    const data: DesignData = {
+      wall: {
+        color: customDesign.wallColor,
+        width: customDesign.wallWidth,
+        height: customDesign.ceilingHeight
+      },
+      sofa: {
+        color: customDesign.furnitureColor,
+        width: customDesign.furnitureWidth,
+        depth: customDesign.furnitureDepth,
+        height: customDesign.furnitureHeight
+      }
+    };
+    return JSON.stringify(data);
+  };
 
   const loadSceneData = useCallback((jsonString: string): void => {
     const currentDesign: DesignData = JSON.parse(jsonString)
@@ -87,7 +95,8 @@ const getSceneData = (): string => {
     setFurnitureColor(currentDesign.sofa.color)
     setFurnitureDepth(currentDesign.sofa.depth)
     setFurnitureWidth(currentDesign.sofa.width)
-}, [])
+    setFurnitureHeight(currentDesign.sofa.height)
+  }, [])
 
 
   return {
@@ -99,6 +108,7 @@ const getSceneData = (): string => {
     setFurnitureColor,
     setFurnitureDepth,
     setFurnitureWidth,
+    setFurnitureHeight,
     getSceneData,
     loadSceneData
   };

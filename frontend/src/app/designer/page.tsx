@@ -23,6 +23,7 @@ export default function NewDesignPage() {
     getSceneData,
     setFurnitureDepth,
     setFurnitureWidth,
+    setFurnitureHeight
   } = useCustomDesign();
 
   async function handleSave() {
@@ -56,6 +57,8 @@ export default function NewDesignPage() {
         furnitureWidth={customDesign.furnitureWidth}
         setFurnitureDepth={setFurnitureDepth}
         setFurnitureWidth={setFurnitureWidth}
+        furnitureHeight={customDesign.furnitureHeight}
+        setFurnitureHeight={setFurnitureHeight}
       />
       <Canvas3D
         wallWidth={customDesign.wallWidth}
@@ -64,6 +67,7 @@ export default function NewDesignPage() {
         furnitureColor={customDesign.furnitureColor}
         furnitureDepth={customDesign.furnitureDepth}
         furnitureWidth={customDesign.furnitureWidth}
+        furnitureHeight={customDesign.furnitureHeight}
       />
       <div>
         <input

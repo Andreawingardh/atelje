@@ -5,24 +5,25 @@ type SofaProps = {
     sofaColor: string;
     sofaWidth: number;
     sofaDepth: number;
+    sofaHeight: number;
     floorSize: number;
     gridCellSize: number;
 }
 
-export const Sofa: React.FC<SofaProps> = ({sofaColor, sofaWidth, sofaDepth, floorSize, gridCellSize}) => {
+export const Sofa: React.FC<SofaProps> = ({sofaColor, sofaWidth, sofaDepth, sofaHeight, floorSize, gridCellSize}) => {
     //calculating Y-position based on floor size
     const floorDimension = floorSize * gridCellSize; // floor size in Three.js units
     const halfFloor = floorDimension / 2;
     const sofaYPlacement = -(halfFloor - (sofaDepth * gridCellSize) / 2);
 
-    const convertedHeight = 80 * gridCellSize; // 85 cm total height
+    const convertedHeight = sofaHeight * gridCellSize; // 85 cm total height (80)
     const convertedDepth = sofaDepth * gridCellSize;
     const convertedWidth = sofaWidth * gridCellSize;
     
     const convertedArmrestWidth = 20 * gridCellSize; // 20 cm
     const convertedSeatWidth = (sofaWidth - 40) * gridCellSize; // subtract armrests
     const convertedSeatHeight = 45 * gridCellSize; // 45 cm seat height
-    const convertedBackHeight = 40 * gridCellSize; // 40 cm backrest height
+    const convertedBackHeight = (sofaHeight - 45) * gridCellSize; // 40 cm backrest height
     
     return (
         <group>
