@@ -18,7 +18,7 @@ interface Canvas3DProps {
   furnitureDepth: number;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth = 210, furnitureDepth = 80} : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth} : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
