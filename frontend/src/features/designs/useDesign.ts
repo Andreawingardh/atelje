@@ -16,14 +16,15 @@ export function useDesign() {
         try {
             setSucceeded(false)
             setIsLoading(true);
-            const result = await DesignService.createDesign({name, userId: user!.userId, designData: sceneData});
+            const result = await DesignService.createDesign({ name, userId: user!.userId, designData: sceneData });
             return result
         } catch (error) {
-            if (error instanceof ApiError) {
-                setError(error.body?.errors?.[0] || "An error occurred")
-            } else {
-                setError("An unexpected error occurred");
-            }
+            setError(
+                error instanceof ApiError
+                    ? (error.body?.errors?.[0] || "An error occurred")
+                    : "An unexpected error occurred"
+            );
+            return undefined;
         } finally {
             setIsLoading(false);
         }
@@ -33,7 +34,7 @@ export function useDesign() {
 
         try {
             setIsLoading(true)
-            await DesignService.updateDesign(designId, {name, designData})
+            await DesignService.updateDesign(designId, { name, designData })
         } catch (error) {
             if (error instanceof ApiError) {
                 setError(error.body?.errors?.[0] || "An error occurred")
