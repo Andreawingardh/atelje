@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import * as THREE from 'three';
 
 type FrameProps = {
@@ -11,6 +11,7 @@ type FrameProps = {
 
 export const Frame: React.FC<FrameProps> = ({frameColor, frameSize, frameOrientation, floorSize, gridCellSize}) => {
     const frameThickness = 3 * gridCellSize; // 3 cm thickness
+    const meshRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [wallMesh, setWallMesh] = useState<THREE.Mesh | null>(null);
 
