@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as THREE from 'three';
 
 type FrameProps = {
     frameColor: string;
@@ -10,6 +11,8 @@ type FrameProps = {
 
 export const Frame: React.FC<FrameProps> = ({frameColor, frameSize, frameOrientation, floorSize, gridCellSize}) => {
     const frameThickness = 3 * gridCellSize; // 3 cm thickness
+    const [isDragging, setIsDragging] = useState(false);
+    const [wallMesh, setWallMesh] = useState<THREE.Mesh | null>(null);
 
     //calculating Y-position based on floor size
     const floorDimension = floorSize * gridCellSize; // floor size in Three.js units
