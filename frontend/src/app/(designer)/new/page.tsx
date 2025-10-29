@@ -12,6 +12,8 @@ export default function DesignerPage() {
     setCeilingHeight,
     setWallColor,
     setFurnitureColor,
+    setFurnitureDepth,
+    setFurnitureWidth
   } = useCustomDesign();
 
   return (
@@ -29,12 +31,18 @@ export default function DesignerPage() {
       <FurnitureForm
         furnitureColor={customDesign.furnitureColor}
         setFurnitureColor={setFurnitureColor}
+        furnitureDepth={customDesign.furnitureDepth}
+        furnitureWidth={customDesign.furnitureWidth}
+        setFurnitureDepth={setFurnitureDepth}
+        setFurnitureWidth={setFurnitureWidth}
       />
       <Canvas3D
         wallWidth={customDesign.wallWidth}
         ceilingHeight={customDesign.ceilingHeight}
         wallColor={customDesign.wallColor}
         furnitureColor={customDesign.furnitureColor}
+        furnitureDepth={customDesign.furnitureDepth}
+        furnitureWidth={customDesign.furnitureWidth}
       />
       {/* </ProtectedRoute> */}
     </>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 

@@ -27,6 +27,8 @@ export default function DesignerPage() {
     setFurnitureColor,
     loadSceneData,
     getSceneData,
+    setFurnitureDepth,
+    setFurnitureWidth,
   } = useCustomDesign();
 
   const { user } = useAuth();
@@ -79,12 +81,18 @@ export default function DesignerPage() {
       <FurnitureForm
         furnitureColor={customDesign.furnitureColor}
         setFurnitureColor={setFurnitureColor}
+        furnitureDepth={customDesign.furnitureDepth}
+        furnitureWidth={customDesign.furnitureWidth}
+        setFurnitureDepth={setFurnitureDepth}
+        setFurnitureWidth={setFurnitureWidth}
       />
       <Canvas3D
         wallWidth={customDesign.wallWidth}
         ceilingHeight={customDesign.ceilingHeight}
         wallColor={customDesign.wallColor}
         furnitureColor={customDesign.furnitureColor}
+        furnitureDepth={customDesign.furnitureDepth}
+        furnitureWidth={customDesign.furnitureWidth}
       />
       <div>
         <input
