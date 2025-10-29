@@ -1,5 +1,5 @@
 import styles from "./StructuralForm.module.css";
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 interface StructuralFormProps {
   wallWidth: number;
@@ -8,6 +8,58 @@ interface StructuralFormProps {
   setCeilingHeight: (value: number) => void;
   wallColor: string;
   setWallColor: (value: string) => void;
+}
+
+// Custom hook that waits for the user to stop typing before updating input
+function useDebouncedNumericInput(
+  value: number,
+  setValue: (value: number) => void,
+  min: number,
+  max: number,
+  delay: number = 600
+) {
+  const [inputValue, setInputValue] = useState(value.toString());
+  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const isTyping = useRef(false);
+
+  // Clamp helper to keep values within limits
+  const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
+
+  // Sync from props when not typing
+  useEffect(() => {
+    if (!isTyping.current) {
+      setInputValue(value.toString());
+    }
+  }, [value]);
+  
+  useEffect(() => {
+    return () => {
+      if (timeout.current) clearTimeout(timeout.current);
+    };
+  }, []);
+
+  // Handle change with debouncing
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    isTyping.current = true;
+
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+
+    timeout.current = setTimeout(() => {
+      const parsed = parseInt(newValue, 10);
+      if (!isNaN(parsed)) {
+        const clamped = clamp(parsed, min, max);
+        setValue(clamped);
+        setInputValue(clamped.toString());
+      }
+      isTyping.current = false;
+    }, delay);
+  };
+
+  return { inputValue, handleChange };
 }
 
 export default function StructuralForm({
@@ -24,20 +76,19 @@ export default function StructuralForm({
   const MIN_CEILING = 200;
   const MAX_CEILING = 500;
 
-  // Keep values within limits
-  const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
+  const wallWidthControl = useDebouncedNumericInput(
+    wallWidth,
+    setWallWidth,
+    MIN_WALL,
+    MAX_WALL
+  );
 
-  const handleWallWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = parseInt(e.target.value, 10);
-    if (isNaN(raw)) return;
-    setWallWidth(clamp(raw, MIN_WALL, MAX_WALL));
-  };
-
-  const handleCeilingHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = parseInt(e.target.value, 10);
-    if (isNaN(raw)) return;
-    setCeilingHeight(clamp(raw, MIN_CEILING, MAX_CEILING));
-  };
+  const ceilingHeightControl = useDebouncedNumericInput(
+    ceilingHeight,
+    setCeilingHeight,
+    MIN_CEILING,
+    MAX_CEILING
+  );
 
   const handleWallColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWallColor(e.target.value);
@@ -52,8 +103,8 @@ export default function StructuralForm({
           type="number"
           min={MIN_WALL}
           max={MAX_WALL}
-          value={wallWidth}
-          onChange={handleWallWidthChange}
+          value={wallWidthControl.inputValue}
+          onChange={wallWidthControl.handleChange}
           className={styles.input}
         />
       </div>
@@ -65,8 +116,8 @@ export default function StructuralForm({
           type="number"
           min={MIN_CEILING}
           max={MAX_CEILING}
-          value={ceilingHeight}
-          onChange={handleCeilingHeightChange}
+          value={ceilingHeightControl.inputValue}
+          onChange={ceilingHeightControl.handleChange}
           className={styles.input}
         />
       </div>
