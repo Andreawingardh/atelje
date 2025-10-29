@@ -105,35 +105,35 @@ export default function FurnitureForm({
       <div className={styles.colorGroup}>
         <label>Sofa Color:</label>
         <div className={styles.colorPickerContainer}>
-          <div className={styles.formGroup}>
-            <label htmlFor="furnitureWidth">Sofa Width (cm):</label>
-            <input
-              id="furnitureWidth"
-              type="number"
-              min={MIN_FURNITURE_WIDTH}
-              max={MAX_FURNITURE_WIDTH}
-              value={furnitureWidthContrl.inputValue}
-              onChange={furnitureWidthContrl.handleChange}
-              className={styles.input}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="furnitureDepth">Sofa Depth (cm):</label>
-            <input
-              id="furnitureDepth"
-              type="number"
-              min={MIN_FURNITURE_DEPTH}
-              max={MAX_FURNITURE_DEPTH}
-              value={furnitureDepthControl.inputValue}
-              onChange={furnitureDepthControl.handleChange}
-              className={styles.input}
-            />
-          </div>
           <input
             type="color"
             value={furnitureColor.sofa}
             onChange={handleSofaColorChange}
             className={styles.colorInput}
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="furnitureWidth">Sofa Width (cm):</label>
+          <input
+            id="furnitureWidth"
+            type="number"
+            min={MIN_FURNITURE_WIDTH}
+            max={MAX_FURNITURE_WIDTH}
+            value={furnitureWidthContrl.inputValue}
+            onChange={furnitureWidthContrl.handleChange}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="furnitureDepth">Sofa Depth (cm):</label>
+          <input
+            id="furnitureDepth"
+            type="number"
+            min={MIN_FURNITURE_DEPTH}
+            max={MAX_FURNITURE_DEPTH}
+            value={furnitureDepthControl.inputValue}
+            onChange={furnitureDepthControl.handleChange}
+            className={styles.input}
           />
         </div>
       </div>
