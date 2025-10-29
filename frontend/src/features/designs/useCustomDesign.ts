@@ -85,6 +85,8 @@ const getSceneData = (): string => {
     setCeilingHeight(currentDesign.wall.height)
     setWallColor(currentDesign.wall.color)
     setFurnitureColor(currentDesign.sofa.color)
+    setFurnitureDepth(currentDesign.sofa.depth)
+    setFurnitureWidth(currentDesign.sofa.width)
 }, [])
 
 
