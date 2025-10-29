@@ -10,6 +10,58 @@ interface StructuralFormProps {
   setWallColor: (value: string) => void;
 }
 
+// Custom hook that waits for the user to stop typing before updating input
+function useDebouncedNumericInput(
+  value: number,
+  setValue: (value: number) => void,
+  min: number,
+  max: number,
+  delay: number = 600
+) {
+  const [inputValue, setInputValue] = useState(value.toString());
+  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const isTyping = useRef(false);
+
+  // Clamp helper to keep values within limits
+  const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
+
+  // Sync from props when not typing
+  useEffect(() => {
+    if (!isTyping.current) {
+      setInputValue(value.toString());
+    }
+  }, [value]);
+  
+  useEffect(() => {
+    return () => {
+      if (timeout.current) clearTimeout(timeout.current);
+    };
+  }, []);
+
+  // Handle change with debouncing
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    isTyping.current = true;
+
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+
+    timeout.current = setTimeout(() => {
+      const parsed = parseInt(newValue, 10);
+      if (!isNaN(parsed)) {
+        const clamped = clamp(parsed, min, max);
+        setValue(clamped);
+        setInputValue(clamped.toString());
+      }
+      isTyping.current = false;
+    }, delay);
+  };
+
+  return { inputValue, handleChange };
+}
+
 export default function StructuralForm({
   wallWidth,
   setWallWidth,
@@ -24,83 +76,23 @@ export default function StructuralForm({
   const MIN_CEILING = 200;
   const MAX_CEILING = 500;
 
-  // Keep values within limits
-  const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
+  const wallWidthControl = useDebouncedNumericInput(
+    wallWidth,
+    setWallWidth,
+    MIN_WALL,
+    MAX_WALL
+  );
 
-  // Local state to keep track of input values
-  const [wallWidthInput, setWallWidthInput] = useState(wallWidth.toString());
-  const [ceilingHeightInput, setCeilingHeightInput] = useState(ceilingHeight.toString());
-
-  const wallWidthTimeout = useRef<NodeJS.Timeout | null>(null);
-  const ceilingHeightTimeout = useRef<NodeJS.Timeout | null>(null);
-
-  const isTypingWall = useRef(false);
-  const isTypingCeiling = useRef(false);
-
-  useEffect(() => {
-    if (!isTypingWall.current) {
-      setWallWidthInput(wallWidth.toString());
-    }
-  }, [wallWidth]);
-
-  useEffect(() => {
-    if (!isTypingCeiling.current) {
-      setCeilingHeightInput(ceilingHeight.toString());
-    }
-  }, [ceilingHeight]);
-
-  const handleWallWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setWallWidthInput(value);
-    isTypingWall.current = true;
-
-    // Clear existing and set new timeout
-    if (wallWidthTimeout.current) {
-      clearTimeout(wallWidthTimeout.current);
-    }
-    
-    wallWidthTimeout.current = setTimeout(() => {
-      const parsed = parseInt(value, 10);
-      if (!isNaN(parsed)) {
-        const clamped = clamp(parsed, MIN_WALL, MAX_WALL);
-        setWallWidth(clamped);
-        setWallWidthInput(clamped.toString());
-      }
-      isTypingWall.current = false;
-    }, 600);
-  };
-
-  const handleCeilingHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCeilingHeightInput(value);
-    isTypingCeiling.current = true;
-
-    // Clear existing and set new timeout
-    if (ceilingHeightTimeout.current) {
-      clearTimeout(ceilingHeightTimeout.current);
-    }
-
-    ceilingHeightTimeout.current = setTimeout(() => {
-      const parsed = parseInt(value, 10);
-      if (!isNaN(parsed)) {
-        const clamped = clamp(parsed, MIN_CEILING, MAX_CEILING);
-        setCeilingHeight(clamped);
-        setCeilingHeightInput(clamped.toString());
-      }
-      isTypingCeiling.current = false;
-    }, 600);
-  };
+  const ceilingHeightControl = useDebouncedNumericInput(
+    ceilingHeight,
+    setCeilingHeight,
+    MIN_CEILING,
+    MAX_CEILING
+  );
 
   const handleWallColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWallColor(e.target.value);
   };
-
-  useEffect(() => {
-    return () => {
-      if (wallWidthTimeout.current) clearTimeout(wallWidthTimeout.current);
-      if (ceilingHeightTimeout.current) clearTimeout(ceilingHeightTimeout.current);
-    };
-  }, []);
 
   return (
     <form className={styles.structuralForm}>
@@ -111,8 +103,8 @@ export default function StructuralForm({
           type="number"
           min={MIN_WALL}
           max={MAX_WALL}
-          value={wallWidthInput}
-          onChange={handleWallWidthChange}
+          value={wallWidthControl.inputValue}
+          onChange={wallWidthControl.handleChange}
           className={styles.input}
         />
       </div>
@@ -124,8 +116,8 @@ export default function StructuralForm({
           type="number"
           min={MIN_CEILING}
           max={MAX_CEILING}
-          value={ceilingHeightInput}
-          onChange={handleCeilingHeightChange}
+          value={ceilingHeightControl.inputValue}
+          onChange={ceilingHeightControl.handleChange}
           className={styles.input}
         />
       </div>
