@@ -34,13 +34,15 @@ export function useDesign() {
 
         try {
             setIsLoading(true)
-            await DesignService.updateDesign(designId, { name, designData })
+            const response = await DesignService.updateDesign(designId, { name, designData })
+            return response;
         } catch (error) {
-            if (error instanceof ApiError) {
-                setError(error.body?.errors?.[0] || "An error occurred")
-            } else {
-                setError("An unexpected error occurred");
-            }
+            setError(
+                error instanceof ApiError
+                    ? (error.body?.errors?.[0] || "An error occurred")
+                    : "An unexpected error occurred"
+            );
+            return undefined;
         } finally {
             setIsLoading(false)
         }
@@ -56,11 +58,12 @@ export function useDesign() {
             setCurrentDesign(response)
             return response;
         } catch (error) {
-            if (error instanceof ApiError) {
-                setError(error.body?.errors?.[0] || "An error occurred")
-            } else {
-                setError("An unexpected error occurred");
-            }
+            setError(
+                error instanceof ApiError
+                    ? (error.body?.errors?.[0] || "An error occurred")
+                    : "An unexpected error occurred"
+            );
+            return undefined;
         } finally {
             setIsLoading(false)
         }
