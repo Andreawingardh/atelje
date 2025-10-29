@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 type WallProps = {
     wallColor: string;
@@ -10,6 +12,8 @@ type WallProps = {
 }
 
 export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, wallPlacement, gridCellSize, floorSize}) => {
+    const meshRef = React.useRef<THREE.Mesh>(null!);
+    
     const width = wallWidth * gridCellSize; // convert cm to Three.js units
     const height = ceilingHeight * gridCellSize; // convert cm to Three.js units
     const floorDimension = floorSize * gridCellSize; // floor size in Three.js units
@@ -17,6 +21,7 @@ export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, w
     // Calculate positions dynamically based on floor size
     const halfFloor = floorDimension / 2;
     const halfHeight = height / 2;
+    const halfWidth = width / 2;
 
     const rotation: [number, number, number] = (() => {
         switch (wallPlacement) {
@@ -40,9 +45,46 @@ export const Wall: React.FC<WallProps> =({wallColor, wallWidth, ceilingHeight, w
         }
     })();
 
+    // Function to convert world position to wall-relative position in cm
+    const worldToWallPosition = (worldPos: THREE.Vector3 ): { x: number; y: number } | null => {
+        if (!meshRef.current) return null;
+
+        // Get the wall's world matrix
+        const wallMatrix = meshRef.current.matrixWorld;
+        const wallMatrixInverse = wallMatrix.clone().invert();
+
+        // Transform world position to wall's local space
+        const localPos = worldPos.clone().applyMatrix4(wallMatrixInverse);
+
+        // Convert from Three.js units back to cm
+        // The wall's local coordinate system has origin at center, so we adjust to bottom-left corner
+        const xCm = (localPos.x + halfWidth) / gridCellSize;
+        const yCm = (localPos.y + height / 2) / gridCellSize;
+
+        return { x: xCm, y: yCm };
+    };
+
+
+    // Function to convert wall-relative position (in cm) to world position
+    const wallToWorldPosition = (xCm: number, yCm: number): THREE.Vector3 | null => {
+    if (!meshRef.current) return null;
+
+    // Convert cm to Three.js units and adjust for wall's local coordinate system
+    // (0,0) in cm is bottom-left corner of wall
+    const localX = (xCm * gridCellSize) - halfWidth;
+    const localY = (yCm * gridCellSize) - height / 2;
+    const localPos = new Vector3(localX, localY, 0.001); // Small offset to prevent z-fighting
+
+    // Transform from wall's local space to world space
+    const worldPos = localPos.clone().applyMatrix4(meshRef.current.matrixWorld);
+    return worldPos;
+    };
+    
+
 
     return (
       <mesh
+      ref={meshRef}
       position={position}
       rotation={rotation}
       receiveShadow
