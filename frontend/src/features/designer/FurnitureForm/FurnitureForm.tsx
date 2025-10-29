@@ -13,6 +13,8 @@ interface FurnitureFormProps {
   setFurnitureWidth: (value: number) => void;
   furnitureDepth: number;
   setFurnitureDepth: (value: number) => void;
+  furnitureHeight: number;
+  setFurnitureHeight: (value: number) => void;
 }
 
 function useDebouncedNumericInput(
@@ -74,11 +76,15 @@ export default function FurnitureForm({
   setFurnitureWidth,
   furnitureDepth,
   setFurnitureDepth,
+  furnitureHeight,
+  setFurnitureHeight
 }: FurnitureFormProps) {
   const MIN_FURNITURE_DEPTH = 80;
   const MAX_FURNITURE_DEPTH = 200;
   const MIN_FURNITURE_WIDTH = 100;
   const MAX_FURNITURE_WIDTH = 500;
+  const MIN_FURNITURE_HEIGHT = 40;
+  const MAX_FURNITURE_HEIGHT = 150;
 
   const furnitureDepthControl = useDebouncedNumericInput(
     furnitureDepth,
@@ -92,6 +98,12 @@ export default function FurnitureForm({
     setFurnitureWidth,
     MIN_FURNITURE_WIDTH,
     MAX_FURNITURE_WIDTH
+  );
+  const furnitureHeightControl = useDebouncedNumericInput(
+    furnitureHeight,
+    setFurnitureHeight,
+    MIN_FURNITURE_HEIGHT,
+    MAX_FURNITURE_HEIGHT
   );
   const handleSofaColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFurnitureColor({
@@ -133,6 +145,18 @@ export default function FurnitureForm({
             max={MAX_FURNITURE_DEPTH}
             value={furnitureDepthControl.inputValue}
             onChange={furnitureDepthControl.handleChange}
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="furnitureHeight">Sofa Height (cm):</label>
+          <input
+            id="furnitureHeight"
+            type="number"
+            min={MIN_FURNITURE_HEIGHT}
+            max={MAX_FURNITURE_HEIGHT}
+            value={furnitureHeightControl.inputValue}
+            onChange={furnitureHeightControl.handleChange}
             className={styles.input}
           />
         </div>
