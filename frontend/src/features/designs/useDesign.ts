@@ -34,7 +34,8 @@ export function useDesign() {
 
         try {
             setIsLoading(true)
-            await DesignService.updateDesign(designId, { name, designData })
+            const response = await DesignService.updateDesign(designId, { name, designData })
+            return response;
         } catch (error) {
             setError(
                 error instanceof ApiError
@@ -62,6 +63,7 @@ export function useDesign() {
                     ? (error.body?.errors?.[0] || "An error occurred")
                     : "An unexpected error occurred"
             );
+            return undefined;
         } finally {
             setIsLoading(false)
         }
