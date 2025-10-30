@@ -1,5 +1,6 @@
 import styles from "./Canvas3D.module.css";
-import React from 'react';
+import React, { useRef } from 'react';
+import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Floor } from "../scene-components/structural/Floor";
@@ -27,6 +28,8 @@ const pointLightHeight = YPosition * 1.0;
 const directionalLightHeight = YPosition * 3.33;
 const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
 
+const wallRef = useRef<THREE.Mesh>(null);
+
   return (
     <section className={styles.designerWindow}>
       <Canvas
@@ -47,13 +50,13 @@ const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
-        <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='front' gridCellSize={cellSize} floorSize={floorSize}/>
+        <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='front' ref={wallRef} gridCellSize={cellSize} floorSize={floorSize}/>
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={210} sofaDepth={80} floorSize={floorSize} gridCellSize={cellSize} />
-        <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} gridCellSize={cellSize} />
+        <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} wallMesh={wallRef.current} gridCellSize={cellSize} />
 
         <OrbitControls 
           enablePan={false}
