@@ -15,7 +15,7 @@ export const Wall = forwardRef<THREE.Mesh, WallProps>(
   ({ wallColor, wallWidth, ceilingHeight, wallPlacement, gridCellSize, floorSize }, ref) => {
     const localRef = useRef<THREE.Mesh>(null!);
 
-    // 👇 Expose the mesh to parent components
+    // Expose the mesh to parent components to access its world matrix
     React.useImperativeHandle(ref, () => localRef.current);
 
     const width = wallWidth * gridCellSize;
