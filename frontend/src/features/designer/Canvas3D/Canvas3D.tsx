@@ -9,6 +9,7 @@ import { Ceiling } from "../scene-components/structural/Ceiling";
 import { Sofa } from "../scene-components/furniture/Sofa";
 import { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import { Frame } from "../scene-components/furniture/Frame";
+import { FrameData } from "../FrameForm/FrameForm";
 
 interface Canvas3DProps {
   wallWidth: number;
@@ -18,9 +19,10 @@ interface Canvas3DProps {
   furnitureWidth: number;
   furnitureDepth: number;
   furnitureHeight: number;
+  frames: FrameData[];
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight} : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames } : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
@@ -60,6 +62,20 @@ const wallRef = useRef<THREE.Mesh>(null);
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={furnitureWidth} sofaDepth={furnitureDepth} sofaHeight={furnitureHeight} floorSize={floorSize} gridCellSize={cellSize} />
         <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} wallMesh={wallRef.current} gridCellSize={cellSize} />
+
+        {/* Render all frames */}
+        {frames.map((frame) => (
+          <group key={frame.id} position={frame.position}>
+            <Frame 
+              frameColor={frame.frameColor}
+              frameSize={frame.frameSize}
+              frameOrientation={frame.frameOrientation}
+              floorSize={floorSize}
+              gridCellSize={cellSize}
+              wallMesh={wallRef.current}
+            />
+          </group>
+        ))}
 
         <OrbitControls 
           enablePan={false}
