@@ -20,11 +20,14 @@ export default function NewDesignPage() {
     setCeilingHeight,
     setWallColor,
     setFurnitureColor,
-    getSceneData
+    getSceneData,
+    setFurnitureDepth,
+    setFurnitureWidth,
+    setFurnitureHeight
   } = useCustomDesign();
 
   async function handleSave() {
-    const sceneData = getSceneData()
+    const sceneData = getSceneData();
     try {
       const newDesign = await createDesign(designName, sceneData);
       if (newDesign) {
@@ -50,12 +53,21 @@ export default function NewDesignPage() {
       <FurnitureForm
         furnitureColor={customDesign.furnitureColor}
         setFurnitureColor={setFurnitureColor}
+        furnitureDepth={customDesign.furnitureDepth}
+        furnitureWidth={customDesign.furnitureWidth}
+        setFurnitureDepth={setFurnitureDepth}
+        setFurnitureWidth={setFurnitureWidth}
+        furnitureHeight={customDesign.furnitureHeight}
+        setFurnitureHeight={setFurnitureHeight}
       />
       <Canvas3D
         wallWidth={customDesign.wallWidth}
         ceilingHeight={customDesign.ceilingHeight}
         wallColor={customDesign.wallColor}
         furnitureColor={customDesign.furnitureColor}
+        furnitureDepth={customDesign.furnitureDepth}
+        furnitureWidth={customDesign.furnitureWidth}
+        furnitureHeight={customDesign.furnitureHeight}
       />
       <div>
         <input
