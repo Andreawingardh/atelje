@@ -9,7 +9,7 @@
     "lint": "eslint",
     "generate:api": "openapi --input http://localhost:5225/openapi/v1.json --output ./src/api/generated --client fetch",
     "test": "jest",
-    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit"
+    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
