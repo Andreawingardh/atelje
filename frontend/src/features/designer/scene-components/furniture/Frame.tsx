@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import * as THREE from 'three';
-import { useThree } from '@react-three/fiber';
+import { useThree, ThreeEvent } from '@react-three/fiber';
 
 type FrameProps = {
     frameColor: string;
@@ -54,7 +54,7 @@ export const Frame: React.FC<FrameProps> = ({
         }
     })();
 
-    const handlePointerDown = (e: any) => {
+    const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
         if (!groupRef.current || !wallMesh) return;
     
@@ -72,7 +72,7 @@ export const Frame: React.FC<FrameProps> = ({
         (e.target as HTMLElement).setPointerCapture(e.pointerId);
     };
     
-    const handlePointerMove = (e: PointerEvent) => {
+    const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
         if (!isDragging || !groupRef.current || !wallMesh) return;
         e.stopPropagation();
     
@@ -104,7 +104,7 @@ export const Frame: React.FC<FrameProps> = ({
     };
     
 
-    const handlePointerUp = (e: any) => {
+    const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
         if (isDragging) {
             setIsDragging(false);
             (e.target as HTMLElement).releasePointerCapture(e.pointerId);
