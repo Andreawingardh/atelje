@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import * as THREE from 'three';
 import { useThree, ThreeEvent } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
 
 type FrameProps = {
     frameColor: string;
@@ -115,6 +116,12 @@ export const Frame: React.FC<FrameProps> = ({
     
         // Apply the new position
         groupRef.current.position.copy(newPosition);
+
+        // Update position display (convert to cm)
+        setPosition({
+        x: Math.round(newPosition.x / gridCellSize),
+        y: Math.round(newPosition.y / gridCellSize)
+        });
     };
     
 
@@ -145,6 +152,20 @@ export const Frame: React.FC<FrameProps> = ({
                     emissiveIntensity={isDragging ? 0.2 : 0}
                 />
             </mesh>
+            {/* Position display when dragging */}
+            {isDragging && (
+                <Html
+                    position={[0, size[1] / 2 + 0.15, 0]}
+                    center
+                    style={{
+                        whiteSpace: 'nowrap',
+                        pointerEvents: 'none',
+                        userSelect: 'none'
+                    }}
+                >
+                    X: {position.x} cm <br></br> Y: {position.y} cm
+                </Html>
+            )}
         </group>
     );
 };
