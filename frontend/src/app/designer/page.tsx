@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import StructuralForm from "@/features/designer/StructuralForm/StructuralForm";
 import FurnitureForm from "@/features/designer/FurnitureForm/FurnitureForm";
+import FrameForm from "@/features/designer/FrameForm/FrameForm";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
@@ -23,7 +24,8 @@ export default function NewDesignPage() {
     getSceneData,
     setFurnitureDepth,
     setFurnitureWidth,
-    setFurnitureHeight
+    setFurnitureHeight,
+    addFrame,
   } = useCustomDesign();
 
   async function handleSave() {
@@ -60,6 +62,10 @@ export default function NewDesignPage() {
         furnitureHeight={customDesign.furnitureHeight}
         setFurnitureHeight={setFurnitureHeight}
       />
+      <FrameForm
+        frames={customDesign.frames}
+        onAddFrame={addFrame}
+      />
       <Canvas3D
         wallWidth={customDesign.wallWidth}
         ceilingHeight={customDesign.ceilingHeight}
@@ -68,6 +74,7 @@ export default function NewDesignPage() {
         furnitureDepth={customDesign.furnitureDepth}
         furnitureWidth={customDesign.furnitureWidth}
         furnitureHeight={customDesign.furnitureHeight}
+        frames={customDesign.frames}
       />
       <div>
         <input

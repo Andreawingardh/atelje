@@ -97,6 +97,7 @@ export default function DesignerPage() {
         furnitureDepth={customDesign.furnitureDepth}
         furnitureWidth={customDesign.furnitureWidth}
         furnitureHeight={customDesign.furnitureHeight}
+        frames={customDesign.frames}
       />
       <div>
         <input
