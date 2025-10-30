@@ -60,8 +60,7 @@ describe("Logout button", () => {
     });
     //Assert
     await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith("/login");
+      expect(mockPush).toHaveBeenCalledWith("/login");
     });
   });
-  test("redirects user to login page", async () => {});
 });
