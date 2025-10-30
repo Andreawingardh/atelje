@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import * as THREE from 'three';
 import { useThree, ThreeEvent } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
 
 type FrameProps = {
     frameColor: string;
@@ -22,6 +23,7 @@ export const Frame: React.FC<FrameProps> = ({
     const frameThickness = 3 * gridCellSize; // 3 cm thickness
     const groupRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 150 }); // Position in cm
     const dragOffset = useRef(new THREE.Vector3());
     
     const { camera, gl, raycaster } = useThree();
@@ -54,19 +56,33 @@ export const Frame: React.FC<FrameProps> = ({
         }
     })();
 
+    // Helper function to snap to our 1x1cm grid
+    const snapToGrid = (value: number, gridSize: number): number => {
+        return Math.round(value / gridSize) * gridSize;
+    };
+
     const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
         if (!groupRef.current || !wallMesh) return;
     
-        // Where we clicked on the frame (in world space)
-        const clickPoint = e.point.clone();
-    
-        // The frame’s world position
+        // Get the frame's current world position
         const framePosition = new THREE.Vector3();
         groupRef.current.getWorldPosition(framePosition);
     
-        // Calculate offset vector from frame center to click point
-        dragOffset.current.copy(clickPoint).sub(framePosition);
+        // Cast a ray to the wall at the current mouse position
+        const pointer = new THREE.Vector2(
+            (e.clientX / gl.domElement.clientWidth) * 2 - 1,
+            -(e.clientY / gl.domElement.clientHeight) * 2 + 1
+        );
+        
+        raycaster.setFromCamera(pointer, camera);
+        const intersects = raycaster.intersectObject(wallMesh);
+        
+        if (intersects.length > 0) {
+            const hit = intersects[0]!;
+            // Store the offset between where we clicked on the wall and the frame's position
+            dragOffset.current.copy(framePosition).sub(hit.point);
+        }
     
         setIsDragging(true);
         (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -88,19 +104,24 @@ export const Frame: React.FC<FrameProps> = ({
         const hit = intersects[0]!;
         const wallNormal = hit.face?.normal.clone() ?? new THREE.Vector3(0, 0, 1);
     
-        // Clone intersection point on the wall
-        const newPosition = hit.point.clone();
+        // Calculate new position: where the mouse hits the wall + the original offset
+        const newPosition = hit.point.clone().add(dragOffset.current);
     
-        // Project the drag offset onto the wall plane
-        // This ensures your mouse stays visually "on" the frame
-        const projectedOffset = dragOffset.current.clone().projectOnPlane(wallNormal);
-        newPosition.sub(projectedOffset);
+        // Snap to grid (1cm increments)
+        newPosition.x = snapToGrid(newPosition.x, gridCellSize);
+        newPosition.y = snapToGrid(newPosition.y, gridCellSize);
     
         // Add offset so the frame sits ON the wall and not inside it
         newPosition.add(wallNormal.multiplyScalar(frameThickness / 2));
     
         // Apply the new position
         groupRef.current.position.copy(newPosition);
+
+        // Update position display (convert to cm)
+        setPosition({
+        x: Math.round(newPosition.x / gridCellSize),
+        y: Math.round(newPosition.y / gridCellSize)
+        });
     };
     
 
@@ -131,6 +152,20 @@ export const Frame: React.FC<FrameProps> = ({
                     emissiveIntensity={isDragging ? 0.2 : 0}
                 />
             </mesh>
+            {/* Position display when dragging */}
+            {isDragging && (
+                <Html
+                    position={[0, size[1] / 2 + 0.15, 0]}
+                    center
+                    style={{
+                        whiteSpace: 'nowrap',
+                        pointerEvents: 'none',
+                        userSelect: 'none'
+                    }}
+                >
+                    X: {position.x} cm <br></br> Y: {position.y} cm
+                </Html>
+            )}
         </group>
     );
 };
