@@ -82,3 +82,4 @@ export const Wall = forwardRef<THREE.Mesh, WallProps>(
     );
   }
 );
+Wall.displayName = 'Wall';
