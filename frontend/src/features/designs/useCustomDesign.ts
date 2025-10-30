@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { FurnitureColor } from "../designer/FurnitureForm/FurnitureForm";
+import { FrameData } from "../designer/FrameForm/FrameForm";
 
 export interface CustomDesign {
   wallWidth: number;
@@ -8,7 +9,8 @@ export interface CustomDesign {
   furnitureColor: FurnitureColor;
   furnitureWidth: number,
   furnitureDepth: number,
-  furnitureHeight: number
+  furnitureHeight: number,
+  frames: FrameData[];
 }
 
 export type DesignData = {
@@ -25,7 +27,7 @@ export type DesignData = {
     height: number;
   };
 
-  //   frames: { frameColor: string; frameSize: string }[];
+  frames: FrameData[];
 };
 
 
@@ -37,8 +39,8 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     furnitureColor: initialDesign?.furnitureColor ?? { sofa: "#8B4513" },
     furnitureDepth: initialDesign?.furnitureDepth ?? 80,
     furnitureWidth: initialDesign?.furnitureWidth ?? 210,
-    furnitureHeight: initialDesign?.furnitureHeight ?? 85
-
+    furnitureHeight: initialDesign?.furnitureHeight ?? 85,
+    frames: initialDesign?.frames ?? []
   });
 
   // Helper functions
@@ -69,6 +71,17 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCustomDesign((prev) => ({ ...prev, furnitureHeight: value }));
   };
 
+  const setFrames = (value: FrameData[]) => {
+    setCustomDesign((prev) => ({ ...prev, frames: value }));
+  };
+
+  const addFrame = (frame: FrameData) => {
+    setCustomDesign((prev) => ({ 
+      ...prev, 
+      frames: [...prev.frames, frame] 
+    }));
+  };
+
   // Inside useCustomDesign:
   const getSceneData = (): string => {
     const data: DesignData = {
@@ -82,7 +95,8 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
         width: customDesign.furnitureWidth,
         depth: customDesign.furnitureDepth,
         height: customDesign.furnitureHeight
-      }
+      },
+      frames: customDesign.frames
     };
     return JSON.stringify(data);
   };
@@ -96,6 +110,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFurnitureDepth(currentDesign.sofa.depth)
     setFurnitureWidth(currentDesign.sofa.width)
     setFurnitureHeight(currentDesign.sofa.height)
+    setFrames(currentDesign.frames || [])
   }, [])
 
 
@@ -109,6 +124,8 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFurnitureDepth,
     setFurnitureWidth,
     setFurnitureHeight,
+    setFrames,
+    addFrame,
     getSceneData,
     loadSceneData
   };
