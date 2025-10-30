@@ -3,12 +3,22 @@ name: Frontend Tests
 on:
   push:
     branches: [ main, dev ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-tests.yml'
   pull_request:
     branches: [ main, dev ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-tests.yml'
 
 jobs:
   jest-tests:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     
     steps:
     - uses: actions/checkout@v4
@@ -24,4 +34,15 @@ jobs:
     
     - name: Run tests
       working-directory: ./frontend
-      run: npm test
+      run: npm run test:ci
+      env:
+        JEST_JUNIT_OUTPUT_DIR: ./test-results
+        JEST_JUNIT_OUTPUT_NAME: junit.xml
+        
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Jest Test Results
+        path: './frontend/test-results.json'
+        reporter: jest-junit
