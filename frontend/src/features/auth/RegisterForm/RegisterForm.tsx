@@ -13,7 +13,7 @@ export default function RegisterForm() {
 
   useEffect(() => {
     if (user) {
-      router.push("/new");
+      router.push("/designer");
     }
   });
 

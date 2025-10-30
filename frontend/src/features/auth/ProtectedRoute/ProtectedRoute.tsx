@@ -12,6 +12,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     if (!isLoading && !user) {
       router.push("/login");
     }
+
   }, [user, isLoading, router]);
 
   // Don't render children until we know auth status
