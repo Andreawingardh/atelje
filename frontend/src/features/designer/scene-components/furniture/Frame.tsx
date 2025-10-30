@@ -104,7 +104,7 @@ export const Frame: React.FC<FrameProps> = ({
         const wallNormal = hit.face?.normal.clone() ?? new THREE.Vector3(0, 0, 1);
     
         // Calculate new position: where the mouse hits the wall + the original offset
-        let newPosition = hit.point.clone().add(dragOffset.current);
+        const newPosition = hit.point.clone().add(dragOffset.current);
     
         // Snap to grid (1cm increments)
         newPosition.x = snapToGrid(newPosition.x, gridCellSize);
