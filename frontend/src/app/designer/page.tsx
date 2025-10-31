@@ -64,6 +64,9 @@ export default function NewDesignPage() {
       />
       <FrameForm
         frames={customDesign.frames}
+        wallWidth={customDesign.wallWidth}
+        ceilingHeight={customDesign.ceilingHeight}
+        gridCellSize={0.01}
         onAddFrame={addFrame}
       />
       <Canvas3D

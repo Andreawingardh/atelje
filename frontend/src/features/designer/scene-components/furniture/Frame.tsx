@@ -134,7 +134,7 @@ export const Frame: React.FC<FrameProps> = ({
 
     return (
         <group
-            position={[0, 1.5, frameYPlacement]}
+            position={[0, 0, frameYPlacement]}
             ref={groupRef}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}

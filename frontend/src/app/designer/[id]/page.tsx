@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import StructuralForm from "@/features/designer/StructuralForm/StructuralForm";
 import FurnitureForm from "@/features/designer/FurnitureForm/FurnitureForm";
+import FrameForm from "@/features/designer/FrameForm/FrameForm";
 import { OpenAPI } from "@/api/generated";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -29,7 +30,8 @@ export default function DesignerPage() {
     getSceneData,
     setFurnitureDepth,
     setFurnitureWidth,
-    setFurnitureHeight
+    setFurnitureHeight,
+    addFrame,
   } = useCustomDesign();
 
   const { user } = useAuth();
@@ -88,6 +90,13 @@ export default function DesignerPage() {
         setFurnitureWidth={setFurnitureWidth}
         furnitureHeight={customDesign.furnitureHeight}
         setFurnitureHeight={setFurnitureHeight}
+      />
+      <FrameForm
+        frames={customDesign.frames}
+        wallWidth={customDesign.wallWidth}
+        ceilingHeight={customDesign.ceilingHeight}
+        gridCellSize={0.01}
+        onAddFrame={addFrame}
       />
       <Canvas3D
         wallWidth={customDesign.wallWidth}
