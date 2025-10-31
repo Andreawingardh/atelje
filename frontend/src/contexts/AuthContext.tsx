@@ -13,6 +13,7 @@ import {
   RegisterDto,
   AuthService,
   OpenAPI,
+  ApiError,
 } from "@/api/generated";
 
 export interface AuthContextType {
@@ -22,7 +23,8 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (dto: RegisterDto) => Promise<void>;
   logout: () => void;
-  error: string | undefined
+  error: string | undefined;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,12 +32,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthResponseDto | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
     if (!token) {
-      setIsLoading(false)
+      setIsLoading(false);
       return;
     }
 
@@ -48,7 +50,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(authorizedUser);
       } catch (error) {
         localStorage.removeItem("auth-token");
-        setError("Failed to get user" + error);
+        setError(
+          error instanceof ApiError
+            ? error.body?.errors?.[0] || "Failed to get user"
+            : "An unexpected error occurred"
+        );
       } finally {
         setIsLoading(false);
       }
@@ -78,7 +84,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 4. Update user state
       setUser(response);
     } catch (error) {
-      throw error; 
+      setError(
+        error instanceof ApiError
+          ? error.body?.errors[0] || "Login failed"
+          : "An unexpected error occurred"
+      );
     }
   }
 
@@ -96,7 +106,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setUser(response);
     } catch (error) {
-      throw error;
+      setError(
+        error instanceof ApiError
+          ? error.body?.errors[0] || "Registration failed"
+          : "An unexpected error occurred"
+      );
     }
   }
 
@@ -106,9 +120,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     OpenAPI.TOKEN = undefined;
   }
 
+  function clearError() {
+    setError(undefined);
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, setIsLoading, login, register, logout, error }}
+      value={{
+        user,
+        isLoading,
+        setIsLoading,
+        login,
+        register,
+        logout,
+        error,
+        clearError,
+      }}
     >
       {children}
     </AuthContext.Provider>
