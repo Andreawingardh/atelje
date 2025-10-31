@@ -1,5 +1,5 @@
 import styles from "./Canvas3D.module.css";
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -34,6 +34,7 @@ const directionalLightHeight = YPosition * 3.33;
 const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
 
 const wallRef = useRef<THREE.Mesh>(null);
+const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
 
   return (
     <section className={styles.designerWindow}>
@@ -44,6 +45,7 @@ const wallRef = useRef<THREE.Mesh>(null);
           near: 1,
           far: 100
         }}
+        onPointerMissed={() => setSelectedFrameId(null)} // Deselect frame when clicking anywhere else in the scene
         shadows
       >
         <ambientLight intensity={0.5} />
@@ -61,8 +63,6 @@ const wallRef = useRef<THREE.Mesh>(null);
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={furnitureWidth} sofaDepth={furnitureDepth} sofaHeight={furnitureHeight} floorSize={floorSize} gridCellSize={cellSize} />
-        {/* <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} wallMesh={wallRef.current} gridCellSize={cellSize} /> */}
-
         {/* Render all frames */}
         {frames.map((frame) => (
           <group key={frame.id} position={frame.position}>
@@ -73,6 +73,8 @@ const wallRef = useRef<THREE.Mesh>(null);
               floorSize={floorSize}
               gridCellSize={cellSize}
               wallMesh={wallRef.current}
+              selected={selectedFrameId === frame.id}
+              onSelect={() => setSelectedFrameId(frame.id)}
             />
           </group>
         ))}
