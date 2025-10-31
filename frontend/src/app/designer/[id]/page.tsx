@@ -51,12 +51,12 @@ export default function DesignerPage() {
           router.push("/designer");
           return;
         }
-          loadSceneData(loadedDesign.designData);
+        loadSceneData(loadedDesign.designData);
       }
     };
 
     fetchAndLoad(); // Call it
-  }, [id, loadDesign, loadSceneData, user, router, currentDesign]);
+  }, [id, loadDesign, loadSceneData, user, router]);
 
   useEffect(() => {
     if (currentDesign?.name) {
@@ -102,16 +102,20 @@ export default function DesignerPage() {
         gridCellSize={0.01}
         onAddFrame={addFrame}
       />
-      <Canvas3D
-        wallWidth={customDesign.wallWidth}
-        ceilingHeight={customDesign.ceilingHeight}
-        wallColor={customDesign.wallColor}
-        furnitureColor={customDesign.furnitureColor}
-        furnitureDepth={customDesign.furnitureDepth}
-        furnitureWidth={customDesign.furnitureWidth}
-        furnitureHeight={customDesign.furnitureHeight}
-        frames={customDesign.frames}
-      />
+      {isLoading ? (
+        <div>Loading design...</div>
+      ) : (
+        <Canvas3D
+          wallWidth={customDesign.wallWidth}
+          ceilingHeight={customDesign.ceilingHeight}
+          wallColor={customDesign.wallColor}
+          furnitureColor={customDesign.furnitureColor}
+          furnitureDepth={customDesign.furnitureDepth}
+          furnitureWidth={customDesign.furnitureWidth}
+          furnitureHeight={customDesign.furnitureHeight}
+          frames={customDesign.frames}
+        />
+      )}
       <div>
         <input
           value={designName}
