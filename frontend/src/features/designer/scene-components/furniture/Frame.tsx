@@ -28,10 +28,10 @@ export const Frame: React.FC<FrameProps> = ({
     
     const { camera, gl, raycaster } = useThree();
 
-    //calculating Y-position based on floor size
+    //calculating Z-position based on floor size
     const floorDimension = floorSize * gridCellSize;
     const halfFloor = floorDimension / 2;
-    const frameYPlacement = -(halfFloor - (frameThickness * gridCellSize));
+    const frameZPlacement = -(halfFloor - (frameThickness * gridCellSize));
 
     const size: [number, number, number] = (() => {
         switch (frameSize) {
@@ -111,9 +111,6 @@ export const Frame: React.FC<FrameProps> = ({
         newPosition.x = snapToGrid(newPosition.x, gridCellSize);
         newPosition.y = snapToGrid(newPosition.y, gridCellSize);
     
-        // Add offset so the frame sits ON the wall and not inside it
-        newPosition.add(wallNormal.multiplyScalar(frameThickness / 2));
-    
         // Apply the new position
         if (groupRef.current.parent) {
             const localPosition = groupRef.current.parent.worldToLocal(newPosition.clone());
@@ -139,7 +136,7 @@ export const Frame: React.FC<FrameProps> = ({
 
     return (
         <group
-            position={[0, 0, frameYPlacement]}
+            position={[0, 0, frameZPlacement]}
             ref={groupRef}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
