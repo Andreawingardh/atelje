@@ -111,9 +111,6 @@ export const Frame: React.FC<FrameProps> = ({
         newPosition.x = snapToGrid(newPosition.x, gridCellSize);
         newPosition.y = snapToGrid(newPosition.y, gridCellSize);
     
-        // Add offset so the frame sits ON the wall and not inside it
-        newPosition.add(wallNormal.multiplyScalar(frameThickness / 2));
-    
         // Apply the new position
         if (groupRef.current.parent) {
             const localPosition = groupRef.current.parent.worldToLocal(newPosition.clone());
