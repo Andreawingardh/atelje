@@ -61,7 +61,7 @@ const wallRef = useRef<THREE.Mesh>(null);
         <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={furnitureWidth} sofaDepth={furnitureDepth} sofaHeight={furnitureHeight} floorSize={floorSize} gridCellSize={cellSize} />
-        <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} wallMesh={wallRef.current} gridCellSize={cellSize} />
+        {/* <Frame frameColor="#ac924f" frameSize="70x100" frameOrientation={'landscape'} floorSize={floorSize} wallMesh={wallRef.current} gridCellSize={cellSize} /> */}
 
         {/* Render all frames */}
         {frames.map((frame) => (
