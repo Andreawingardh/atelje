@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import {
   AuthResponseDto,
   RegisterDto,
@@ -10,11 +17,12 @@ import {
 
 export interface AuthContextType {
   user: AuthResponseDto | null; //
-  isLoading: boolean,
-  setIsLoading: Dispatch<SetStateAction<boolean>>,
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
   login: (email: string, password: string) => Promise<void>;
   register: (dto: RegisterDto) => Promise<void>;
   logout: () => void;
+  error: string | undefined
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,10 +30,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthResponseDto | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
     if (!token) {
+      setIsLoading(false)
       return;
     }
 
@@ -37,10 +47,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const authorizedUser = await AuthService.getApiAuthMe();
         setUser(authorizedUser);
       } catch (error) {
-        console.error("Failed to get user:", error);
         localStorage.removeItem("auth-token");
+        setError("Failed to get user" + error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
 
@@ -68,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 4. Update user state
       setUser(response);
     } catch (error) {
-      throw error; // Handle error - maybe throw it so the form can show an error message?
+      throw error; 
     }
   }
 
@@ -97,7 +107,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, setIsLoading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, setIsLoading, login, register, logout, error }}
+    >
       {children}
     </AuthContext.Provider>
   );
