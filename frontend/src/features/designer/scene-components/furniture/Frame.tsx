@@ -12,6 +12,8 @@ type FrameProps = {
     wallMesh?: THREE.Mesh | null;
     selected?: boolean;
     onSelect?: () => void;
+    onDragStart?: () => void;
+    onDragEnd?: () => void;
 }
 
 export const Frame: React.FC<FrameProps> = ({
@@ -22,7 +24,9 @@ export const Frame: React.FC<FrameProps> = ({
     gridCellSize,
     wallMesh,
     selected = false,
-    onSelect
+    onSelect,
+    onDragStart,
+    onDragEnd
 }) => {
     const frameThickness = 3 * gridCellSize; // 3 cm thickness
     const groupRef = useRef<THREE.Group>(null);
@@ -104,6 +108,7 @@ export const Frame: React.FC<FrameProps> = ({
         }
     
         setIsDragging(true);
+        onDragStart?.();
         (e.target as HTMLElement).setPointerCapture(e.pointerId);
     };
 
@@ -149,6 +154,7 @@ export const Frame: React.FC<FrameProps> = ({
     const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
         if (isDragging) {
             setIsDragging(false);
+            onDragEnd?.();
             (e.target as HTMLElement).releasePointerCapture(e.pointerId);
         }
     };

@@ -35,6 +35,7 @@ const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
 
 const wallRef = useRef<THREE.Mesh>(null);
 const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+const [isDraggingFrame, setIsDraggingFrame] = useState(false);
 
   return (
     <section className={styles.designerWindow}>
@@ -75,6 +76,8 @@ const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
               wallMesh={wallRef.current}
               selected={selectedFrameId === frame.id}
               onSelect={() => setSelectedFrameId(frame.id)}
+              onDragStart={() => setIsDraggingFrame(true)}
+              onDragEnd={() => setIsDraggingFrame(false)}
             />
           </group>
         ))}
@@ -82,7 +85,7 @@ const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
         <OrbitControls 
           enablePan={false}
           enableZoom={true}
-          enableRotate={!selectedFrameId ? true : false} // Disable rotation when a frame is selected
+          enableRotate={isDraggingFrame ? false : true} // Disable rotation when a frame is selected
           minDistance={minDistanceZoom}
           maxDistance={maxDistanceZoom}
           maxPolarAngle={Math.PI / 2 - 0.1} // Prevent camera from going below floor
