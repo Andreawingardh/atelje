@@ -115,7 +115,12 @@ export const Frame: React.FC<FrameProps> = ({
         newPosition.add(wallNormal.multiplyScalar(frameThickness / 2));
     
         // Apply the new position
-        groupRef.current.position.copy(newPosition);
+        if (groupRef.current.parent) {
+            const localPosition = groupRef.current.parent.worldToLocal(newPosition.clone());
+            groupRef.current.position.copy(localPosition);
+        } else {
+            groupRef.current.position.copy(newPosition);
+        }
 
         // Update position display (convert to cm)
         setPosition({
