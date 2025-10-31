@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useDesign } from "@/features/designs/useDesign";
 import Canvas3D from "@/features/designer/Canvas3D/Canvas3D";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
@@ -15,6 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function DesignerPage() {
   const params = useParams();
   const id = params.id ? Number(params.id) : null;
+  const router = useRouter();
 
   const { saveDesign, loadDesign, currentDesign, error, isLoading } =
     useDesign();
@@ -45,14 +46,17 @@ export default function DesignerPage() {
     const fetchAndLoad = async () => {
       if (id && user) {
         const loadedDesign = await loadDesign(id);
-        if (loadedDesign) {
-          loadSceneData(loadedDesign.designData);
+
+        if (loadedDesign == undefined) {
+          router.push("/designer");
+          return;
         }
+          loadSceneData(loadedDesign.designData);
       }
     };
 
     fetchAndLoad(); // Call it
-  }, [id, loadDesign, loadSceneData, user]);
+  }, [id, loadDesign, loadSceneData, user, router, currentDesign]);
 
   useEffect(() => {
     if (currentDesign?.name) {
