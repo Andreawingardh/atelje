@@ -10,6 +10,8 @@ type FrameProps = {
     floorSize: number;
     gridCellSize: number;
     wallMesh?: THREE.Mesh | null;
+    selected?: boolean;
+    onSelect?: () => void;
 }
 
 export const Frame: React.FC<FrameProps> = ({
@@ -18,7 +20,9 @@ export const Frame: React.FC<FrameProps> = ({
     frameOrientation, 
     floorSize, 
     gridCellSize,
-    wallMesh
+    wallMesh,
+    selected = false,
+    onSelect
 }) => {
     const frameThickness = 3 * gridCellSize; // 3 cm thickness
     const groupRef = useRef<THREE.Group>(null);
@@ -61,8 +65,23 @@ export const Frame: React.FC<FrameProps> = ({
         return Math.round(value / gridSize) * gridSize;
     };
 
+/*     const handleClick = (e: ThreeEvent<PointerEvent>) => {
+        if (!selected) {
+            setSelected(true);
+        } else {
+            setSelected(false);
+        }
+    }; */
+
     const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
+
+         // Toggle selection first
+         if (!selected) {
+            onSelect?.();
+            return;
+        }
+
         if (!groupRef.current || !wallMesh) return;
     
         // Get the frame's current world position
@@ -74,7 +93,7 @@ export const Frame: React.FC<FrameProps> = ({
             (e.clientX / gl.domElement.clientWidth) * 2 - 1,
             -(e.clientY / gl.domElement.clientHeight) * 2 + 1
         );
-        
+
         raycaster.setFromCamera(pointer, camera);
         const intersects = raycaster.intersectObject(wallMesh);
         
@@ -87,9 +106,9 @@ export const Frame: React.FC<FrameProps> = ({
         setIsDragging(true);
         (e.target as HTMLElement).setPointerCapture(e.pointerId);
     };
-    
+
     const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
-        if (!isDragging || !groupRef.current || !wallMesh) return;
+        if (!isDragging || !groupRef.current || !wallMesh || !selected) return;
         e.stopPropagation();
     
         const pointer = new THREE.Vector2(
@@ -150,8 +169,8 @@ export const Frame: React.FC<FrameProps> = ({
                     color={frameColor} 
                     roughness={0.6} 
                     metalness={0.2}
-                    emissive={isDragging ? frameColor : '#000000'}
-                    emissiveIntensity={isDragging ? 0.2 : 0}
+                    emissive={selected ? frameColor : '#000000'}
+                    emissiveIntensity={selected ? 0.2 : 0}
                 />
             </mesh>
             {/* Position display when dragging */}
