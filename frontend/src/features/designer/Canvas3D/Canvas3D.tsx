@@ -82,7 +82,7 @@ const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
         <OrbitControls 
           enablePan={false}
           enableZoom={true}
-          enableRotate={true}
+          enableRotate={!selectedFrameId ? true : false} // Disable rotation when a frame is selected
           minDistance={minDistanceZoom}
           maxDistance={maxDistanceZoom}
           maxPolarAngle={Math.PI / 2 - 0.1} // Prevent camera from going below floor
