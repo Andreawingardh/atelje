@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, error } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -13,11 +13,16 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
       router.push("/login");
     }
 
+    console.log("isLoading: " + isLoading)
   }, [user, isLoading, router]);
 
   // Don't render children until we know auth status
   if (isLoading || !user) {
-    return null;
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <>{error}</>;
   }
 
   return <>{children}</>;
