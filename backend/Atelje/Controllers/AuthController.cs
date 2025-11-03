@@ -15,11 +15,15 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IEmailSender _emailSender;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(UserManager<User> userManager, ITokenService tokenService)
+    public AuthController(UserManager<User> userManager, ITokenService tokenService, IEmailSender emailSender, ILogger<AuthController> logger)
     {
         _userManager = userManager;
         _tokenService = tokenService;
+        _emailSender = emailSender;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -44,14 +48,33 @@ public class AuthController : ControllerBase
         }
 
         var token = _tokenService.GenerateToken(user.Id, user.Email);
-        
+
+        var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        var emailConfirmationUrl = $"http://localhost:3000/confirm-email?userId={user.Id}&token={emailToken}";
+
+        var innerHtmlMessage = $"""
+                                <p> Hi {user.UserName} </p>
+                                <p>Please click the following URL to confirm your email</p>:
+                                <a href="{emailConfirmationUrl}">Click me</a>
+                                """;
+        try
+        {
+            await _emailSender.SendEmailAsync(user.Email, "Confirm your email", innerHtmlMessage);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError("There was an error sending confirmation email: {Exception}", exception);
+        }
+
         return Ok(new AuthResponseDto
         {
             Token = token,
             UserId = user.Id,
             Email = user.Email!,
             UserName = user.UserName!,
-            DisplayName = user.DisplayName
+            DisplayName = user.DisplayName,
+            EmailConfirmed = user.EmailConfirmed
         });
     }
 
@@ -74,7 +97,8 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             Email = user.Email!,
             UserName = user.UserName!,
-            DisplayName = user.DisplayName
+            DisplayName = user.DisplayName,
+            EmailConfirmed = user.EmailConfirmed
         });
 
     }
