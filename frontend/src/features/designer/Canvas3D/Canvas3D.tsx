@@ -71,6 +71,7 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
               frameColor={frame.frameColor}
               frameSize={frame.frameSize}
               frameOrientation={frame.frameOrientation}
+              imageUrl={frame.imageUrl}
               floorSize={floorSize}
               gridCellSize={cellSize}
               wallMesh={wallRef.current}

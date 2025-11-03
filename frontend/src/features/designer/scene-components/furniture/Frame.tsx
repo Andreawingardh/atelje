@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree, ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
@@ -6,6 +6,7 @@ import { Html } from '@react-three/drei';
 type FrameProps = {
     frameColor: string;
     frameSize: string;
+    imageUrl?: string;
     frameOrientation: 'portrait' | 'landscape';
     floorSize: number;
     gridCellSize: number;
@@ -19,6 +20,7 @@ type FrameProps = {
 export const Frame: React.FC<FrameProps> = ({
     frameColor, 
     frameSize, 
+    imageUrl,
     frameOrientation, 
     floorSize, 
     gridCellSize,
@@ -28,11 +30,12 @@ export const Frame: React.FC<FrameProps> = ({
     onDragStart,
     onDragEnd
 }) => {
-    const frameThickness = 3 * gridCellSize; // 3 cm thickness
+    const frameThickness = 4 * gridCellSize; // 3 cm thickness
     const groupRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 150 }); // Position in cm
     const dragOffset = useRef(new THREE.Vector3());
+    const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     
     const { camera, gl, raycaster } = useThree();
 
@@ -40,6 +43,10 @@ export const Frame: React.FC<FrameProps> = ({
     const floorDimension = floorSize * gridCellSize;
     const halfFloor = floorDimension / 2;
     const frameZPlacement = -(halfFloor - (frameThickness * gridCellSize));
+
+    const frameWidth = 70 * gridCellSize;
+    const frameHeight = 100 * gridCellSize;
+    const frameDepth = 5 * gridCellSize;
 
     const size: [number, number, number] = (() => {
         switch (frameSize) {
@@ -68,14 +75,6 @@ export const Frame: React.FC<FrameProps> = ({
     const snapToGrid = (value: number, gridSize: number): number => {
         return Math.round(value / gridSize) * gridSize;
     };
-
-/*     const handleClick = (e: ThreeEvent<PointerEvent>) => {
-        if (!selected) {
-            setSelected(true);
-        } else {
-            setSelected(false);
-        }
-    }; */
 
     const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
@@ -159,6 +158,23 @@ export const Frame: React.FC<FrameProps> = ({
         }
     };
 
+    useEffect(() => {
+        if (imageUrl) {
+            const loader = new THREE.TextureLoader();
+            loader.load(
+                imageUrl,
+                (loadedTexture) => {
+                    setImageTexture(loadedTexture);
+                },
+                undefined,
+                (error) => {
+                    console.error('Error loading texture:', error);
+                }
+            );
+        }
+    }, [imageUrl]);
+
+
     return (
         <group
             position={[0, 0, frameZPlacement]}
@@ -167,18 +183,41 @@ export const Frame: React.FC<FrameProps> = ({
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
         >
-            <mesh 
-                castShadow
-            >
-                <boxGeometry args={size} />
-                <meshStandardMaterial 
-                    color={frameColor} 
-                    roughness={0.6} 
-                    metalness={0.2}
-                    emissive={selected ? frameColor : '#000000'}
-                    emissiveIntensity={selected ? 0.2 : 0}
+            {/* Frame border */}
+            <mesh castShadow receiveShadow>
+                <boxGeometry args={[
+                    frameWidth + frameThickness * 2,
+                    frameHeight + frameThickness * 2,
+                    frameDepth
+                ]} />
+                <meshStandardMaterial color={frameColor} />
+            </mesh>
+
+            {/* Inner frame (cutout) */}
+            <mesh position={[0, 0, frameDepth * 0.15]}>
+                <boxGeometry args={[frameWidth, frameHeight, frameDepth * 0.8]} />
+                <meshStandardMaterial color="#ffffff" />
+            </mesh>
+            
+            {/* Glass effect */}
+            <mesh position={[0, 0, frameDepth * 0.65]}>
+                <planeGeometry args={[frameWidth, frameHeight]} />
+                <meshPhysicalMaterial 
+                    color="#ffffff"
+                    transmission={1}
+                    thickness={0.01}
+                    roughness={0}
+                    reflectivity={1}
+                    metalness={0}
                 />
             </mesh>
+
+            {/* Image plane */}
+            <mesh position={[0, 0, frameDepth * 0.6]}>
+                <planeGeometry args={[frameWidth * 0.95, frameHeight * 0.95]} />
+                <meshStandardMaterial map={ImageTexture} />
+            </mesh>
+
             {/* Position display when dragging */}
             {isDragging && (
                 <Html
