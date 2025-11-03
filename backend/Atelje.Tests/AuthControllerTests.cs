@@ -163,6 +163,7 @@ public class AuthControllerTests
         );
     }
 
+
     [Fact]
     public async Task ConfirmEmail_ValidToken_ConfirmsEmail()
     {
@@ -177,22 +178,97 @@ public class AuthControllerTests
             EmailConfirmed = false,
             UserName = "testuser"
         };
+        var wasNotConfirmedBefore = user.EmailConfirmed;
 
         _mockUserManager
             .Setup(x => x.FindByIdAsync(userId))
-            .ReturnsAsync(user); 
+            .ReturnsAsync(user);
 
         _mockUserManager
-                .Setup(x => x.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .Setup(x => x.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
             .ReturnsAsync(IdentityResult.Success);
+
+        //Act
+        var result = await _controller.ConfirmEmail(userId, emailToken);
+        //Assert
+        Assert.False(wasNotConfirmedBefore);
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var response = Assert.IsType<EmailConfirmationResponseDto>(okResult.Value);
+        Assert.True(response.EmailConfirmed);
+    }
+
+    [Fact]
+    public async Task ConfirmEmail_AlreadyConfirmed_HandlesGracefully()
+    {
+        //Arrange
+        var userId = "test_user_id";
+        var emailToken = "test_email_token";
+
+        var user = new User
+        {
+            Id = userId,
+            Email = "test@test.com",
+            EmailConfirmed = true,
+            UserName = "testuser"
+        };
         
+        var wasConfirmedBefore = user.EmailConfirmed;
+
+        _mockUserManager
+            .Setup(x => x.FindByIdAsync(userId))
+            .ReturnsAsync(user);
+
+        _mockUserManager
+            .Setup(x => x.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(IdentityResult.Success);
+
         //Act
         var result = await _controller.ConfirmEmail(userId, emailToken);
         //Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var response = Assert.IsType<EmailConfirmationResponseDto>(okResult.Value);
+        Assert.True(wasConfirmedBefore);
+        Assert.Contains("already confirmed", response.Message, StringComparison.OrdinalIgnoreCase);
         Assert.True(response.EmailConfirmed);
+    }
+    [Fact]
+    public async Task ConfirmEmail_InvalidToken_ReturnsBadRequest()
+    {
+        //Arrange
+        var userId = "test_user_id";
+        var emailToken = "test_email_token";
+
+        var user = new User
+        {
+            Id = userId,
+            Email = "test@test.com",
+            EmailConfirmed = false,
+            UserName = "testuser"
+        };
         
+        var wasNotConfirmedBefore = user.EmailConfirmed;
+
+
+        _mockUserManager
+            .Setup(x => x.FindByIdAsync(userId))
+            .ReturnsAsync(user);
+
+        _mockUserManager
+            .Setup(x => x.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(IdentityResult.Failed(new IdentityError
+            {
+                Description = "Token is invalid"
+            }));
+
+        //Act
+        var result = await _controller.ConfirmEmail(userId, emailToken);
+        //Assert
+        var badResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        var errorResponse = Assert.IsType<ErrorResponseDto>(badResult.Value);
+        Assert.False(wasNotConfirmedBefore);
+        Assert.False(user.EmailConfirmed);
+        Assert.NotNull(errorResponse.Errors);
+        Assert.NotEmpty(errorResponse.Errors);
     }
 
     [Fact]
