@@ -43,33 +43,40 @@ export const Frame: React.FC<FrameProps> = ({
     const floorDimension = floorSize * gridCellSize;
     const halfFloor = floorDimension / 2;
     const frameZPlacement = -(halfFloor - (frameThickness * gridCellSize));
+    const frameDepth = 5 * gridCellSize; // 5 cm depth
 
-    const frameWidth = 70 * gridCellSize;
-    const frameHeight = 100 * gridCellSize;
-    const frameDepth = 5 * gridCellSize;
-
-    const size: [number, number, number] = (() => {
-        switch (frameSize) {
-        case '70x100':
-            return [1, 0.7, frameThickness];
-        case '70x50':
-            return [0.5, 0.7, frameThickness];
-        case '50x50':
-            return [0.5, 0.5, frameThickness];
-        case '50x40':
-            return [0.4, 0.5, frameThickness];
-        case '40x30':
-            return [0.3, 0.4, frameThickness];
-        case '30x30':
-            return [0.3, 0.3, frameThickness];
-        case '20x20':
-            return [0.2, 0.2, frameThickness];
-        case '18x13':
-            return [0.2, 0.3, frameThickness];
-        default:
-            return [0.5, 0.7, frameThickness];
+    const getFrameDimensions = (frameSize: string): { width: number; height: number } => {
+        const parts = frameSize.split('x').map(Number); // Split "70x50" into [70, 50]
+        
+        // Handle invalid format
+        if (parts.length !== 2 || parts.some(isNaN)) {
+            console.warn(`Invalid frame size format: ${frameSize}. Using default 70x50.`);
+            return { 
+                width: 70 * gridCellSize, 
+                height: 50 * gridCellSize 
+            };
         }
-    })();
+        
+        const [dimension1, dimension2] = parts;
+        
+        // Convert cm to meters by multiplying by gridCellSize
+        return { 
+            width: dimension1! * gridCellSize, 
+            height: dimension2! * gridCellSize 
+        };
+    };
+
+    const baseDimensions = getFrameDimensions(frameSize);
+
+    // Adjust dimensions based on orientation
+    const frameWidth = frameOrientation === 'portrait' 
+    ? Math.min(baseDimensions.width, baseDimensions.height)
+    : Math.max(baseDimensions.width, baseDimensions.height);
+  
+    const frameHeight = frameOrientation === 'portrait'
+    ? Math.max(baseDimensions.width, baseDimensions.height)
+    : Math.min(baseDimensions.width, baseDimensions.height);
+
 
     // Helper function to snap to our 1x1cm grid
     const snapToGrid = (value: number, gridSize: number): number => {
@@ -221,7 +228,7 @@ export const Frame: React.FC<FrameProps> = ({
             {/* Position display when dragging */}
             {isDragging && (
                 <Html
-                    position={[0, size[1] / 2 + 0.15, 0]}
+                    position={[0, 0 / 2 + 0.15, 0]}
                     center
                     style={{
                         whiteSpace: 'nowrap',
