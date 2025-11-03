@@ -13,6 +13,7 @@ using Atelje.Models;
 using Atelje.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 
 namespace Atelje.Tests;
@@ -36,13 +37,15 @@ public class AuthControllerTests
 
         // Create a mock of ITokenService
         var mockTokenService = new Mock<ITokenService>();
+        var mockEmailSender = new Mock<IEmailSender>();
+        var mockLogger = new Mock<ILogger>();
 
         // Tell the mock what to return when GenerateToken is called
         mockTokenService
             .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>()))
             .Returns("fake-jwt-token");
 
-        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
+        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object, mockEmailSender.Object, mockLogger.Object);
         // Act
         var result = await mockAuthController.Register(user);
 
@@ -73,6 +76,9 @@ public class AuthControllerTests
             .Returns("fake-jwt-token");
         
         var mockUserManager = MockUserManager<User>();
+        var mockEmailSender = new Mock<IEmailSender>();
+        var mockLogger = new Mock<ILogger>();
+
 
         mockUserManager.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
             .ReturnsAsync(IdentityResult.Failed(new IdentityError 
@@ -80,7 +86,8 @@ public class AuthControllerTests
                 Description = "Email is already taken" 
             }));
         
-        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
+        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object, mockEmailSender.Object, mockLogger.Object);
+
         // Act
         var result = await mockAuthController.Register(user);
     
@@ -120,13 +127,17 @@ public class AuthControllerTests
 
         // Create a mock of ITokenService
         var mockTokenService = new Mock<ITokenService>();
+        var mockEmailSender = new Mock<IEmailSender>();
+        var mockLogger = new Mock<ILogger>();
+
 
         // Tell the mock what to return when GenerateToken is called
         mockTokenService
             .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>()))
             .Returns("fake-jwt-token");
 
-        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
+        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object, mockEmailSender.Object, mockLogger.Object);
+
         // Act
         var result = await mockAuthController.Login(loginDto);
         
@@ -165,13 +176,16 @@ public class AuthControllerTests
 
         // Create a mock of ITokenService
         var mockTokenService = new Mock<ITokenService>();
+        var mockEmailSender = new Mock<IEmailSender>();
+        var mockLogger = new Mock<ILogger>();
+
 
         // Tell the mock what to return when GenerateToken is called
         mockTokenService
             .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>()))
             .Returns("fake-jwt-token");
 
-        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object);
+        var mockAuthController = new AuthController(mockUserManager.Object, mockTokenService.Object, mockEmailSender.Object, mockLogger.Object);
         
         //Act
         var result = await mockAuthController.Login(loginDto);
