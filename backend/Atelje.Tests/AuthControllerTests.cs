@@ -38,7 +38,7 @@ public class AuthControllerTests
         // Create a mock of ITokenService
         var mockTokenService = new Mock<ITokenService>();
         var mockEmailSender = new Mock<IEmailSender>();
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<AuthController>>();
 
         // Tell the mock what to return when GenerateToken is called
         mockTokenService
@@ -77,7 +77,7 @@ public class AuthControllerTests
         
         var mockUserManager = MockUserManager<User>();
         var mockEmailSender = new Mock<IEmailSender>();
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<AuthController>>();
 
 
         mockUserManager.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
@@ -128,7 +128,7 @@ public class AuthControllerTests
         // Create a mock of ITokenService
         var mockTokenService = new Mock<ITokenService>();
         var mockEmailSender = new Mock<IEmailSender>();
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<AuthController>>();
 
 
         // Tell the mock what to return when GenerateToken is called
@@ -177,7 +177,7 @@ public class AuthControllerTests
         // Create a mock of ITokenService
         var mockTokenService = new Mock<ITokenService>();
         var mockEmailSender = new Mock<IEmailSender>();
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<AuthController>>();
 
 
         // Tell the mock what to return when GenerateToken is called
