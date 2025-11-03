@@ -197,7 +197,7 @@ export const Frame: React.FC<FrameProps> = ({
                     frameHeight + frameThickness * 2,
                     frameDepth
                 ]} />
-                <meshStandardMaterial color={frameColor} />
+                <meshStandardMaterial color={selected ? "#000000" : frameColor} /> {/* temporary color change on select for dev */}
             </mesh>
 
             {/* Inner frame (cutout) */}
