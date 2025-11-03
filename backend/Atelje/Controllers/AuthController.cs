@@ -16,9 +16,9 @@ public class AuthController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
     private readonly IEmailSender _emailSender;
-    private readonly ILogger _logger;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(UserManager<User> userManager, ITokenService tokenService, IEmailSender emailSender, ILogger logger)
+    public AuthController(UserManager<User> userManager, ITokenService tokenService, IEmailSender emailSender, ILogger<AuthController> logger)
     {
         _userManager = userManager;
         _tokenService = tokenService;
@@ -73,7 +73,8 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             Email = user.Email!,
             UserName = user.UserName!,
-            DisplayName = user.DisplayName
+            DisplayName = user.DisplayName,
+            EmailConfirmed = user.EmailConfirmed
         });
     }
 
@@ -96,7 +97,8 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             Email = user.Email!,
             UserName = user.UserName!,
-            DisplayName = user.DisplayName
+            DisplayName = user.DisplayName,
+            EmailConfirmed = user.EmailConfirmed
         });
 
     }

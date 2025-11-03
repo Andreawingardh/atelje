@@ -7,4 +7,5 @@ public class AuthResponseDto
         public required string Email { get; set; }
         public required string UserName { get; set; }
         public string? DisplayName { get; set; }
+        public bool EmailConfirmed { get; set; }
 }
