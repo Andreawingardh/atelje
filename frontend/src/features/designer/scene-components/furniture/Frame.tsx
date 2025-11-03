@@ -35,6 +35,7 @@ export const Frame: React.FC<FrameProps> = ({
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 150 }); // Position in cm
     const dragOffset = useRef(new THREE.Vector3());
+    const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     
     const { camera, gl, raycaster } = useThree();
 
@@ -46,7 +47,6 @@ export const Frame: React.FC<FrameProps> = ({
     const frameWidth = 70 * gridCellSize;
     const frameHeight = 100 * gridCellSize;
     const frameDepth = 5 * gridCellSize;
-    const image = "241113-doge.jpg";
 
     const size: [number, number, number] = (() => {
         switch (frameSize) {
@@ -158,6 +158,22 @@ export const Frame: React.FC<FrameProps> = ({
         }
     };
 
+    useEffect(() => {
+        if (imageUrl) {
+            const loader = new THREE.TextureLoader();
+            loader.load(
+                imageUrl,
+                (loadedTexture) => {
+                    setImageTexture(loadedTexture);
+                },
+                undefined,
+                (error) => {
+                    console.error('Error loading texture:', error);
+                }
+            );
+        }
+    }, [imageUrl]);
+
 
     return (
         <group
@@ -176,26 +192,31 @@ export const Frame: React.FC<FrameProps> = ({
                 ]} />
                 <meshStandardMaterial color={frameColor} />
             </mesh>
-            
+
             {/* Inner frame (cutout) */}
-            <mesh position={[0, 0, frameDepth * 0.1]}>
+            <mesh position={[0, 0, frameDepth * 0.15]}>
                 <boxGeometry args={[frameWidth, frameHeight, frameDepth * 0.8]} />
                 <meshStandardMaterial color="#ffffff" />
             </mesh>
             
             {/* Glass effect */}
-            <mesh position={[0, 0, frameDepth * 0.48]}>
+            <mesh position={[0, 0, frameDepth * 0.65]}>
                 <planeGeometry args={[frameWidth, frameHeight]} />
                 <meshPhysicalMaterial 
                     color="#ffffff"
-                    transmission={0.9}
+                    transmission={1}
                     thickness={0.01}
-                    roughness={0.1}
-                    metalness={0.1}
+                    roughness={0}
+                    reflectivity={1}
+                    metalness={0}
                 />
             </mesh>
 
-
+            {/* Image plane */}
+            <mesh position={[0, 0, frameDepth * 0.6]}>
+                <planeGeometry args={[frameWidth * 0.95, frameHeight * 0.95]} />
+                <meshStandardMaterial map={ImageTexture} />
+            </mesh>
 
             {/* Position display when dragging */}
             {isDragging && (

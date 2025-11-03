@@ -6,6 +6,7 @@ export interface FrameData {
   frameColor: string;
   frameSize: string;
   frameOrientation: 'portrait' | 'landscape';
+  imageUrl?: string;
   position: [number, number, number];
 }
 
@@ -46,6 +47,7 @@ export default function FrameForm({ frames, onAddFrame, wallWidth, ceilingHeight
       frameColor: '#ac924f',
       frameSize: '70x50',
       frameOrientation: 'portrait',
+      imageUrl: '/241113-doge.jpg',
       position: getRandomPosition() // Position will be changed later to work with collisions etc
     };
     onAddFrame(newFrame);
