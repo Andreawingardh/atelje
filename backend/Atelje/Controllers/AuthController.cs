@@ -172,7 +172,7 @@ public class AuthController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError(" {Exception}", exception);
-            return BadRequest(new ErrorResponseDto { Errors = ["There was an error confirming the email"] });
+            return BadRequest(new ErrorResponseDto { Errors = [$"There was an error confirming the email"] });
         }
     }
 }
