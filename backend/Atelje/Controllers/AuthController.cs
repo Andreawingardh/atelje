@@ -127,21 +127,25 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("confirm-email")]
-    public async Task<ActionResult<EmailConfirmationDto>> ConfirmEmail(string userId, string emailToken)
+    public async Task<ActionResult<EmailConfirmationResponseDto>> ConfirmEmail(string userId, string emailToken)
     {
         if (emailToken == null || userId == null)
         {
-            _logger.LogInformation("Token or user is null");
-            return BadRequest();
+            return BadRequest(new ErrorResponseDto { Errors = ["Token or user is invalid"] });
         }
 
         try
         {
             var user = await _userManager.FindByIdAsync(userId);
 
+            if (user == null)
+            {
+                return BadRequest(new ErrorResponseDto { Errors = ["User can't be found"] });
+            }
+
             if (user.EmailConfirmed)
             {
-                var dto = new EmailConfirmationDto
+                var dto = new EmailConfirmationResponseDto
                 {
                     Message = "Email is already confirmed",
                     EmailConfirmed = true
@@ -152,11 +156,13 @@ public class AuthController : ControllerBase
             var result = await _userManager.ConfirmEmailAsync(user, emailToken);
             if (!result.Succeeded)
             {
-                _logger.LogInformation("user can't be confirmed");
-                return BadRequest();
+                return BadRequest(new ErrorResponseDto
+                {
+                    Errors = result.Errors.Select(e => e.Description)
+                });
             }
 
-            var value = new EmailConfirmationDto
+            var value = new EmailConfirmationResponseDto
             {
                 Message = "Your email has been confirmed, you can now log in",
                 EmailConfirmed = true
@@ -165,8 +171,8 @@ public class AuthController : ControllerBase
         }
         catch (Exception exception)
         {
-            _logger.LogError("There was an error confirming the email: {Exception}", exception);
-            return BadRequest();
+            _logger.LogError(" {Exception}", exception);
+            return BadRequest(new ErrorResponseDto { Errors = ["There was an error confirming the email"] });
         }
     }
 }
