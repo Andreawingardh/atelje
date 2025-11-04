@@ -15,10 +15,10 @@ export default function ConfirmEmailPage() {
 
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
-  const emailToken = searchParams.get("token");
+  const token = searchParams.get("token");
 
   useEffect(() => {
-    if (!userId || !emailToken) {
+    if (!userId || !token) {
       setStatus("error");
       return notFound();
     }
@@ -26,7 +26,7 @@ export default function ConfirmEmailPage() {
       try {
         const response = await AuthService.getApiAuthConfirmEmail(
           userId,
-          emailToken
+          token
         );
         if (response.emailConfirmed) {
             setStatus("success");
@@ -43,7 +43,7 @@ export default function ConfirmEmailPage() {
     };
 
     confirmEmail();
-  }, [emailToken, userId]);
+  }, [token, userId]);
 
   if (status === "loading") {
     return (
