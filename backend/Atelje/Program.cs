@@ -51,6 +51,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDesignService, DesignService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailSender, FakeEmailSender>();
+builder.Services.AddScoped<IR2Service, R2Service>();
 
 //Sets up JWT authentication
 builder.Services.AddAuthentication(options =>
