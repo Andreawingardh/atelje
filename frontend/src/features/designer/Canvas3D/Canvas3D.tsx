@@ -20,9 +20,11 @@ interface Canvas3DProps {
   furnitureDepth: number;
   furnitureHeight: number;
   frames: FrameData[];
+  selectedFrameId?: string | null;
+  onFrameSelect?: (frameId: string | null) => void;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames } : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect } : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
@@ -34,7 +36,12 @@ const directionalLightHeight = YPosition * 3.33;
 const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
 
 const wallRef = useRef<THREE.Mesh>(null);
-const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+
+// Use internal state if no external state is provided (backward compatibility)
+const [internalSelectedFrameId, setInternalSelectedFrameId] = useState<string | null>(null);
+
+const currentSelectedFrameId = selectedFrameId !== undefined ? selectedFrameId : internalSelectedFrameId;
+const handleFrameSelect = onFrameSelect || setInternalSelectedFrameId;
 const [isDraggingFrame, setIsDraggingFrame] = useState(false);
 
   return (
@@ -46,7 +53,7 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
           near: 1,
           far: 100
         }}
-        onPointerMissed={() => setSelectedFrameId(null)} // Deselect frame when clicking anywhere else in the scene
+        onPointerMissed={() => handleFrameSelect(null)} // Deselect frame when clicking anywhere else in the scene
         shadows
       >
         <ambientLight intensity={0.5} />
@@ -76,7 +83,7 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
               gridCellSize={cellSize}
               wallMesh={wallRef.current}
               selected={selectedFrameId === frame.id}
-              onSelect={() => setSelectedFrameId(frame.id)}
+              onSelect={() => handleFrameSelect(frame.id)}
               onDragStart={() => setIsDraggingFrame(true)}
               onDragEnd={() => setIsDraggingFrame(false)}
             />

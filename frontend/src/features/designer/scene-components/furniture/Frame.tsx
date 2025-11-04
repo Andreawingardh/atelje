@@ -5,8 +5,8 @@ import { Html } from '@react-three/drei';
 
 type FrameProps = {
     frameColor: string;
-    frameSize: string;
     imageUrl?: string;
+    frameSize: string;
     frameOrientation: 'portrait' | 'landscape';
     floorSize: number;
     gridCellSize: number;
@@ -18,9 +18,9 @@ type FrameProps = {
 }
 
 export const Frame: React.FC<FrameProps> = ({
-    frameColor, 
+    frameColor,
+    imageUrl, 
     frameSize, 
-    imageUrl,
     frameOrientation, 
     floorSize, 
     gridCellSize,
