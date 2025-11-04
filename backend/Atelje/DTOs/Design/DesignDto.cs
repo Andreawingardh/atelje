@@ -8,4 +8,6 @@ public class DesignDto
     public DateTime UpdatedAt { get; set; }
     public string UserId { get; set; }
     public required string DesignData { get; set; }
+    public string? ScreenshotUrl { get; set; }
+    public string? ThumbnailUrl { get; set; }
 }
