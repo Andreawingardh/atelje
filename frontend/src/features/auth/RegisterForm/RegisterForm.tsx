@@ -7,8 +7,8 @@ import { ApiError, RegisterDto } from "@/api/generated";
 import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
-  const { user, register, isLoading, setIsLoading } = useAuth();
-  const [error, setError] = useState<string | null>(null);
+  const { user, register, isLoading, setIsLoading, error } = useAuth();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,9 +39,9 @@ export default function RegisterForm() {
       await register(user);
     } catch (error) {
       if (error instanceof ApiError) {
-        setError(error.body.errors[0]);
+        setErrorMessage(error.body.errors[0]);
       } else {
-        setError("An unexpected error occurred");
+        setErrorMessage("An unexpected error occurred");
       }
     } finally {
       setIsLoading(false);
@@ -51,7 +51,7 @@ export default function RegisterForm() {
   return (
     <>
       <h1 className={styles.title}>Sign up</h1>
-      {error && <p>{error}</p>}
+      {error && <p>{error} { errorMessage }</p>}
       <form className={styles.registerForm} onSubmit={handleSubmit}>
         <label className={styles.registerLabel} htmlFor="username">
           Username
