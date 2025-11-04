@@ -1,6 +1,6 @@
 using Amazon.S3;
 using Amazon.S3.Model;
-using Atelje.DTOs;
+using Atelje.DTOs.R2;
 
 namespace Atelje.Services;
 

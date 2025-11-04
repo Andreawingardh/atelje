@@ -1,4 +1,4 @@
-using Atelje.DTOs;
+using Atelje.DTOs.R2;
 
 namespace Atelje.Services;
 
