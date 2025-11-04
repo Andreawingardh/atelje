@@ -7,8 +7,11 @@ import { ApiError, RegisterDto } from "@/api/generated";
 import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
-  const { user, register, isLoading, setIsLoading } = useAuth();
-  const [error, setError] = useState<string | null>(null);
+  const { user, register, isLoading, error } = useAuth();
+  const [status, setStatus] = useState<"loading" | "success" | "error" | null>(
+    null
+  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -18,6 +21,7 @@ export default function RegisterForm() {
   });
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    setStatus("loading")
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -35,23 +39,28 @@ export default function RegisterForm() {
     };
 
     try {
-      setIsLoading(true);
       await register(user);
+      setStatus("success")
     } catch (error) {
       if (error instanceof ApiError) {
-        setError(error.body.errors[0]);
+        setErrorMessage(error.body.errors[0]);
       } else {
-        setError("An unexpected error occurred");
+        setErrorMessage("An unexpected error occurred");
       }
+      setStatus("error")
     } finally {
-      setIsLoading(false);
     }
   }
+
 
   return (
     <>
       <h1 className={styles.title}>Sign up</h1>
-      {error && <p>{error}</p>}
+      {status == "error" && (
+        <p>
+          {error} {errorMessage}
+        </p>
+      )}
       <form className={styles.registerForm} onSubmit={handleSubmit}>
         <label className={styles.registerLabel} htmlFor="username">
           Username
@@ -103,7 +112,7 @@ export default function RegisterForm() {
           required
         />
 
-        <button type="submit">{isLoading ? "Signing up..." : "Sign up"}</button>
+        <button type="submit">{status == "loading" ? "Signing up..." : "Sign up"}</button>
       </form>
     </>
   );

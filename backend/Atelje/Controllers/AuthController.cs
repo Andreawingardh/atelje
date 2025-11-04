@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text;
 using Atelje.DTOs;
 using Atelje.DTOs.Auth;
 using Atelje.Models;
@@ -6,6 +7,7 @@ using Atelje.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Atelje.Controllers;
 
@@ -52,8 +54,14 @@ public class AuthController : ControllerBase
 
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         _logger.LogInformation("Email token: {EmailToken}", emailToken);
+        
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailToken));
+        
+        _logger.LogInformation("Original token: {Token}", emailToken);
+        _logger.LogInformation("Decoded token: {Encoded token}", encodedToken);
 
-        var emailConfirmationUrl = $"http://localhost:3000/confirm-email?userId={user.Id}&token={emailToken}";
+
+        var emailConfirmationUrl = $"http://localhost:3000/confirm-email?userId={user.Id}&token={encodedToken}";
 
         var innerHtmlMessage = $"""
                                 <p> Hi {user.UserName} </p>
@@ -127,9 +135,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("confirm-email")]
-    public async Task<ActionResult<EmailConfirmationResponseDto>> ConfirmEmail(string userId, string emailToken)
+    public async Task<ActionResult<EmailConfirmationResponseDto>> ConfirmEmail(string userId, string token)
     {
-        if (emailToken == null || userId == null)
+        if (token == null || userId == null)
         {
             return BadRequest(new ErrorResponseDto { Errors = ["Token or user is invalid"] });
         }
@@ -153,7 +161,13 @@ public class AuthController : ControllerBase
                 return Ok(dto);
             }
 
-            var result = await _userManager.ConfirmEmailAsync(user, emailToken);
+            var decodedBytes = WebEncoders.Base64UrlDecode(token);
+            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
+            
+            _logger.LogInformation("Received token: {Token}", token);
+            _logger.LogInformation("Decoded token: {Decoded}", decodedToken);
+
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
             if (!result.Succeeded)
             {
                 return BadRequest(new ErrorResponseDto
