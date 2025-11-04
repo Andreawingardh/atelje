@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AuthResponseDto } from '../models/AuthResponseDto';
+import type { EmailConfirmationResponseDto } from '../models/EmailConfirmationResponseDto';
 import type { LoginDto } from '../models/LoginDto';
 import type { RegisterDto } from '../models/RegisterDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -47,6 +48,25 @@ export class AuthService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Auth/me',
+        });
+    }
+    /**
+     * @param userId
+     * @param emailToken
+     * @returns EmailConfirmationResponseDto OK
+     * @throws ApiError
+     */
+    public static getApiAuthConfirmEmail(
+        userId?: string,
+        emailToken?: string,
+    ): CancelablePromise<EmailConfirmationResponseDto> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Auth/confirm-email',
+            query: {
+                'userId': userId,
+                'emailToken': emailToken,
+            },
         });
     }
 }

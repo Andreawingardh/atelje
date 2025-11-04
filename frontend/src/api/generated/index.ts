@@ -11,6 +11,7 @@ export type { AuthResponseDto } from './models/AuthResponseDto';
 export type { CreateDesignDto } from './models/CreateDesignDto';
 export type { CreateUserDto } from './models/CreateUserDto';
 export type { DesignDto } from './models/DesignDto';
+export type { EmailConfirmationResponseDto } from './models/EmailConfirmationResponseDto';
 export type { LoginDto } from './models/LoginDto';
 export type { RegisterDto } from './models/RegisterDto';
 export type { UpdateDesignDto } from './models/UpdateDesignDto';
