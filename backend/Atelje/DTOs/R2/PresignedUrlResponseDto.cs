@@ -1,6 +1,6 @@
 namespace Atelje.DTOs;
 
-public class PresignedUrlResponse
+public class PresignedUrlResponseDto
 {
     public string? UploadUrl { get; set; }
     public string? PublicUrl { get; set; }

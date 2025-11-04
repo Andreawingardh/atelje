@@ -26,7 +26,7 @@ public class R2Service : IR2Service
         _s3Client = new AmazonS3Client(accessKey, secretKey, s3Config);
     }
     
-    public async Task<PresignedUrlResponse> GeneratePresignedUploadUrl(string fileName, int expiryMinutes)
+    public async Task<PresignedUrlResponseDto> GeneratePresignedUploadUrl(string fileName, int expiryMinutes)
     {
         var request = new GetPreSignedUrlRequest
         {
@@ -37,7 +37,7 @@ public class R2Service : IR2Service
         };
         
         var uploadUrl = _s3Client.GetPreSignedURL(request);
-        return new PresignedUrlResponse
+        return new PresignedUrlResponseDto
         {
             UploadUrl = uploadUrl,
             PublicUrl = GetPublicUrl(fileName)
