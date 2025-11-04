@@ -1,4 +1,4 @@
-namespace Atelje.DTOs;
+namespace Atelje.DTOs.R2;
 
 public class PresignedUrlResponseDto
 {
