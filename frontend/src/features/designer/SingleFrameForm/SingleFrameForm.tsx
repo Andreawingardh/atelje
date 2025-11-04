@@ -97,13 +97,83 @@ export default function SingleFrameForm({
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="frameSize">Size</label>
+          <label htmlFor="frameSizeLable">
           <input
             id="frameSize"
-            type="text"
-            value={frameSize}
+            type="radio"
+            value={"70x100"}
+            checked={frameSize === "70x100"}
             onChange={handleSetFrameSize}
             className={styles.input}
           />
+            70x100
+          </label>
+          <label htmlFor="frameSizeLable">
+          <input
+            id="frameSize"
+            type="radio"
+            value={"50x70"}
+            checked={frameSize === "50x70"}
+            onChange={handleSetFrameSize}
+            className={styles.input}
+          />
+            50x70
+          </label>
+          <label htmlFor="frameSizeLable">
+          <input
+            id="frameSize"
+            type="radio"
+            value={"40x50"}
+            checked={frameSize === "40x50"}
+            onChange={handleSetFrameSize}
+            className={styles.input}
+          />
+            40x50
+          </label>
+          <label htmlFor="frameSizeLable">
+          <input
+            id="frameSize"
+            type="radio"
+            value={"30x40"}
+            checked={frameSize === "30x40"}
+            onChange={handleSetFrameSize}
+            className={styles.input}
+          />
+            30x40
+          </label>
+          <label htmlFor="frameSizeLable">
+          <input
+            id="frameSize"
+            type="radio"
+            value={"30x30"}
+            checked={frameSize === "30x30"}
+            onChange={handleSetFrameSize}
+            className={styles.input}
+          />
+            30x30
+          </label>
+          <label htmlFor="frameSizeLable">
+          <input
+            id="frameSize"
+            type="radio"
+            value={"20x30"}
+            checked={frameSize === "20x30"}
+            onChange={handleSetFrameSize}
+            className={styles.input}
+          />
+            20x30
+          </label>
+          <label htmlFor="frameSizeLable">
+          <input
+            id="frameSize"
+            type="radio"
+            value={"13x18"}
+            checked={frameSize === "13x18"}
+            onChange={handleSetFrameSize}
+            className={styles.input}
+          />
+            13x18
+          </label>
         </div>
       </div>
     </form>

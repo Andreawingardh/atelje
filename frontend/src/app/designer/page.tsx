@@ -98,7 +98,6 @@ export default function NewDesignPage() {
             frameOrientation={selectedFrame.frameOrientation || "portrait"}
             setFrameOrientation={(orientation) => setFrameOrientation(selectedFrameIndex, orientation as 'portrait' | 'landscape')}
           />
-          <button onClick={() => setSelectedFrameId(null)}>Close Editor</button>
         </div>
       )}
 
