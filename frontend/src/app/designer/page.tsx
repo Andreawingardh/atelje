@@ -9,11 +9,15 @@ import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import StructuralForm from "@/features/designer/StructuralForm/StructuralForm";
 import FurnitureForm from "@/features/designer/FurnitureForm/FurnitureForm";
 import FrameForm from "@/features/designer/FrameForm/FrameForm";
+import SingleFrameForm from "@/features/designer/SingleFrameForm/SingleFrameForm";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
   const router = useRouter();
   const [designName, setDesignName] = useState("");
+  
+  // Track which frame is selected by ID (shared with Canvas3D)
+  const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
 
   const {
     customDesign,
@@ -26,7 +30,15 @@ export default function NewDesignPage() {
     setFurnitureWidth,
     setFurnitureHeight,
     addFrame,
+    setFrameColor,
+    setFrameImage,
+    setFrameSize,
+    setFrameOrientation,
   } = useCustomDesign();
+
+  // Find the selected frame by ID
+  const selectedFrameIndex = customDesign.frames.findIndex(frame => frame.id === selectedFrameId);
+  const selectedFrame = selectedFrameIndex !== -1 ? customDesign.frames[selectedFrameIndex] : null;
 
   async function handleSave() {
     const sceneData = getSceneData();
@@ -69,6 +81,26 @@ export default function NewDesignPage() {
         gridCellSize={0.01}
         onAddFrame={addFrame}
       />
+
+      {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
+      {selectedFrame && selectedFrameIndex !== -1 && (
+        <div>
+          <h3>Edit Selected Frame</h3>
+          <SingleFrameForm
+            frames={customDesign.frames}
+            id={selectedFrame.id}
+            frameColor={selectedFrame.frameColor || "#ac924f"}
+            setFrameColor={(color) => setFrameColor(selectedFrameIndex, color)}
+            imageUrl={selectedFrame.imageUrl}
+            setFrameImage={(url) => setFrameImage(selectedFrameIndex, url)}
+            frameSize={selectedFrame.frameSize || "70x50"}
+            setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
+            frameOrientation={selectedFrame.frameOrientation || "portrait"}
+            setFrameOrientation={(orientation) => setFrameOrientation(selectedFrameIndex, orientation as 'portrait' | 'landscape')}
+          />
+        </div>
+      )}
+
       <Canvas3D
         wallWidth={customDesign.wallWidth}
         ceilingHeight={customDesign.ceilingHeight}
@@ -78,6 +110,8 @@ export default function NewDesignPage() {
         furnitureWidth={customDesign.furnitureWidth}
         furnitureHeight={customDesign.furnitureHeight}
         frames={customDesign.frames}
+        selectedFrameId={selectedFrameId}
+        onFrameSelect={setSelectedFrameId}
       />
       <div>
         <input

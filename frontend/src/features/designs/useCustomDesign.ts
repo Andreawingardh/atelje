@@ -43,7 +43,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     frames: initialDesign?.frames ?? []
   });
 
-  // Helper functions
+  // Structural helper functions
   const setWallWidth = (value: number) => {
     setCustomDesign((prev) => ({ ...prev, wallWidth: value }));
   };
@@ -56,6 +56,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCustomDesign((prev) => ({ ...prev, wallColor: value }));
   };
 
+  // Furniture helper functions
   const setFurnitureColor = (value: FurnitureColor) => {
     setCustomDesign((prev) => ({ ...prev, furnitureColor: value }));
   };
@@ -75,12 +76,40 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCustomDesign((prev) => ({ ...prev, frames: value }));
   };
 
+  // Frame helper functions
   const addFrame = (frame: FrameData) => {
     setCustomDesign((prev) => ({ 
       ...prev, 
       frames: [...prev.frames, frame] 
     }));
   };
+
+  const updateFrame = (index: number, updatedFrame: Partial<FrameData>) => {
+    setCustomDesign((prev) => ({
+      ...prev,
+      frames: prev.frames.map((frame, i) => 
+        i === index ? { ...frame, ...updatedFrame } : frame
+      )
+    }));
+  };
+
+  const setFrameColor = (index: number, color: string) => {
+    updateFrame(index, { frameColor: color });
+  };
+
+  const setFrameImage = (index: number, imageUrl: string | undefined) => {
+    updateFrame(index, { imageUrl });
+  };
+
+  const setFrameSize = (index: number, size: string) => {
+    updateFrame(index, { frameSize: size });
+  };
+
+  const setFrameOrientation = (index: number, orientation: 'portrait' | 'landscape') => {
+    updateFrame(index, { frameOrientation: orientation });
+  };
+
+
 
   // Inside useCustomDesign:
   const getSceneData = (): string => {
@@ -126,6 +155,11 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFurnitureHeight,
     setFrames,
     addFrame,
+    updateFrame,
+    setFrameColor,
+    setFrameImage,
+    setFrameSize,
+    setFrameOrientation,
     getSceneData,
     loadSceneData
   };

@@ -5,8 +5,8 @@ import { Html } from '@react-three/drei';
 
 type FrameProps = {
     frameColor: string;
-    frameSize: string;
     imageUrl?: string;
+    frameSize: string;
     frameOrientation: 'portrait' | 'landscape';
     floorSize: number;
     gridCellSize: number;
@@ -18,9 +18,9 @@ type FrameProps = {
 }
 
 export const Frame: React.FC<FrameProps> = ({
-    frameColor, 
+    frameColor,
+    imageUrl, 
     frameSize, 
-    imageUrl,
     frameOrientation, 
     floorSize, 
     gridCellSize,
@@ -197,7 +197,7 @@ export const Frame: React.FC<FrameProps> = ({
                     frameHeight + frameThickness * 2,
                     frameDepth
                 ]} />
-                <meshStandardMaterial color={frameColor} />
+                <meshStandardMaterial color={selected ? "#000000" : frameColor} /> {/* temporary color change on select for dev */}
             </mesh>
 
             {/* Inner frame (cutout) */}
