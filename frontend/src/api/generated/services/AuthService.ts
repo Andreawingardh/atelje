@@ -52,20 +52,20 @@ export class AuthService {
     }
     /**
      * @param userId
-     * @param emailToken
+     * @param token
      * @returns EmailConfirmationResponseDto OK
      * @throws ApiError
      */
     public static getApiAuthConfirmEmail(
         userId?: string,
-        emailToken?: string,
+        token?: string,
     ): CancelablePromise<EmailConfirmationResponseDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Auth/confirm-email',
             query: {
                 'userId': userId,
-                'emailToken': emailToken,
+                'token': token,
             },
         });
     }
