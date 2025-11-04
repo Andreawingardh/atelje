@@ -52,9 +52,6 @@ export default function RegisterForm() {
     }
   }
 
-  if (status == "success") {
-    <><p>You have registered successfully. Please check your email to confirm your account.</p></>
-  }
 
   return (
     <>

@@ -26,7 +26,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user.emailConfirmed)
-    return <><p>Please confirm your email</p>
+    return <><p>Registration successful! Please confirm your email</p>
       {children}</>
 
   return <>{children}</>;
