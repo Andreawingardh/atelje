@@ -69,4 +69,14 @@ export class AuthService {
             },
         });
     }
+    /**
+     * @returns AuthResponseDto OK
+     * @throws ApiError
+     */
+    public static postApiAuthResendConfirmationEmail(): CancelablePromise<AuthResponseDto> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/Auth/resend-confirmation-email',
+        });
+    }
 }
