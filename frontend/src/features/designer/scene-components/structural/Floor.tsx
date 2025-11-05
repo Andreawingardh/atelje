@@ -1,4 +1,5 @@
 import React from 'react';
+import * as THREE from 'three';
 import { useTexture } from "@react-three/drei";
 
 type FloorProps = {
@@ -11,6 +12,18 @@ type FloorProps = {
 export const Floor: React.FC<FloorProps> = ({floorColor, gridSize, gridCellSize}) => {
     const floorSize = gridSize * gridCellSize; // convert cm to Three.js units
 
+      const textures = useTexture({
+        map: "/3D-textures/birch-floor-parquet/albedo.jpg",
+        normalMap: "/3D-textures/birch-floor-parquet/normal.jpg",
+        roughnessMap: "/3D-textures/birch-floor-parquet/roughness.jpg",
+      })
+    
+      // Repeat pattern across the floor
+      Object.values(textures).forEach(tex => {
+        tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+        tex.repeat.set(2, 2)
+      })
+
   return (
     <mesh 
       rotation={[-Math.PI / 2, 0, 0]} 
@@ -19,9 +32,7 @@ export const Floor: React.FC<FloorProps> = ({floorColor, gridSize, gridCellSize}
     >
       <planeGeometry args={[floorSize, floorSize]} />
       <meshStandardMaterial 
-        color={floorColor}
-        roughness={0.8}
-        metalness={0.1}
+        {...textures}
       />
     </mesh>
   );
