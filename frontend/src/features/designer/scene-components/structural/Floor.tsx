@@ -13,9 +13,9 @@ export const Floor: React.FC<FloorProps> = ({floorColor, gridSize, gridCellSize}
     const floorSize = gridSize * gridCellSize; // convert cm to Three.js units
 
       const textures = useTexture({
-        map: "/3D-textures/birch-floor-parquet/albedo.jpg",
-        normalMap: "/3D-textures/birch-floor-parquet/normal.jpg",
-        roughnessMap: "/3D-textures/birch-floor-parquet/roughness.jpg",
+        map: "/3D-textures/walnut-floor-parquet/albedo.jpg",
+        normalMap: "/3D-textures/walnut-floor-parquet/normal.jpg",
+        roughnessMap: "/3D-textures/walnut-floor-parquet/roughness.jpg",
       })
     
       // Repeat pattern across the floor
