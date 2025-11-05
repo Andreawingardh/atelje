@@ -112,6 +112,7 @@ export default function DesignerWorkspace({
                 orientation as "portrait" | "landscape"
               )
             }
+            onDelete={() => deleteFrame(selectedFrameIndex)}
           />
         </div>
       )}

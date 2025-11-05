@@ -13,6 +13,7 @@ interface singleFrameFormProps {
   setFrameSize: (frameSize: string) => void;
   frameOrientation: 'portrait' | 'landscape';
   setFrameOrientation: (frameOrientation: string) => void;
+  onDelete: () => void; 
 }
 
 export default function SingleFrameForm({
@@ -25,6 +26,7 @@ export default function SingleFrameForm({
     setFrameSize,
     frameOrientation,
     setFrameOrientation,
+    onDelete,
 }: singleFrameFormProps) {
 
   const handleFrameColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
