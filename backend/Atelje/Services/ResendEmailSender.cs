@@ -5,18 +5,18 @@ using Resend;
 public class ResendEmailSender(
     ILogger<ResendEmailSender> logger,
     IConfiguration configuration,
-    IResend resend)
+    IResend resend, IWebHostEnvironment env)
     : IEmailSender
 {
     private readonly string? _senderEmail = configuration["Email:SenderEmail"] ?? "onboarding@resend.dev";
     private readonly string? _senderName = configuration["Email:SenderName"] ?? "Atelje";
 
-
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         var message = new EmailMessage();
         message.From = $"{_senderName} <{_senderEmail}>";
-        message.To.Add(email);
+        //For when we need to test the email delivery system and can use the Resend dashboard, not relevant for prod:
+        message.To = env.IsDevelopment() ? "delivered@resend.dev" : email;
         message.Subject = subject;
         message.HtmlBody = htmlMessage;
 
