@@ -1,11 +1,12 @@
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useState } from "react";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
-import FurnitureForm from "../FurnitureForm/FurnitureForm";
+import FurnitureForm, { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import StructuralForm from "../StructuralForm/StructuralForm";
 import SingleFrameForm from "../SingleFrameForm/SingleFrameForm";
 import FrameForm from "../FrameForm/FrameForm";
 import Canvas3D from "../Canvas3D/Canvas3D";
+import { FrameData } from "../FrameForm/FrameForm";
 
 interface DesignerWorkspaceProps {
   designName: string;
@@ -13,30 +14,26 @@ interface DesignerWorkspaceProps {
   onSave: () => void;
   isLoading: boolean;
   error?: string;
+  // Add these from useCustomDesign:
+  customDesign: ReturnType<typeof useCustomDesign>['customDesign'];
+  setWallWidth: (width: number) => void;
+  setCeilingHeight: (height: number) => void;
+  setWallColor: (color: string) => void;
+  setFurnitureColor: (color: FurnitureColor) => void;
+  setFurnitureDepth: (depth: number) => void;
+  setFurnitureWidth: (width: number) => void;
+  setFurnitureHeight: (height: number) => void;
+  addFrame: (frame: FrameData) => void;
+  setFrameColor: (index: number, color: string) => void;
+  setFrameImage: (index: number, url: string) => void;
+  setFrameSize: (index: number, size: string) => void;
+  setFrameOrientation: (index: number, orientation: "portrait" | "landscape") => void;
 }
 
 export default function DesignerWorkspace({
-  designName,
-  onDesignNameChange,
-  onSave,
-  isLoading,
-  error,
+designName, onDesignNameChange, onSave,isLoading, error,customDesign, setWallWidth, setCeilingHeight, setWallColor, setFurnitureColor, setFurnitureDepth, setFurnitureHeight, setFurnitureWidth, addFrame, setFrameColor, setFrameImage, setFrameSize, setFrameOrientation
 }: DesignerWorkspaceProps) {
-  const {
-    customDesign,
-    setWallWidth,
-    setCeilingHeight,
-    setWallColor,
-    setFurnitureColor,
-    setFurnitureDepth,
-    setFurnitureWidth,
-    setFurnitureHeight,
-    addFrame,
-    setFrameColor,
-    setFrameImage,
-    setFrameSize,
-    setFrameOrientation,
-  } = useCustomDesign();
+
 
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
 
@@ -85,7 +82,7 @@ export default function DesignerWorkspace({
             frameColor={selectedFrame.frameColor || "#ac924f"}
             setFrameColor={(color) => setFrameColor(selectedFrameIndex, color)}
             imageUrl={selectedFrame.imageUrl}
-            setFrameImage={(url) => setFrameImage(selectedFrameIndex, url)}
+            setFrameImage={(url) => setFrameImage(selectedFrameIndex, url!)}
             frameSize={selectedFrame.frameSize || "70x50"}
             setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
             frameOrientation={selectedFrame.frameOrientation || "portrait"}
