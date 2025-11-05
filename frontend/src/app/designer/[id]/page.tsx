@@ -34,6 +34,7 @@ export default function DesignerPage() {
     setWallColor,
     setWallWidth,
     addFrame,
+    deleteFrame,
     customDesign,
   } = useCustomDesign();
 
@@ -104,6 +105,7 @@ export default function DesignerPage() {
         setFurnitureHeight={setFurnitureHeight}
         setFurnitureWidth={setFurnitureWidth}
         addFrame={addFrame}
+        deleteFrame={deleteFrame}
         customDesign={customDesign}
       />
     </ProtectedRoute>

@@ -1,7 +1,6 @@
 import styles from "./SingleFrameForm.module.css";
 import React from "react";
 import { FrameData } from "../FrameForm/FrameForm";
-import { useCustomDesign } from "@/features/designs/useCustomDesign";
 
 interface singleFrameFormProps {
   frames: FrameData[];
@@ -14,6 +13,7 @@ interface singleFrameFormProps {
   setFrameSize: (frameSize: string) => void;
   frameOrientation: 'portrait' | 'landscape';
   setFrameOrientation: (frameOrientation: string) => void;
+  onDelete: () => void; 
 }
 
 export default function SingleFrameForm({
@@ -26,6 +26,7 @@ export default function SingleFrameForm({
     setFrameSize,
     frameOrientation,
     setFrameOrientation,
+    onDelete,
 }: singleFrameFormProps) {
 
   const handleFrameColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +44,7 @@ export default function SingleFrameForm({
   const handleSetFrameSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFrameSize(e.target.value);
   };
+  
 
   return (
     <form className={styles.frameForm}>
@@ -176,6 +178,13 @@ export default function SingleFrameForm({
           </label>
         </div>
       </div>
+      <button 
+        type="button" 
+        onClick={onDelete}
+        className={styles.deleteButton}
+      >
+        Delete Frame
+      </button>
     </form>
   );
 };
