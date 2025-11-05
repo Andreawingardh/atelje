@@ -9,5 +9,6 @@ export type AuthResponseDto = {
     userName: string;
     displayName?: string | null;
     emailConfirmed?: boolean;
+    emailSent?: boolean;
 };
 
