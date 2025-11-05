@@ -17,6 +17,7 @@ type FrameProps = {
     onSelect?: () => void;
     onDragStart?: () => void;
     onDragEnd?: () => void;
+    onPositionChange?: (position: THREE.Vector3) => void;
 }
 
 export const Frame: React.FC<FrameProps> = ({
@@ -32,7 +33,8 @@ export const Frame: React.FC<FrameProps> = ({
     selected = false,
     onSelect,
     onDragStart,
-    onDragEnd
+    onDragEnd,
+    onPositionChange
 }) => {
     const frameThickness = 4 * gridCellSize; // 3 cm thickness
     const groupRef = useRef<THREE.Group>(null);
@@ -109,6 +111,36 @@ export const Frame: React.FC<FrameProps> = ({
         return clampedPos;
     };
 
+      // Effect to clamp frame position when wall dimensions change
+      useEffect(() => {
+        if (groupRef.current) {
+            const currentPos = new THREE.Vector3();
+            groupRef.current.getWorldPosition(currentPos);
+            
+            const clampedPos = clampToWallBoundaries(currentPos);
+            
+            // Only update if position changed after clamping
+            if (!currentPos.equals(clampedPos)) {
+                if (groupRef.current.parent) {
+                    const localPosition = groupRef.current.parent.worldToLocal(clampedPos.clone());
+                    groupRef.current.position.copy(localPosition);
+                } else {
+                    groupRef.current.position.copy(clampedPos);
+                }
+                
+                // Update position display
+                setPosition({
+                    x: Math.round(clampedPos.x / gridCellSize),
+                    y: Math.round(clampedPos.y / gridCellSize)
+                });
+
+                // Notify parent of position change
+                onPositionChange?.(clampedPos);
+            }
+        }
+    }, [wallWidth, ceilingHeight, frameWidth, frameHeight]);
+
+
     
     // Helper function to snap to our 1x1cm grid
     const snapToGrid = (value: number, gridSize: number): number => {
@@ -164,14 +196,16 @@ export const Frame: React.FC<FrameProps> = ({
         if (intersects.length === 0) return;
     
         const hit = intersects[0]!;
-        const wallNormal = hit.face?.normal.clone() ?? new THREE.Vector3(0, 0, 1);
     
         // Calculate new position: where the mouse hits the wall + the original offset
-        const newPosition = hit.point.clone().add(dragOffset.current);
+        let newPosition = hit.point.clone().add(dragOffset.current);
     
         // Snap to grid (1cm increments)
         newPosition.x = snapToGrid(newPosition.x, gridCellSize);
         newPosition.y = snapToGrid(newPosition.y, gridCellSize);
+        
+        // Clamp to wall boundaries
+        newPosition = clampToWallBoundaries(newPosition);
     
         // Apply the new position
         if (groupRef.current.parent) {
@@ -183,9 +217,12 @@ export const Frame: React.FC<FrameProps> = ({
 
         // Update position display (convert to cm)
         setPosition({
-        x: Math.round(newPosition.x / gridCellSize),
-        y: Math.round(newPosition.y / gridCellSize)
+            x: Math.round(newPosition.x / gridCellSize),
+            y: Math.round(newPosition.y / gridCellSize)
         });
+
+        // Notify parent of position change
+        onPositionChange?.(newPosition);
     };
     
 
