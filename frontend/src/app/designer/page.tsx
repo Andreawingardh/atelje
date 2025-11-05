@@ -1,54 +1,53 @@
 "use client";
 
-import Canvas3D from "@/features/designer/Canvas3D/Canvas3D";
 import { useDesign } from "@/features/designs/useDesign";
 import { useRouter } from "next/navigation";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import { useState } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
-import StructuralForm from "@/features/designer/StructuralForm/StructuralForm";
-import FurnitureForm from "@/features/designer/FurnitureForm/FurnitureForm";
-import FrameForm from "@/features/designer/FrameForm/FrameForm";
-import SingleFrameForm from "@/features/designer/SingleFrameForm/SingleFrameForm";
+import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
+import { ApiError } from "@/api/generated";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
   const router = useRouter();
-  const [designName, setDesignName] = useState("");
-  
-  // Track which frame is selected by ID (shared with Canvas3D)
-  const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+  const [designName, setDesignName] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
-    customDesign,
-    setWallWidth,
-    setCeilingHeight,
-    setWallColor,
-    setFurnitureColor,
     getSceneData,
-    setFurnitureDepth,
-    setFurnitureWidth,
-    setFurnitureHeight,
-    addFrame,
+    setCeilingHeight,
     setFrameColor,
     setFrameImage,
-    setFrameSize,
     setFrameOrientation,
+    setFrameSize,
+    setFrames,
+    setFurnitureColor,
+    setFurnitureDepth,
+    setFurnitureHeight,
+    setFurnitureWidth,
+    setWallColor,
+    setWallWidth,
+    addFrame,
+    customDesign,
   } = useCustomDesign();
-
-  // Find the selected frame by ID
-  const selectedFrameIndex = customDesign.frames.findIndex(frame => frame.id === selectedFrameId);
-  const selectedFrame = selectedFrameIndex !== -1 ? customDesign.frames[selectedFrameIndex] : null;
 
   async function handleSave() {
     const sceneData = getSceneData();
     try {
       const newDesign = await createDesign(designName, sceneData);
+      console.log("About to create design with sceneData:", sceneData);
+      console.log("Parsed:", JSON.parse(sceneData));
       if (newDesign) {
         router.push(`/designer/${newDesign.id}`);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error instanceof ApiError
+          ? error.body?.errors[0] || "Save failed"
+          : "An unexpected error occurred"
+      );
     }
   }
 
@@ -56,73 +55,27 @@ export default function NewDesignPage() {
     <ProtectedRoute>
       <p>DEBUG: This is the NEW design page</p>
       <h1>Designer 3D-tool</h1>
-      <StructuralForm
-        wallWidth={customDesign.wallWidth}
-        setWallWidth={setWallWidth}
-        ceilingHeight={customDesign.ceilingHeight}
+      {errorMessage && <p>{errorMessage}</p>}
+      <DesignerWorkspace
+        designName={designName}
+        onDesignNameChange={setDesignName}
+        onSave={handleSave}
+        isLoading={isLoading}
+        error={error}
         setCeilingHeight={setCeilingHeight}
-        wallColor={customDesign.wallColor}
+        setWallWidth={setWallWidth}
         setWallColor={setWallColor}
-      />
-      <FurnitureForm
-        furnitureColor={customDesign.furnitureColor}
+        setFrameColor={setFrameColor}
+        setFrameImage={setFrameImage}
+        setFrameOrientation={setFrameOrientation}
+        setFrameSize={setFrameSize}
         setFurnitureColor={setFurnitureColor}
-        furnitureDepth={customDesign.furnitureDepth}
-        furnitureWidth={customDesign.furnitureWidth}
         setFurnitureDepth={setFurnitureDepth}
-        setFurnitureWidth={setFurnitureWidth}
-        furnitureHeight={customDesign.furnitureHeight}
         setFurnitureHeight={setFurnitureHeight}
+        setFurnitureWidth={setFurnitureWidth}
+        addFrame={addFrame}
+        customDesign={customDesign}
       />
-      <FrameForm
-        frames={customDesign.frames}
-        wallWidth={customDesign.wallWidth}
-        ceilingHeight={customDesign.ceilingHeight}
-        gridCellSize={0.01}
-        onAddFrame={addFrame}
-      />
-
-      {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
-      {selectedFrame && selectedFrameIndex !== -1 && (
-        <div>
-          <h3>Edit Selected Frame</h3>
-          <SingleFrameForm
-            frames={customDesign.frames}
-            id={selectedFrame.id}
-            frameColor={selectedFrame.frameColor || "#ac924f"}
-            setFrameColor={(color) => setFrameColor(selectedFrameIndex, color)}
-            imageUrl={selectedFrame.imageUrl}
-            setFrameImage={(url) => setFrameImage(selectedFrameIndex, url)}
-            frameSize={selectedFrame.frameSize || "70x50"}
-            setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
-            frameOrientation={selectedFrame.frameOrientation || "portrait"}
-            setFrameOrientation={(orientation) => setFrameOrientation(selectedFrameIndex, orientation as 'portrait' | 'landscape')}
-          />
-        </div>
-      )}
-
-      <Canvas3D
-        wallWidth={customDesign.wallWidth}
-        ceilingHeight={customDesign.ceilingHeight}
-        wallColor={customDesign.wallColor}
-        furnitureColor={customDesign.furnitureColor}
-        furnitureDepth={customDesign.furnitureDepth}
-        furnitureWidth={customDesign.furnitureWidth}
-        furnitureHeight={customDesign.furnitureHeight}
-        frames={customDesign.frames}
-        selectedFrameId={selectedFrameId}
-        onFrameSelect={setSelectedFrameId}
-      />
-      <div>
-        <input
-          value={designName}
-          onChange={(e) => setDesignName(e.target.value)}
-          placeholder="Design name"
-          required={true}
-        />
-        <button onClick={handleSave}>{isLoading ? "Saving" : "Save"}</button>
-        {error && <p>{error}</p>}
-      </div>
     </ProtectedRoute>
   );
 }
