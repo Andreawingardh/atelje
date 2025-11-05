@@ -82,6 +82,8 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
               floorSize={floorSize}
               gridCellSize={cellSize}
               wallMesh={wallRef.current}
+              wallWidth={wallWidth}
+              ceilingHeight={ceilingHeight}
               selected={selectedFrameId === frame.id}
               onSelect={() => handleFrameSelect(frame.id)}
               onDragStart={() => setIsDraggingFrame(true)}

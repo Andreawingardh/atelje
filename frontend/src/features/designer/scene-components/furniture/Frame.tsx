@@ -11,6 +11,8 @@ type FrameProps = {
     floorSize: number;
     gridCellSize: number;
     wallMesh?: THREE.Mesh | null;
+    wallWidth: number;
+    ceilingHeight: number;
     selected?: boolean;
     onSelect?: () => void;
     onDragStart?: () => void;
@@ -25,6 +27,8 @@ export const Frame: React.FC<FrameProps> = ({
     floorSize, 
     gridCellSize,
     wallMesh,
+    wallWidth,
+    ceilingHeight,
     selected = false,
     onSelect,
     onDragStart,
