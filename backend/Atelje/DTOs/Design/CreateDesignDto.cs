@@ -18,4 +18,12 @@ public class CreateDesignDto
     [Required]
     [MinLength(3)]
     public required string DesignData { get; set; }
+    
+    [Url]
+    [MaxLength(500)]
+    public string? ScreenshotUrl { get; set; }
+    
+    [Url]
+    [MaxLength(500)]
+    public string? ThumbnailUrl { get; set; }
 }
