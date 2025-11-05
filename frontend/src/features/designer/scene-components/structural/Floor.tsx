@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTexture } from "@react-three/drei";
 
 type FloorProps = {
     floorColor: string;
