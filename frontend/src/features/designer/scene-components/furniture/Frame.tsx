@@ -98,6 +98,17 @@ export const Frame: React.FC<FrameProps> = ({
         };
     };
 
+    // Clamp position to wall boundaries
+    const clampToWallBoundaries = (pos: THREE.Vector3): THREE.Vector3 => {
+        const boundaries = getWallBoundaries();
+        const clampedPos = pos.clone();
+        
+        clampedPos.x = Math.max(boundaries.minX, Math.min(boundaries.maxX, pos.x));
+        clampedPos.y = Math.max(boundaries.minY, Math.min(boundaries.maxY, pos.y));
+        
+        return clampedPos;
+    };
+
     
     // Helper function to snap to our 1x1cm grid
     const snapToGrid = (value: number, gridSize: number): number => {
