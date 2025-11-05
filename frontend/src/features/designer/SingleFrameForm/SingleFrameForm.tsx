@@ -177,6 +177,13 @@ export default function SingleFrameForm({
           </label>
         </div>
       </div>
+      <button 
+        type="button" 
+        onClick={onDelete}
+        className={styles.deleteButton}
+      >
+        Delete Frame
+      </button>
     </form>
   );
 };
