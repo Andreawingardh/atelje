@@ -4,6 +4,8 @@
 /* eslint-disable */
 import type { CreateDesignDto } from '../models/CreateDesignDto';
 import type { DesignDto } from '../models/DesignDto';
+import type { RequestScreenshotUrlsDto } from '../models/RequestScreenshotUrlsDto';
+import type { ScreenshotUrlsDto } from '../models/ScreenshotUrlsDto';
 import type { UpdateDesignDto } from '../models/UpdateDesignDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -84,6 +86,21 @@ export class DesignService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * @param requestBody
+     * @returns ScreenshotUrlsDto OK
+     * @throws ApiError
+     */
+    public static getScreenshotUploadUrls(
+        requestBody: RequestScreenshotUrlsDto,
+    ): CancelablePromise<ScreenshotUrlsDto> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/Design/screenshots/upload-urls',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 }

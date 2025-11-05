@@ -1,5 +1,5 @@
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import FurnitureForm, { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import StructuralForm from "../StructuralForm/StructuralForm";
@@ -56,6 +56,8 @@ export default function DesignerWorkspace({
   deleteFrame,
 }: DesignerWorkspaceProps) {
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Find the selected frame by ID
   const selectedFrameIndex = customDesign.frames.findIndex(
@@ -135,6 +137,7 @@ export default function DesignerWorkspace({
           frames={customDesign.frames}
           selectedFrameId={selectedFrameId}
           onFrameSelect={setSelectedFrameId}
+          canvasRef={canvasRef}
         />
       )}
       <div>
