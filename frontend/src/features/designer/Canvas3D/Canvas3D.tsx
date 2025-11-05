@@ -66,6 +66,13 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
+        <directionalLight
+          position={[-2, 5, cameraDistance / 2]}
+          intensity={0.4}
+          castShadow
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+        />
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='front' ref={wallRef} gridCellSize={cellSize} floorSize={floorSize}/>
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
