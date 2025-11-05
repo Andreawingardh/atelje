@@ -31,6 +31,7 @@ interface DesignerWorkspaceProps {
     index: number,
     orientation: "portrait" | "landscape"
   ) => void;
+  deleteFrame: (index: number) => void;
 }
 
 export default function DesignerWorkspace({
@@ -52,6 +53,7 @@ export default function DesignerWorkspace({
   setFrameImage,
   setFrameSize,
   setFrameOrientation,
+  deleteFrame,
 }: DesignerWorkspaceProps) {
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
 
