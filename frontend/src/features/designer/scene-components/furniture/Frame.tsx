@@ -81,7 +81,24 @@ export const Frame: React.FC<FrameProps> = ({
     ? Math.max(baseDimensions.width, baseDimensions.height)
     : Math.min(baseDimensions.width, baseDimensions.height);
 
+    // Calculate wall boundaries in world space
+    const getWallBoundaries = () => {
+        const wallWidthInMeters = wallWidth * gridCellSize;
+        const wallHeightInMeters = ceilingHeight * gridCellSize;
+        
+        // Half dimensions of the frame including thickness
+        const halfFrameWidth = (frameWidth + frameThickness * 2) / 2;
+        const halfFrameHeight = (frameHeight + frameThickness * 2) / 2;
+        
+        return {
+            minX: -wallWidthInMeters / 2 + halfFrameWidth,
+            maxX: wallWidthInMeters / 2 - halfFrameWidth,
+            minY: halfFrameHeight,
+            maxY: wallHeightInMeters - halfFrameHeight
+        };
+    };
 
+    
     // Helper function to snap to our 1x1cm grid
     const snapToGrid = (value: number, gridSize: number): number => {
         return Math.round(value / gridSize) * gridSize;
