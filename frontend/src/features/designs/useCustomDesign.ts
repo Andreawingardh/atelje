@@ -6,6 +6,7 @@ export interface CustomDesign {
   wallWidth: number;
   ceilingHeight: number;
   wallColor: string;
+  flooring: string;
   furnitureColor: FurnitureColor;
   furnitureWidth: number,
   furnitureDepth: number,
@@ -36,6 +37,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     wallWidth: initialDesign?.wallWidth ?? 500,
     ceilingHeight: initialDesign?.ceilingHeight ?? 300,
     wallColor: initialDesign?.wallColor ?? "#DEDEDE",
+    flooring: initialDesign?.flooring ?? "birch-floor-parquet",
     furnitureColor: initialDesign?.furnitureColor ?? { sofa: "#8B4513" },
     furnitureDepth: initialDesign?.furnitureDepth ?? 80,
     furnitureWidth: initialDesign?.furnitureWidth ?? 210,
@@ -55,6 +57,10 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
   const setWallColor = (value: string) => {
     setCustomDesign((prev) => ({ ...prev, wallColor: value }));
   };
+
+  const setFlooring = (value: string) => {
+    setCustomDesign((prev) => ({ ...prev, flooring: value }));
+  }
 
   // Furniture helper functions
   const setFurnitureColor = (value: FurnitureColor) => {
@@ -142,6 +148,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setWallWidth(currentDesign.wall.width);
     setCeilingHeight(currentDesign.wall.height)
     setWallColor(currentDesign.wall.color)
+    /* setFlooring(currentDesign.flooring) */ // We'll add this later!
     setFurnitureColor(currentDesign.sofa.color)
     setFurnitureDepth(currentDesign.sofa.depth)
     setFurnitureWidth(currentDesign.sofa.width)
@@ -156,6 +163,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setWallWidth,
     setCeilingHeight,
     setWallColor,
+    setFlooring,
     setFurnitureColor,
     setFurnitureDepth,
     setFurnitureWidth,

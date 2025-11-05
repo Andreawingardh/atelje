@@ -15,6 +15,7 @@ interface Canvas3DProps {
   wallWidth: number;
   ceilingHeight: number;
   wallColor: string;
+  flooring: string;
   furnitureColor: FurnitureColor;
   furnitureWidth: number;
   furnitureDepth: number;
@@ -25,7 +26,7 @@ interface Canvas3DProps {
   onFramePositionChange?: (frameId: string, position: THREE.Vector3) => void;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionChange } : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionChange } : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
@@ -76,7 +77,7 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='front' ref={wallRef} gridCellSize={cellSize} floorSize={floorSize}/>
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='left' gridCellSize={cellSize} floorSize={floorSize}/>
         <Wall wallColor={wallColor} wallWidth={wallWidth} ceilingHeight={ceilingHeight} wallPlacement='right' gridCellSize={cellSize} floorSize={floorSize}/>
-        <Floor floorColor="#55412C" gridSize={floorSize} gridCellSize={cellSize} />
+        <Floor flooring={flooring} gridSize={floorSize} gridCellSize={cellSize} />
         <Ceiling ceilingHeight={ceilingHeight} gridSize={floorSize} gridCellSize={cellSize} />
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={furnitureWidth} sofaDepth={furnitureDepth} sofaHeight={furnitureHeight} floorSize={floorSize} gridCellSize={cellSize} />
         {/* Render all frames */}
