@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using Resend;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +40,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 {
     // Require unique email
     options.User.RequireUniqueEmail = true;
-    
+
     // Password settings (optional, but good to be explicit)
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
@@ -47,10 +48,20 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 6;
 });
-builder.Services.AddScoped<IUserService, UserService>(); 
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDesignService, DesignService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IEmailSender, FakeEmailSender>();
+// builder.Services.AddScoped<IEmailSender, FakeEmailSender>();
+builder.Services.AddScoped<IResend, ResendClient>();
+builder.Services.AddScoped<IEmailSender, ResendEmailSender>();
+builder.Services.AddOptions();
+builder.Services.Configure<ResendClientOptions>(o =>
+{
+    o.ApiToken = builder.Configuration["Email:ApiKey"] ?? throw new InvalidOperationException(
+        "Email:ApiKey configuration is missing. Add it to user secrets.");
+    ;
+});
+builder.Services.AddHttpClient<ResendClient>();
 builder.Services.AddScoped<IR2Service, R2Service>();
 
 //Sets up JWT authentication
@@ -80,7 +91,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("TestDatabase");
 
     var pgHost = builder.Configuration["PGHOST"];
-    
+
     if (!string.IsNullOrEmpty(pgHost))
     {
         connectionString = $"Host={pgHost};" + $"Port={builder.Configuration["PGPORT"] ?? "5432"};" +
@@ -94,6 +105,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     {
         throw new InvalidOperationException("No database connection string found.");
     }
+
     options.UseNpgsql(connectionString);
 });
 
@@ -106,10 +118,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.OpenApiRoutePattern = "/openapi/v1.json";
-    });
+    app.MapScalarApiReference(options => { options.OpenApiRoutePattern = "/openapi/v1.json"; });
 }
 
 if (app.Environment.IsProduction())
@@ -118,7 +127,7 @@ if (app.Environment.IsProduction())
     //@TODO: Check if it's really necessary to define these again
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var loggerProd = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    
+
     try
     {
         loggerProd.LogInformation("Starting database migration...");
@@ -129,7 +138,8 @@ if (app.Environment.IsProduction())
     {
         loggerProd.LogError(ex, "Database migration failed");
         throw;
-    }}
+    }
+}
 
 
 app.UseHttpsRedirection();
@@ -144,14 +154,13 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     {
         ResponseWriter = async (context, report) =>
         {
-            
             context.Response.StatusCode = report.Status switch
             {
                 HealthStatus.Healthy or HealthStatus.Degraded => StatusCodes.Status200OK,
                 HealthStatus.Unhealthy => StatusCodes.Status503ServiceUnavailable,
                 _ => StatusCodes.Status500InternalServerError
             };
-            
+
             var json = JsonSerializer.Serialize(new
             {
                 status = report.Status.ToString(),
@@ -160,7 +169,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
                     e => e.Key,
                     e => e.Value.Status.ToString())
             });
-        
+
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(json);
         }
