@@ -135,7 +135,8 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             Email = user.Email!,
             UserName = user.UserName!,
-            DisplayName = user.DisplayName
+            DisplayName = user.DisplayName,
+            EmailConfirmed = user.EmailConfirmed
         });
     }
 
@@ -208,11 +209,7 @@ public class AuthController : ControllerBase
         {
             return BadRequest();
         }
-
-        if (user.EmailSent)
-        {
-            return Conflict(new { message = "Confirmation email has already been sent." });
-        }
+        
 
         if (user.EmailConfirmed)
         {
@@ -235,11 +232,10 @@ public class AuthController : ControllerBase
                                 <p>Please click the following URL to confirm your email</p>:
                                 <a href="{emailConfirmationUrl}">Click me</a>
                                 """;
-
         var isEmailSent = true;
         try
         {
-            await _emailSender.SendEmailAsync(user.Email, "Confirm your email", innerHtmlMessage);
+            await _emailSender.SendEmailAsync(user.Email!, "Confirm your email", innerHtmlMessage);
         }
         catch (Exception exception)
         {
