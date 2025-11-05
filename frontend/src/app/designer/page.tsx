@@ -9,12 +9,28 @@ import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWor
 import { ApiError } from "@/api/generated";
 
 export default function NewDesignPage() {
-  const { createDesign, isLoading, error, } = useDesign();
+  const { createDesign, isLoading, error } = useDesign();
   const router = useRouter();
   const [designName, setDesignName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { getSceneData, setCeilingHeight, setFrameColor, setFrameImage, setFrameOrientation, setFrameSize, setFrames, setFurnitureColor, setFurnitureDepth, setFurnitureHeight, setFurnitureWidth, setWallColor, setWallWidth, addFrame, customDesign  } = useCustomDesign();
+  const {
+    getSceneData,
+    setCeilingHeight,
+    setFrameColor,
+    setFrameImage,
+    setFrameOrientation,
+    setFrameSize,
+    setFrames,
+    setFurnitureColor,
+    setFurnitureDepth,
+    setFurnitureHeight,
+    setFurnitureWidth,
+    setWallColor,
+    setWallWidth,
+    addFrame,
+    customDesign,
+  } = useCustomDesign();
 
   async function handleSave() {
     const sceneData = getSceneData();
@@ -46,7 +62,7 @@ export default function NewDesignPage() {
         onSave={handleSave}
         isLoading={isLoading}
         error={error}
-               setCeilingHeight={setCeilingHeight}
+        setCeilingHeight={setCeilingHeight}
         setWallWidth={setWallWidth}
         setWallColor={setWallColor}
         setFrameColor={setFrameColor}

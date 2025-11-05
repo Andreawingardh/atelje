@@ -18,7 +18,24 @@ export default function DesignerPage() {
     useDesign();
   const [designName, setDesignName] = useState("");
 
-  const { loadSceneData, getSceneData, setCeilingHeight, setFrameColor, setFrameImage, setFrameOrientation, setFrameSize, setFrames, setFurnitureColor, setFurnitureDepth, setFurnitureHeight, setFurnitureWidth, setWallColor, setWallWidth, addFrame, customDesign } = useCustomDesign();
+  const {
+    loadSceneData,
+    getSceneData,
+    setCeilingHeight,
+    setFrameColor,
+    setFrameImage,
+    setFrameOrientation,
+    setFrameSize,
+    setFrames,
+    setFurnitureColor,
+    setFurnitureDepth,
+    setFurnitureHeight,
+    setFurnitureWidth,
+    setWallColor,
+    setWallWidth,
+    addFrame,
+    customDesign,
+  } = useCustomDesign();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

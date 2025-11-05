@@ -15,7 +15,7 @@ interface DesignerWorkspaceProps {
   isLoading: boolean;
   error?: string;
   // Add these from useCustomDesign:
-  customDesign: ReturnType<typeof useCustomDesign>['customDesign'];
+  customDesign: ReturnType<typeof useCustomDesign>["customDesign"];
   setWallWidth: (width: number) => void;
   setCeilingHeight: (height: number) => void;
   setWallColor: (color: string) => void;
@@ -27,14 +27,32 @@ interface DesignerWorkspaceProps {
   setFrameColor: (index: number, color: string) => void;
   setFrameImage: (index: number, url: string) => void;
   setFrameSize: (index: number, size: string) => void;
-  setFrameOrientation: (index: number, orientation: "portrait" | "landscape") => void;
+  setFrameOrientation: (
+    index: number,
+    orientation: "portrait" | "landscape"
+  ) => void;
 }
 
 export default function DesignerWorkspace({
-designName, onDesignNameChange, onSave,isLoading, error,customDesign, setWallWidth, setCeilingHeight, setWallColor, setFurnitureColor, setFurnitureDepth, setFurnitureHeight, setFurnitureWidth, addFrame, setFrameColor, setFrameImage, setFrameSize, setFrameOrientation
+  designName,
+  onDesignNameChange,
+  onSave,
+  isLoading,
+  error,
+  customDesign,
+  setWallWidth,
+  setCeilingHeight,
+  setWallColor,
+  setFurnitureColor,
+  setFurnitureDepth,
+  setFurnitureHeight,
+  setFurnitureWidth,
+  addFrame,
+  setFrameColor,
+  setFrameImage,
+  setFrameSize,
+  setFrameOrientation,
 }: DesignerWorkspaceProps) {
-
-
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
 
   // Find the selected frame by ID
