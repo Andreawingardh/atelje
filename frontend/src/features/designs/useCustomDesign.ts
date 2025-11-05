@@ -112,7 +112,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
   const deleteFrame = (index: number) => {
     setCustomDesign((prev) => ({
       ...prev,
-      frames: prev.frames.filter((_, i) => i !== index)
+      frames: prev.frames.filter((frame, i) => i !== index)
     }));
   };
 
