@@ -63,6 +63,7 @@ export default function DesignerWorkspace({
   );
   const selectedFrame =
     selectedFrameIndex !== -1 ? customDesign.frames[selectedFrameIndex] : null;
+
   return (
     <ProtectedRoute>
       <h1>Designer 3D-tool</h1>
@@ -112,7 +113,10 @@ export default function DesignerWorkspace({
                 orientation as "portrait" | "landscape"
               )
             }
-            onDelete={() => deleteFrame(selectedFrameIndex)}
+            onDelete={() => {
+              deleteFrame(selectedFrameIndex);
+              setSelectedFrameId(null);
+            }}
           />
         </div>
       )}

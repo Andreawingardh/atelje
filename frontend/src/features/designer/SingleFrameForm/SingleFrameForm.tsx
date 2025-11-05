@@ -44,6 +44,7 @@ export default function SingleFrameForm({
   const handleSetFrameSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFrameSize(e.target.value);
   };
+  
 
   return (
     <form className={styles.frameForm}>
