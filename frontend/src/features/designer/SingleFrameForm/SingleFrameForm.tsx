@@ -1,7 +1,6 @@
 import styles from "./SingleFrameForm.module.css";
 import React from "react";
 import { FrameData } from "../FrameForm/FrameForm";
-import { useCustomDesign } from "@/features/designs/useCustomDesign";
 
 interface singleFrameFormProps {
   frames: FrameData[];
