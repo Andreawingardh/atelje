@@ -23,5 +23,4 @@ export type { UserDto } from './models/UserDto';
 export { AteljeService } from './services/AteljeService';
 export { AuthService } from './services/AuthService';
 export { DesignService } from './services/DesignService';
-export { TestService } from './services/TestService';
 export { UserService } from './services/UserService';

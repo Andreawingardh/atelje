@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ScreenshotUrlsDto = {
-    fullSizeUploadUrl?: string;
-    thumbnailUploadUrl?: string;
-    fullSizePublicUrl?: string;
-    thumbnailPublicUrl?: string;
+    fullSizeUploadUrl: string;
+    thumbnailUploadUrl: string;
+    fullSizePublicUrl: string;
+    thumbnailPublicUrl: string;
 };
 

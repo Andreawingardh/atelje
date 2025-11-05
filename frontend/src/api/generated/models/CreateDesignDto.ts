@@ -6,5 +6,7 @@ export type CreateDesignDto = {
     name: string;
     userId: string;
     designData: string;
+    screenshotUrl?: string | null;
+    thumbnailUrl?: string | null;
 };
 
