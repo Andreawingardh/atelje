@@ -22,10 +22,11 @@ interface Canvas3DProps {
   frames: FrameData[];
   selectedFrameId?: string | null;
   onFrameSelect?: (frameId: string | null) => void;
+  onFramePositionChange?: (frameId: string, position: THREE.Vector3) => void;
   canvasRef?: React.RefObject<HTMLCanvasElement | null>;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, canvasRef } : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionChange, canvasRef } : Canvas3DProps) {
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
 const minDistanceZoom = Math.max(2, floorSize / 200);
@@ -89,10 +90,13 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
               floorSize={floorSize}
               gridCellSize={cellSize}
               wallMesh={wallRef.current}
+              wallWidth={wallWidth}
+              ceilingHeight={ceilingHeight}
               selected={selectedFrameId === frame.id}
               onSelect={() => handleFrameSelect(frame.id)}
               onDragStart={() => setIsDraggingFrame(true)}
               onDragEnd={() => setIsDraggingFrame(false)}
+              onPositionChange={(position) => onFramePositionChange?.(frame.id, position)}
             />
           </group>
         ))}

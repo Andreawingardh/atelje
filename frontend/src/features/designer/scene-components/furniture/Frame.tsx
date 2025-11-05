@@ -11,10 +11,13 @@ type FrameProps = {
     floorSize: number;
     gridCellSize: number;
     wallMesh?: THREE.Mesh | null;
+    wallWidth: number;
+    ceilingHeight: number;
     selected?: boolean;
     onSelect?: () => void;
     onDragStart?: () => void;
     onDragEnd?: () => void;
+    onPositionChange?: (position: THREE.Vector3) => void;
 }
 
 export const Frame: React.FC<FrameProps> = ({
@@ -25,10 +28,13 @@ export const Frame: React.FC<FrameProps> = ({
     floorSize, 
     gridCellSize,
     wallMesh,
+    wallWidth,
+    ceilingHeight,
     selected = false,
     onSelect,
     onDragStart,
-    onDragEnd
+    onDragEnd,
+    onPositionChange
 }) => {
     const frameThickness = 4 * gridCellSize; // 3 cm thickness
     const groupRef = useRef<THREE.Group>(null);
@@ -77,7 +83,65 @@ export const Frame: React.FC<FrameProps> = ({
     ? Math.max(baseDimensions.width, baseDimensions.height)
     : Math.min(baseDimensions.width, baseDimensions.height);
 
+    // Calculate wall boundaries in world space
+    const getWallBoundaries = () => {
+        const wallWidthInMeters = wallWidth * gridCellSize;
+        const wallHeightInMeters = ceilingHeight * gridCellSize;
+        
+        // Half dimensions of the frame including thickness
+        const halfFrameWidth = (frameWidth + frameThickness * 2) / 2;
+        const halfFrameHeight = (frameHeight + frameThickness * 2) / 2;
+        
+        return {
+            minX: -wallWidthInMeters / 2 + halfFrameWidth,
+            maxX: wallWidthInMeters / 2 - halfFrameWidth,
+            minY: halfFrameHeight,
+            maxY: wallHeightInMeters - halfFrameHeight
+        };
+    };
 
+    // Clamp position to wall boundaries
+    const clampToWallBoundaries = (pos: THREE.Vector3): THREE.Vector3 => {
+        const boundaries = getWallBoundaries();
+        const clampedPos = pos.clone();
+        
+        clampedPos.x = Math.max(boundaries.minX, Math.min(boundaries.maxX, pos.x));
+        clampedPos.y = Math.max(boundaries.minY, Math.min(boundaries.maxY, pos.y));
+        
+        return clampedPos;
+    };
+
+      // Effect to clamp frame position when wall dimensions change
+      useEffect(() => {
+        if (groupRef.current) {
+            const currentPos = new THREE.Vector3();
+            groupRef.current.getWorldPosition(currentPos);
+            
+            const clampedPos = clampToWallBoundaries(currentPos);
+            
+            // Only update if position changed after clamping
+            if (!currentPos.equals(clampedPos)) {
+                if (groupRef.current.parent) {
+                    const localPosition = groupRef.current.parent.worldToLocal(clampedPos.clone());
+                    groupRef.current.position.copy(localPosition);
+                } else {
+                    groupRef.current.position.copy(clampedPos);
+                }
+                
+                // Update position display
+                setPosition({
+                    x: Math.round(clampedPos.x / gridCellSize),
+                    y: Math.round(clampedPos.y / gridCellSize)
+                });
+
+                // Notify parent of position change
+                onPositionChange?.(clampedPos);
+            }
+        }
+    }, [wallWidth, ceilingHeight, frameWidth, frameHeight]);
+
+
+    
     // Helper function to snap to our 1x1cm grid
     const snapToGrid = (value: number, gridSize: number): number => {
         return Math.round(value / gridSize) * gridSize;
@@ -132,14 +196,16 @@ export const Frame: React.FC<FrameProps> = ({
         if (intersects.length === 0) return;
     
         const hit = intersects[0]!;
-        const wallNormal = hit.face?.normal.clone() ?? new THREE.Vector3(0, 0, 1);
     
         // Calculate new position: where the mouse hits the wall + the original offset
-        const newPosition = hit.point.clone().add(dragOffset.current);
+        let newPosition = hit.point.clone().add(dragOffset.current);
     
         // Snap to grid (1cm increments)
         newPosition.x = snapToGrid(newPosition.x, gridCellSize);
         newPosition.y = snapToGrid(newPosition.y, gridCellSize);
+        
+        // Clamp to wall boundaries
+        newPosition = clampToWallBoundaries(newPosition);
     
         // Apply the new position
         if (groupRef.current.parent) {
@@ -151,9 +217,12 @@ export const Frame: React.FC<FrameProps> = ({
 
         // Update position display (convert to cm)
         setPosition({
-        x: Math.round(newPosition.x / gridCellSize),
-        y: Math.round(newPosition.y / gridCellSize)
+            x: Math.round(newPosition.x / gridCellSize),
+            y: Math.round(newPosition.y / gridCellSize)
         });
+
+        // Notify parent of position change
+        onPositionChange?.(newPosition);
     };
     
 

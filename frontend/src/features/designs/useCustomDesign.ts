@@ -109,6 +109,13 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     updateFrame(index, { frameOrientation: orientation });
   };
 
+  const deleteFrame = (index: number) => {
+    setCustomDesign((prev) => ({
+      ...prev,
+      frames: prev.frames.filter((frame, i) => i !== index)
+    }));
+  };
+
 
 
   // Inside useCustomDesign:
@@ -160,6 +167,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFrameImage,
     setFrameSize,
     setFrameOrientation,
+    deleteFrame,
     getSceneData,
     loadSceneData
   };
