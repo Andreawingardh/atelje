@@ -68,6 +68,8 @@ public class AuthController : ControllerBase
                                 <p>Please click the following URL to confirm your email</p>:
                                 <a href="{emailConfirmationUrl}">Click me</a>
                                 """;
+
+        var isEmailSent = true;
         try
         {
             await _emailSender.SendEmailAsync(user.Email, "Confirm your email", innerHtmlMessage);
@@ -75,7 +77,9 @@ public class AuthController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError("There was an error sending confirmation email: {Exception}", exception);
+            isEmailSent = false;
         }
+        
 
         return Ok(new AuthResponseDto
         {
@@ -84,7 +88,8 @@ public class AuthController : ControllerBase
             Email = user.Email!,
             UserName = user.UserName!,
             DisplayName = user.DisplayName,
-            EmailConfirmed = user.EmailConfirmed
+            EmailConfirmed = user.EmailConfirmed,
+            EmailSent = isEmailSent
         });
     }
 

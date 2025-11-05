@@ -39,7 +39,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Require unique email
-    options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = false; //@TODO: Change back to true when done testing
 
     // Password settings (optional, but good to be explicit)
     options.Password.RequireDigit = true;
