@@ -6,7 +6,7 @@ export interface FrameData {
   frameColor: string;
   frameSize: string;
   frameOrientation: 'portrait' | 'landscape';
-  imageUrl?: string;
+  imageUrl: string;
   position: [number, number, number];
 }
 

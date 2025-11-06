@@ -1,6 +1,7 @@
 import styles from "./SingleFrameForm.module.css";
 import React from "react";
 import { FrameData } from "../FrameForm/FrameForm";
+import { stockPhotos } from "@/lib/stockPhotos";
 
 interface singleFrameFormProps {
   frames: FrameData[];

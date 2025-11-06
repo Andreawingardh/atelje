@@ -5,7 +5,7 @@ import { Html } from '@react-three/drei';
 
 type FrameProps = {
     frameColor: string;
-    imageUrl?: string;
+    imageUrl: string;
     frameSize: string;
     frameOrientation: 'portrait' | 'landscape';
     floorSize: number;
@@ -234,6 +234,7 @@ export const Frame: React.FC<FrameProps> = ({
         }
     };
 
+    // Load image texture
     useEffect(() => {
         if (imageUrl) {
             const loader = new THREE.TextureLoader();

@@ -105,7 +105,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     updateFrame(index, { frameColor: color });
   };
 
-  const setFrameImage = (index: number, imageUrl: string | undefined) => {
+  const setFrameImage = (index: number, imageUrl: string) => {
     updateFrame(index, { imageUrl });
   };
 
