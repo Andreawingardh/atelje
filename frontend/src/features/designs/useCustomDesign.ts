@@ -29,6 +29,8 @@ export type DesignData = {
   };
 
   frames: FrameData[];
+
+  flooring: string;
 };
 
 
@@ -138,7 +140,8 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
         depth: customDesign.furnitureDepth,
         height: customDesign.furnitureHeight
       },
-      frames: customDesign.frames
+      frames: customDesign.frames,
+      flooring: customDesign.flooring
     };
     return JSON.stringify(data);
   };
@@ -148,7 +151,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setWallWidth(currentDesign.wall.width);
     setCeilingHeight(currentDesign.wall.height)
     setWallColor(currentDesign.wall.color)
-    /* setFlooring(currentDesign.flooring) */ // We'll add this later!
+    setFlooring(currentDesign.flooring)
     setFurnitureColor(currentDesign.sofa.color)
     setFurnitureDepth(currentDesign.sofa.depth)
     setFurnitureWidth(currentDesign.sofa.width)
