@@ -1,6 +1,9 @@
 import styles from "./SingleFrameForm.module.css";
 import React from "react";
+import { useState, useEffect } from 'react';
 import { FrameData } from "../FrameForm/FrameForm";
+import { stockPhotos, PhotoCategory, getPhotosByCategory } from "@/lib/stockPhotos";
+import Image from 'next/image';
 
 interface singleFrameFormProps {
   frames: FrameData[];
@@ -28,6 +31,9 @@ export default function SingleFrameForm({
     setFrameOrientation,
     onDelete,
 }: singleFrameFormProps) {
+  const [selectedCategory, setSelectedCategory] = useState<PhotoCategory>('nature');
+  const categories: PhotoCategory[] = ['nature', 'city', 'graphic', 'vintage', 'animals', 'people'];
+  const filteredPhotos = getPhotosByCategory(selectedCategory);
 
   const handleFrameColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFrameColor(e.target.value);
@@ -45,6 +51,21 @@ export default function SingleFrameForm({
     setFrameSize(e.target.value);
   };
   
+  //Get current image category when imageUrl changes
+  useEffect(() => {
+    if (imageUrl) {
+      // Extract filename from the full path
+      const filename = imageUrl.split('/').pop();
+      
+      // Find the photo in stockPhotos
+      const currentPhoto = stockPhotos.find(photo => photo.filename === filename);
+      
+      // If found, set the category to match
+      if (currentPhoto) {
+        setSelectedCategory(currentPhoto.category);
+      }
+    }
+  }, [imageUrl]);
 
   return (
     <form className={styles.frameForm}>
@@ -60,13 +81,33 @@ export default function SingleFrameForm({
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="imageUrl">Picture</label>
-          <input
-            id="imageUrl"
-            type="text"
-            value={imageUrl || ""}
-            onChange={handleFrameImageChange}
-            className={styles.input}
-          />
+          <div className={styles.categoryButtons}>
+            {categories.map(category => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setSelectedCategory(category)}
+                className={`${styles.categoryButton} ${selectedCategory === category ? styles.active : ''}`}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
+          </div>
+          <div className={styles.photoGrid}>
+            {filteredPhotos.map(photo => (
+              <Image
+              key={photo.id}
+              src={`/stock-photos/${photo.filename}`}
+              alt={photo.alt}
+              width={80}
+              height={80}
+              onClick={() => setFrameImage(`/stock-photos/${photo.filename}`)}
+              className={`${styles.photoThumbnail} ${imageUrl?.includes(photo.filename) ? styles.selected : ''}`}
+              quality={75}
+              style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+            />
+            ))}
+          </div>
         </div>
         <div className={styles.formGroup}>
           <label>Orientation</label>

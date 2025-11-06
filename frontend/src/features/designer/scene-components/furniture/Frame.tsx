@@ -5,7 +5,7 @@ import { Html } from '@react-three/drei';
 
 type FrameProps = {
     frameColor: string;
-    imageUrl?: string;
+    imageUrl: string;
     frameSize: string;
     frameOrientation: 'portrait' | 'landscape';
     floorSize: number;
@@ -234,13 +234,18 @@ export const Frame: React.FC<FrameProps> = ({
         }
     };
 
+    // Load image texture
     useEffect(() => {
         if (imageUrl) {
             const loader = new THREE.TextureLoader();
+            console.log('Loading texture from URL:', imageUrl);
             loader.load(
                 imageUrl,
                 (loadedTexture) => {
+                    loadedTexture.colorSpace = THREE.SRGBColorSpace;
+                    loadedTexture.needsUpdate = true;
                     setImageTexture(loadedTexture);
+                    console.log('Texture loaded successfully');
                 },
                 undefined,
                 (error) => {
@@ -275,23 +280,16 @@ export const Frame: React.FC<FrameProps> = ({
                 <meshStandardMaterial color="#ffffff" />
             </mesh>
             
-            {/* Glass effect */}
-            <mesh position={[0, 0, frameDepth * 0.65]}>
-                <planeGeometry args={[frameWidth, frameHeight]} />
-                <meshPhysicalMaterial 
-                    color="#ffffff"
-                    transmission={1}
-                    thickness={0.01}
-                    roughness={0}
-                    reflectivity={1}
-                    metalness={0}
-                />
-            </mesh>
-
             {/* Image plane */}
             <mesh position={[0, 0, frameDepth * 0.6]}>
                 <planeGeometry args={[frameWidth * 0.95, frameHeight * 0.95]} />
-                <meshStandardMaterial map={ImageTexture} />
+                {ImageTexture && (
+                    <meshStandardMaterial 
+                        key={imageUrl}
+                        map={ImageTexture} 
+                        side={THREE.DoubleSide}
+                    />
+                )}
             </mesh>
 
             {/* Position display when dragging */}
