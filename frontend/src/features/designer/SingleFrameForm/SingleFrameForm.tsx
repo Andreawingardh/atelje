@@ -94,13 +94,17 @@ export default function SingleFrameForm({
               </button>
             ))}
           </div>
-          <input
-            id="imageUrl"
-            type="text"
-            value={imageUrl || ""}
-            onChange={handleFrameImageChange}
-            className={styles.input}
-          />
+          <div className={styles.photoGrid}>
+            {filteredPhotos.map(photo => (
+              <img
+                key={photo.id}
+                src={`/stock-photos/${photo.filename}`}
+                alt={photo.alt}
+                onClick={() => setFrameImage(`/stock-photos/${photo.filename}`)}
+                className={`${styles.photoThumbnail} ${imageUrl?.includes(photo.filename) ? styles.selected : ''}`}
+              />
+            ))}
+          </div>
         </div>
         <div className={styles.formGroup}>
           <label>Orientation</label>
