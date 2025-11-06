@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './FrameForm.module.css';
+import { stockPhotos } from "@/lib/stockPhotos";
 
 export interface FrameData {
   id: string;
@@ -41,13 +42,22 @@ export default function FrameForm({ frames, onAddFrame, wallWidth, ceilingHeight
     return [randomX, randomY, 0];
   };
 
+  const getRandomImageUrl = (): string => {
+    if (stockPhotos.length === 0) {
+      return '/mountains-field-flowers-daniela-kokina-unsplash.jpg';
+    }
+    const randomIndex = Math.floor(Math.random() * stockPhotos.length);
+    const photo = stockPhotos[randomIndex]!;
+    return `/stock-photos/${photo.filename}`;
+  };
+
   const handleAddFrame = () => {
     const newFrame: FrameData = {
       id: `frame-${Date.now()}`,
       frameColor: '#ac924f',
       frameSize: '70x50',
       frameOrientation: 'portrait',
-      imageUrl: '/241113-doge.jpg',
+      imageUrl: getRandomImageUrl(),
       position: getRandomPosition() // Position will be changed later to work with collisions etc
     };
     onAddFrame(newFrame);
