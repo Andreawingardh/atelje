@@ -3,6 +3,7 @@
 import { ApiError, DesignDto, DesignService } from "@/api/generated";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useCallback } from "react";
+import { uploadScreenshotsToR2 } from "@/lib/uploadScreenshots";
 
 export function useDesign() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -11,13 +12,44 @@ export function useDesign() {
     const [succeeded, setSucceeded] = useState<boolean>(false);
     const [currentDesign, setCurrentDesign] = useState<DesignDto | undefined>(undefined);
 
-    async function createDesign(name: string, sceneData: string): Promise<DesignDto | undefined> {
+    async function createDesign(name: string, sceneData: string, screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }): Promise<DesignDto | undefined> {
 
         try {
             setSucceeded(false)
             setIsLoading(true);
-            const result = await DesignService.createDesign({ name, userId: user!.userId, designData: sceneData });
-            return result
+            // Create design (without screenshots)
+            const design = await DesignService.createDesign({ 
+                name, 
+                userId: user!.userId, 
+                designData: sceneData 
+            });
+            
+            // If screenshots provided, upload them
+            if (screenshots && design.id) {
+                try {
+                    
+                    const { screenshotUrl, thumbnailUrl } = await uploadScreenshotsToR2(
+                        design.id,
+                        screenshots.fullBlob,
+                        screenshots.thumbnailBlob
+                    );
+                    
+                    // Update design with screenshot URLs
+                    const updatedDesign = await DesignService.updateDesign(design.id, {
+                        screenshotUrl,
+                        thumbnailUrl
+                    });
+                    
+                    return updatedDesign;
+                    
+                } catch (screenshotError) {
+                    console.warn('Screenshot upload failed, but design was saved:', screenshotError);
+                    // Design saved without screenshots
+                    return design;
+                }
+            }
+            
+            return design;
         } catch (error) {
             setError(
                 error instanceof ApiError

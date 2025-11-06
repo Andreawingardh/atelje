@@ -72,8 +72,10 @@ public class DesignService(AppDbContext context) : IDesignService
         
         if (design == null) return null;
 
-        design.Name = updateDesignDto.Name;
-        design.DesignData = updateDesignDto.DesignData;
+        design.Name = updateDesignDto.Name ?? design.Name;
+        design.DesignData = updateDesignDto.DesignData ?? design.DesignData;
+        design.ScreenshotUrl = updateDesignDto.ScreenshotUrl ?? design.ScreenshotUrl;
+        design.ThumbnailUrl = updateDesignDto.ThumbnailUrl ?? design.ThumbnailUrl;
         design.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
@@ -85,7 +87,9 @@ public class DesignService(AppDbContext context) : IDesignService
             DesignData = design.DesignData,
             CreatedAt = design.CreatedAt,
             UpdatedAt = design.UpdatedAt,
-            UserId = design.UserId
+            UserId = design.UserId,
+            ScreenshotUrl = design.ScreenshotUrl,
+            ThumbnailUrl = design.ThumbnailUrl
         };
     }
     

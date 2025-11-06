@@ -7,13 +7,11 @@ namespace Atelje.DTOs.Design;
 /// </summary>
 public class UpdateDesignDto
 {
-    [Required]
     [MaxLength(50)]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
     
-    [Required]
     [MinLength(3)]
-    public required string DesignData { get; set; }
+    public string? DesignData { get; set; }
     
     [Url]
     [MaxLength(500)]

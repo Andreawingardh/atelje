@@ -1,5 +1,5 @@
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import FurnitureForm, { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import StructuralForm from "../StructuralForm/StructuralForm";
@@ -7,11 +7,12 @@ import SingleFrameForm from "../SingleFrameForm/SingleFrameForm";
 import FrameForm from "../FrameForm/FrameForm";
 import Canvas3D from "../Canvas3D/Canvas3D";
 import { FrameData } from "../FrameForm/FrameForm";
+import { captureScreenshot } from "@/lib/screenshotCapture";
 
 interface DesignerWorkspaceProps {
   designName: string;
   onDesignNameChange: (name: string) => void;
-  onSave: () => void;
+  onSave: (screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) => Promise<void>;
   isLoading: boolean;
   error?: string;
   // Add these from useCustomDesign:
@@ -58,6 +59,23 @@ export default function DesignerWorkspace({
   deleteFrame,
 }: DesignerWorkspaceProps) {
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const handleSaveClick = async () => {
+    if (!canvasRef.current) {
+      console.error('Canvas not ready');
+      await onSave(); // Save without screenshots
+      return;
+    }
+
+    try {
+      const screenshots = await captureScreenshot(canvasRef.current);
+      await onSave(screenshots);
+    } catch (error) {
+      await onSave();
+    }
+  };
 
   // Find the selected frame by ID
   const selectedFrameIndex = customDesign.frames.findIndex(
@@ -140,6 +158,7 @@ export default function DesignerWorkspace({
           frames={customDesign.frames}
           selectedFrameId={selectedFrameId}
           onFrameSelect={setSelectedFrameId}
+          canvasRef={canvasRef}
         />
       )}
       <div>
@@ -148,7 +167,7 @@ export default function DesignerWorkspace({
           onChange={(e) => onDesignNameChange(e.target.value)}
           placeholder={designName || "Give your design a name"}
         />
-        <button onClick={onSave}>{isLoading ? "Saving" : "Save"}</button>
+        <button onClick={handleSaveClick}>{isLoading ? "Saving" : "Save"}</button>
         {error && <p>{error}</p>}
       </div>
     </ProtectedRoute>

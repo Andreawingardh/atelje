@@ -34,10 +34,10 @@ export default function NewDesignPage() {
     customDesign,
   } = useCustomDesign();
 
-  async function handleSave() {
+  async function handleSave(screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) {
     const sceneData = getSceneData();
     try {
-      const newDesign = await createDesign(designName, sceneData);
+      const newDesign = await createDesign(designName, sceneData, screenshots);
       console.log("About to create design with sceneData:", sceneData);
       console.log("Parsed:", JSON.parse(sceneData));
       if (newDesign) {

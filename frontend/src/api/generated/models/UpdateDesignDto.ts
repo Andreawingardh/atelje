@@ -3,7 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UpdateDesignDto = {
-    name: string;
-    designData: string;
+    name?: string | null;
+    designData?: string | null;
+    screenshotUrl?: string | null;
+    thumbnailUrl?: string | null;
 };
 
