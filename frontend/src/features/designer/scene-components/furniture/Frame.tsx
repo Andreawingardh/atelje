@@ -275,19 +275,6 @@ export const Frame: React.FC<FrameProps> = ({
                 <boxGeometry args={[frameWidth, frameHeight, frameDepth * 0.8]} />
                 <meshStandardMaterial color="#ffffff" />
             </mesh>
-            
-            {/* Glass effect */}
-            <mesh position={[0, 0, frameDepth * 0.65]}>
-                <planeGeometry args={[frameWidth, frameHeight]} />
-                <meshPhysicalMaterial 
-                    color="#ffffff"
-                    transmission={1}
-                    thickness={0.01}
-                    roughness={0}
-                    reflectivity={1}
-                    metalness={0}
-                />
-            </mesh>
 
             {/* Image plane */}
             <mesh position={[0, 0, frameDepth * 0.6]}>
