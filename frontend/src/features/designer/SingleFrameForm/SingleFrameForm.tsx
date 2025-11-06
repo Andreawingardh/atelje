@@ -1,7 +1,8 @@
 import styles from "./SingleFrameForm.module.css";
 import React from "react";
+import { useState, useEffect } from 'react';
 import { FrameData } from "../FrameForm/FrameForm";
-import { stockPhotos } from "@/lib/stockPhotos";
+import { stockPhotos, PhotoCategory, getPhotosByCategory } from "@/lib/stockPhotos";
 
 interface singleFrameFormProps {
   frames: FrameData[];
@@ -29,6 +30,9 @@ export default function SingleFrameForm({
     setFrameOrientation,
     onDelete,
 }: singleFrameFormProps) {
+  const [selectedCategory, setSelectedCategory] = useState<PhotoCategory>('nature');
+  const categories: PhotoCategory[] = ['nature', 'city', 'graphic', 'vintage', 'animals', 'people'];
+  const filteredPhotos = getPhotosByCategory(selectedCategory);
 
   const handleFrameColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFrameColor(e.target.value);
@@ -46,6 +50,23 @@ export default function SingleFrameForm({
     setFrameSize(e.target.value);
   };
   
+  //Get current image category when imageUrl changes
+  useEffect(() => {
+    if (imageUrl) {
+      // Extract filename from the full path
+      const filename = imageUrl.split('/').pop();
+      
+      // Find the photo in stockPhotos
+      const currentPhoto = stockPhotos.find(photo => photo.filename === filename);
+      
+      // If found, set the category to match
+      if (currentPhoto) {
+        setSelectedCategory(currentPhoto.category);
+      }
+    }
+  }, [imageUrl]);
+
+  console.log('Selected Category:', selectedCategory);
 
   return (
     <form className={styles.frameForm}>
@@ -61,6 +82,18 @@ export default function SingleFrameForm({
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="imageUrl">Picture</label>
+          <div className={styles.categoryButtons}>
+            {categories.map(category => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setSelectedCategory(category)}
+                className={`${styles.categoryButton} ${selectedCategory === category ? styles.active : ''}`}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
+          </div>
           <input
             id="imageUrl"
             type="text"
