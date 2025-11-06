@@ -43,7 +43,7 @@ export const stockPhotos: StockPhoto[] = [
     photographer: 'Klara Kulikova',
     aspectRatio: 1.5
   },
-  {
+/*   {
     id: 'leaf-with-waterdrop',
     filename: 'leaf-with-waterdrop-aaron-burden-unsplash.jpg',
     category: 'nature',
@@ -194,7 +194,7 @@ export const stockPhotos: StockPhoto[] = [
     alt: 'Graphic print of rectangles in various colors',
     photographer: 'The New York Public Library',
     aspectRatio: 1.5
-  },
+  } */
 ];
 
 // Helper functions

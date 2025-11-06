@@ -238,10 +238,14 @@ export const Frame: React.FC<FrameProps> = ({
     useEffect(() => {
         if (imageUrl) {
             const loader = new THREE.TextureLoader();
+            console.log('Loading texture from URL:', imageUrl);
             loader.load(
                 imageUrl,
                 (loadedTexture) => {
+                    loadedTexture.colorSpace = THREE.SRGBColorSpace;
+                    loadedTexture.needsUpdate = true;
                     setImageTexture(loadedTexture);
+                    console.log('Texture loaded successfully');
                 },
                 undefined,
                 (error) => {
@@ -275,11 +279,17 @@ export const Frame: React.FC<FrameProps> = ({
                 <boxGeometry args={[frameWidth, frameHeight, frameDepth * 0.8]} />
                 <meshStandardMaterial color="#ffffff" />
             </mesh>
-
+            
             {/* Image plane */}
             <mesh position={[0, 0, frameDepth * 0.6]}>
                 <planeGeometry args={[frameWidth * 0.95, frameHeight * 0.95]} />
-                <meshStandardMaterial map={ImageTexture} />
+                {ImageTexture && (
+                    <meshStandardMaterial 
+                        key={imageUrl}
+                        map={ImageTexture} 
+                        side={THREE.DoubleSide}
+                    />
+                )}
             </mesh>
 
             {/* Position display when dragging */}

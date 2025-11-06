@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from 'react';
 import { FrameData } from "../FrameForm/FrameForm";
 import { stockPhotos, PhotoCategory, getPhotosByCategory } from "@/lib/stockPhotos";
+import Image from 'next/image';
 
 interface singleFrameFormProps {
   frames: FrameData[];
@@ -66,8 +67,6 @@ export default function SingleFrameForm({
     }
   }, [imageUrl]);
 
-  console.log('Selected Category:', selectedCategory);
-
   return (
     <form className={styles.frameForm}>
       <div className={styles.colorGroup}>
@@ -96,13 +95,17 @@ export default function SingleFrameForm({
           </div>
           <div className={styles.photoGrid}>
             {filteredPhotos.map(photo => (
-              <img
-                key={photo.id}
-                src={`/stock-photos/${photo.filename}`}
-                alt={photo.alt}
-                onClick={() => setFrameImage(`/stock-photos/${photo.filename}`)}
-                className={`${styles.photoThumbnail} ${imageUrl?.includes(photo.filename) ? styles.selected : ''}`}
-              />
+              <Image
+              key={photo.id}
+              src={`/stock-photos/${photo.filename}`}
+              alt={photo.alt}
+              width={80}
+              height={80}
+              onClick={() => setFrameImage(`/stock-photos/${photo.filename}`)}
+              className={`${styles.photoThumbnail} ${imageUrl?.includes(photo.filename) ? styles.selected : ''}`}
+              quality={75}
+              style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+            />
             ))}
           </div>
         </div>
