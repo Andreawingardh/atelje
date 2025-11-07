@@ -19,14 +19,16 @@ public class AuthController : ControllerBase
     private readonly ITokenService _tokenService;
     private readonly IEmailSender _emailSender;
     private readonly ILogger<AuthController> _logger;
+    private readonly IWebHostEnvironment _env;
 
     public AuthController(UserManager<User> userManager, ITokenService tokenService, IEmailSender emailSender,
-        ILogger<AuthController> logger)
+        ILogger<AuthController> logger, IWebHostEnvironment env)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _emailSender = emailSender;
         _logger = logger;
+        _env = env;
     }
 
     [HttpPost("register")]
@@ -61,7 +63,8 @@ public class AuthController : ControllerBase
         _logger.LogInformation("Decoded token: {Encoded token}", encodedToken);
 
 
-        var emailConfirmationUrl = $"http://localhost:3000/confirm-email?userId={user.Id}&token={encodedToken}";
+        var baseUrl = _env.IsDevelopment() ? "https://localhost:3000" : "https://www.atelje.app";
+        var emailConfirmationUrl = $"{baseUrl}confirm-email?userId={user.Id}&token={encodedToken}";
 
         var innerHtmlMessage = $"""
                                 <p> Hi {user.UserName} </p>

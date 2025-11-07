@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
 
 
 namespace Atelje.Tests;
@@ -27,20 +28,22 @@ public class AuthControllerTests
     private readonly Mock<IEmailSender> _mockEmailSender;
     private readonly Mock<ILogger<AuthController>> _mockLogger;
     private readonly AuthController _controller;
+    private readonly Mock<IWebHostEnvironment> _mockEnv;
 
     public AuthControllerTests()
     {
-        // Setup that every test needs
         _mockUserManager = MockUserManager<User>();
         _mockTokenService = new Mock<ITokenService>();
         _mockEmailSender = new Mock<IEmailSender>();
         _mockLogger = new Mock<ILogger<AuthController>>();
+        _mockEnv = new Mock<IWebHostEnvironment>();
 
         _controller = new AuthController(
             _mockUserManager.Object,
             _mockTokenService.Object,
             _mockEmailSender.Object,
-            _mockLogger.Object
+            _mockLogger.Object,
+            _mockEnv.Object
         );
     }
 
