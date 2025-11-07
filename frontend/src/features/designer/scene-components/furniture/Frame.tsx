@@ -36,10 +36,10 @@ export const Frame: React.FC<FrameProps> = ({
     onDragEnd,
     onPositionChange
 }) => {
-    const frameThickness = 4 * gridCellSize; // 3 cm thickness
+    const frameThickness = 4 * gridCellSize; // 4 cm thickness
     const groupRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 150 }); // Position in cm
+    const [position, setPosition] = useState({ x: 100, y: 150 });
     const dragOffset = useRef(new THREE.Vector3());
     const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     
@@ -88,9 +88,9 @@ export const Frame: React.FC<FrameProps> = ({
         const wallWidthInMeters = wallWidth * gridCellSize;
         const wallHeightInMeters = ceilingHeight * gridCellSize;
         
-        // Half dimensions of the frame including thickness
-        const halfFrameWidth = (frameWidth + frameThickness * 2) / 2;
-        const halfFrameHeight = (frameHeight + frameThickness * 2) / 2;
+        // Half dimensions of the frame
+        const halfFrameWidth = frameWidth / 2; 
+        const halfFrameHeight = frameHeight / 2;
         
         return {
             minX: -wallWidthInMeters / 2 + halfFrameWidth,
@@ -99,6 +99,21 @@ export const Frame: React.FC<FrameProps> = ({
             maxY: wallHeightInMeters - halfFrameHeight
         };
     };
+    
+        // Convert from Three.js center origin to lower-left origin
+        // AND offset to represent bottom-left corner of frame instead of center
+        const worldToLowerLeft = (worldPos: THREE.Vector3): { x: number; y: number } => {
+            const wallWidthInMeters = wallWidth * gridCellSize;
+            
+            // Calculate half dimensions of the ENTIRE frame
+            const halfTotalFrameWidth = frameWidth / 2;
+            const halfTotalFrameHeight = frameHeight / 2;
+            
+            return {
+                x: worldPos.x + wallWidthInMeters / 2 - halfTotalFrameWidth,
+                y: worldPos.y - halfTotalFrameHeight
+            };
+        };
 
     // Clamp position to wall boundaries
     const clampToWallBoundaries = (pos: THREE.Vector3): THREE.Vector3 => {
@@ -129,9 +144,10 @@ export const Frame: React.FC<FrameProps> = ({
                 }
                 
                 // Update position display
+                const displayPos = worldToLowerLeft(clampedPos);
                 setPosition({
-                    x: Math.round(clampedPos.x / gridCellSize),
-                    y: Math.round(clampedPos.y / gridCellSize)
+                    x: Math.round(displayPos.x / gridCellSize),
+                    y: Math.round(displayPos.y / gridCellSize)
                 });
 
                 // Notify parent of position change
@@ -216,9 +232,10 @@ export const Frame: React.FC<FrameProps> = ({
         }
 
         // Update position display (convert to cm)
+        const displayPos = worldToLowerLeft(newPosition);
         setPosition({
-            x: Math.round(newPosition.x / gridCellSize),
-            y: Math.round(newPosition.y / gridCellSize)
+            x: Math.round(displayPos.x / gridCellSize),
+            y: Math.round(displayPos.y / gridCellSize)
         });
 
         // Notify parent of position change
@@ -267,8 +284,8 @@ export const Frame: React.FC<FrameProps> = ({
             {/* Frame border */}
             <mesh castShadow receiveShadow>
                 <boxGeometry args={[
-                    frameWidth + frameThickness * 2,
-                    frameHeight + frameThickness * 2,
+                    frameWidth,
+                    frameHeight,
                     frameDepth
                 ]} />
                 <meshStandardMaterial color={selected ? "#000000" : frameColor} /> {/* temporary color change on select for dev */}
@@ -276,13 +293,13 @@ export const Frame: React.FC<FrameProps> = ({
 
             {/* Inner frame (cutout) */}
             <mesh position={[0, 0, frameDepth * 0.15]}>
-                <boxGeometry args={[frameWidth, frameHeight, frameDepth * 0.8]} />
+                <boxGeometry args={[frameWidth - frameThickness * 2, frameHeight - frameThickness * 2, frameDepth * 0.8]} />
                 <meshStandardMaterial color="#ffffff" />
             </mesh>
             
             {/* Image plane */}
             <mesh position={[0, 0, frameDepth * 0.6]}>
-                <planeGeometry args={[frameWidth * 0.95, frameHeight * 0.95]} />
+                <planeGeometry args={[frameWidth - (frameThickness * 4) * 0.95, frameHeight - (frameThickness * 4) * 0.95]} />
                 {ImageTexture && (
                     <meshStandardMaterial 
                         key={imageUrl}
