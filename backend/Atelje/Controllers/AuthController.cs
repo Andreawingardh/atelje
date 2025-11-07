@@ -64,7 +64,7 @@ public class AuthController : ControllerBase
 
 
         var baseUrl = _env.IsDevelopment() ? "https://localhost:3000" : "https://www.atelje.app";
-        var emailConfirmationUrl = $"{baseUrl}confirm-email?userId={user.Id}&token={encodedToken}";
+        var emailConfirmationUrl = $"{baseUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
 
         var innerHtmlMessage = $"""
                                 <p> Hi {user.UserName} </p>
