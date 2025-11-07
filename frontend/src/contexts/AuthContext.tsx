@@ -25,6 +25,7 @@ export interface AuthContextType {
   logout: () => void;
   error: string | undefined;
   clearError: () => void;
+  setUser: Dispatch<SetStateAction<AuthResponseDto | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -128,6 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         isLoading,
         setIsLoading,
         login,

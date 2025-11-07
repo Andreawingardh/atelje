@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>1b28effc-9d5a-4873-867c-f812125cab5a</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +18,7 @@
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+        <PackageReference Include="Resend" Version="0.2.0" />
         <PackageReference Include="Scalar.AspNetCore" Version="2.9.0" />
     </ItemGroup>
 

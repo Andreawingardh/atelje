@@ -54,9 +54,9 @@ public class AuthController : ControllerBase
 
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         _logger.LogInformation("Email token: {EmailToken}", emailToken);
-        
+
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailToken));
-        
+
         _logger.LogInformation("Original token: {Token}", emailToken);
         _logger.LogInformation("Decoded token: {Encoded token}", encodedToken);
 
@@ -68,6 +68,8 @@ public class AuthController : ControllerBase
                                 <p>Please click the following URL to confirm your email</p>:
                                 <a href="{emailConfirmationUrl}">Click me</a>
                                 """;
+
+        var isEmailSent = true;
         try
         {
             await _emailSender.SendEmailAsync(user.Email, "Confirm your email", innerHtmlMessage);
@@ -75,7 +77,9 @@ public class AuthController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError("There was an error sending confirmation email: {Exception}", exception);
+            isEmailSent = false;
         }
+
 
         return Ok(new AuthResponseDto
         {
@@ -84,7 +88,8 @@ public class AuthController : ControllerBase
             Email = user.Email!,
             UserName = user.UserName!,
             DisplayName = user.DisplayName,
-            EmailConfirmed = user.EmailConfirmed
+            EmailConfirmed = user.EmailConfirmed,
+            EmailSent = isEmailSent
         });
     }
 
@@ -130,7 +135,8 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             Email = user.Email!,
             UserName = user.UserName!,
-            DisplayName = user.DisplayName
+            DisplayName = user.DisplayName,
+            EmailConfirmed = user.EmailConfirmed
         });
     }
 
@@ -163,7 +169,7 @@ public class AuthController : ControllerBase
 
             var decodedBytes = WebEncoders.Base64UrlDecode(token);
             var decodedToken = Encoding.UTF8.GetString(decodedBytes);
-            
+
             _logger.LogInformation("Received token: {Token}", token);
             _logger.LogInformation("Decoded token: {Decoded}", decodedToken);
 
@@ -188,5 +194,66 @@ public class AuthController : ControllerBase
             _logger.LogError(" {Exception}", exception);
             return BadRequest(new ErrorResponseDto { Errors = [$"There was an error confirming the email"] });
         }
+    }
+
+    [HttpPost("resend-confirmation-email")]
+    [Authorize]
+    public async Task<ActionResult<AuthResponseDto>> ResendConfirmationEmail()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var email = User.FindFirstValue(ClaimTypes.Email);
+
+        var user = await _userManager.FindByIdAsync(userId!);
+
+        if (user == null)
+        {
+            return BadRequest();
+        }
+        
+
+        if (user.EmailConfirmed)
+        {
+            return Conflict(new { message = "Email is already confirmed" });
+        }
+        
+        var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        _logger.LogInformation("Email token: {EmailToken}", emailToken);
+
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailToken));
+
+        _logger.LogInformation("Original token: {Token}", emailToken);
+        _logger.LogInformation("Decoded token: {Encoded token}", encodedToken);
+
+
+        var emailConfirmationUrl = $"http://localhost:3000/confirm-email?userId={user.Id}&token={encodedToken}";
+
+        var innerHtmlMessage = $"""
+                                <p> Hi {user.UserName} </p>
+                                <p>Please click the following URL to confirm your email</p>:
+                                <a href="{emailConfirmationUrl}">Click me</a>
+                                """;
+        var isEmailSent = true;
+        try
+        {
+            await _emailSender.SendEmailAsync(user.Email!, "Confirm your email", innerHtmlMessage);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError("There was an error sending confirmation email: {Exception}", exception);
+            isEmailSent = false;
+        }
+
+
+        return Ok(new AuthResponseDto
+        {
+            Token = "",
+            UserId = user.Id,
+            Email = user.Email!,
+            UserName = user.UserName!,
+            DisplayName = user.DisplayName,
+            EmailConfirmed = user.EmailConfirmed,
+            EmailSent = isEmailSent
+        });
+        
     }
 }
