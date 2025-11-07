@@ -194,4 +194,19 @@ else
     logger.LogInformation("💻 Using local TestDatabase connection from appsettings.json");
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        context.Database.Migrate(); // This applies any pending migrations
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        throw; // Re-throw so the app doesn't start with a broken database
+    }
+}
+
 app.Run();
