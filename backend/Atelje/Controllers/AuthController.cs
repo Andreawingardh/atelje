@@ -19,16 +19,14 @@ public class AuthController : ControllerBase
     private readonly ITokenService _tokenService;
     private readonly IEmailSender _emailSender;
     private readonly ILogger<AuthController> _logger;
-    private readonly IConfiguration _configuration;
 
     public AuthController(UserManager<User> userManager, ITokenService tokenService, IEmailSender emailSender,
-        ILogger<AuthController> logger, IConfiguration configuration)
+        ILogger<AuthController> logger)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _emailSender = emailSender;
         _logger = logger;
-        _configuration = configuration;
     }
 
     [HttpPost("register")]
@@ -62,8 +60,8 @@ public class AuthController : ControllerBase
         _logger.LogInformation("Original token: {Token}", emailToken);
         _logger.LogInformation("Decoded token: {Encoded token}", encodedToken);
 
-        var frontendBaseUrl = _configuration["FrontendBaseUrl"] ?? "http://localhost:3000";
-        var emailConfirmationUrl = $"{frontendBaseUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
+
+        var emailConfirmationUrl = $"http://localhost:3000/confirm-email?userId={user.Id}&token={encodedToken}";
 
         var innerHtmlMessage = $"""
                                 <p> Hi {user.UserName} </p>
