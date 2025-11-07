@@ -39,7 +39,7 @@ export const Frame: React.FC<FrameProps> = ({
     const frameThickness = 4 * gridCellSize; // 3 cm thickness
     const groupRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 150 }); // Position in cm
+    const [position, setPosition] = useState({ x: 100, y: 150 });
     const dragOffset = useRef(new THREE.Vector3());
     const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     
@@ -93,8 +93,8 @@ export const Frame: React.FC<FrameProps> = ({
         const halfFrameHeight = (frameHeight + frameThickness * 2) / 2;
         
         return {
-            minX: -wallWidthInMeters / 2 + halfFrameWidth,
-            maxX: wallWidthInMeters / 2 - halfFrameWidth,
+            minX: halfFrameWidth,
+            maxX: wallWidthInMeters - halfFrameWidth,
             minY: halfFrameHeight,
             maxY: wallHeightInMeters - halfFrameHeight
         };
