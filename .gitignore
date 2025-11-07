@@ -118,7 +118,6 @@ next-env.d.ts
 *.sqlite3
 
 #migrations
-backend/Atelje/Migrations/*.cs
 
 # ============================================
 # General
