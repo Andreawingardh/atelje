@@ -34,8 +34,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
 
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error("Backend url is not provided");
+  }
+  OpenAPI.BASE = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
+
     if (!token) {
       setIsLoading(false);
       return;
