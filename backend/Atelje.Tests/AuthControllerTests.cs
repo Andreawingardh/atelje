@@ -15,6 +15,7 @@ using Atelje.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 
@@ -27,6 +28,7 @@ public class AuthControllerTests
     private readonly Mock<IEmailSender> _mockEmailSender;
     private readonly Mock<ILogger<AuthController>> _mockLogger;
     private readonly AuthController _controller;
+    private readonly IConfiguration _mockConfiguration;
 
     public AuthControllerTests()
     {
@@ -35,12 +37,20 @@ public class AuthControllerTests
         _mockTokenService = new Mock<ITokenService>();
         _mockEmailSender = new Mock<IEmailSender>();
         _mockLogger = new Mock<ILogger<AuthController>>();
+        var inMemorySettings = new Dictionary<string, string> {
+            { "FrontendBaseUrl", "http://localhost:3000" }
+        };
+
+        _mockConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
 
         _controller = new AuthController(
             _mockUserManager.Object,
             _mockTokenService.Object,
             _mockEmailSender.Object,
-            _mockLogger.Object
+            _mockLogger.Object,
+            _mockConfiguration
         );
     }
 
