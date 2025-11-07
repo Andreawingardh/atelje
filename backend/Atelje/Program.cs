@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://atelje.up.railway.app")
+        policy.WithOrigins("http://localhost:3000", "https://atelje.up.railway.app", "https://www.atelje.app")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
