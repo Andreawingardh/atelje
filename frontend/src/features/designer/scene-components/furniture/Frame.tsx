@@ -88,7 +88,7 @@ export const Frame: React.FC<FrameProps> = ({
         const wallWidthInMeters = wallWidth * gridCellSize;
         const wallHeightInMeters = ceilingHeight * gridCellSize;
         
-        // Half dimensions of the frame (including thickness)
+        // Half dimensions of the frame
         const halfFrameWidth = frameWidth / 2; 
         const halfFrameHeight = frameHeight / 2;
         
@@ -105,7 +105,7 @@ export const Frame: React.FC<FrameProps> = ({
         const worldToLowerLeft = (worldPos: THREE.Vector3): { x: number; y: number } => {
             const wallWidthInMeters = wallWidth * gridCellSize;
             
-            // Calculate half dimensions of the ENTIRE frame (including thickness)
+            // Calculate half dimensions of the ENTIRE frame
             const halfTotalFrameWidth = frameWidth / 2;
             const halfTotalFrameHeight = frameHeight / 2;
             
