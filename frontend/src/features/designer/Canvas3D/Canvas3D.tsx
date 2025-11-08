@@ -24,10 +24,11 @@ interface Canvas3DProps {
   selectedFrameId?: string | null;
   onFrameSelect?: (frameId: string | null) => void;
   onFramePositionChange?: (frameId: string, position: THREE.Vector3) => void;
+  onFramePositionUpdate?: (index: number, position: [number, number, number]) => void;
   canvasRef?: React.RefObject<HTMLCanvasElement | null>;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionChange, canvasRef } : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef } : Canvas3DProps) {
 
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 500);
@@ -47,6 +48,13 @@ const [internalSelectedFrameId, setInternalSelectedFrameId] = useState<string | 
 const currentSelectedFrameId = selectedFrameId !== undefined ? selectedFrameId : internalSelectedFrameId;
 const handleFrameSelect = onFrameSelect || setInternalSelectedFrameId;
 const [isDraggingFrame, setIsDraggingFrame] = useState(false);
+
+const handlePositionUpdate = (frameId: string, position: THREE.Vector3) => {
+  const frameIndex = frames.findIndex(f => f.id === frameId);
+  if (frameIndex !== -1 && onFramePositionUpdate) {
+    onFramePositionUpdate(frameIndex, [position.x, position.y, position.z]);
+  }
+};
 
   return (
     <section className={styles.designerWindow}>
@@ -90,24 +98,24 @@ const [isDraggingFrame, setIsDraggingFrame] = useState(false);
         <Sofa sofaColor={furnitureColor.sofa} sofaWidth={furnitureWidth} sofaDepth={furnitureDepth} sofaHeight={furnitureHeight} floorSize={floorSize} gridCellSize={cellSize} />
         {/* Render all frames */}
         {frames.map((frame) => (
-          <group key={frame.id} position={frame.position}>
-            <Frame 
-              frameColor={frame.frameColor}
-              frameSize={frame.frameSize}
-              frameOrientation={frame.frameOrientation}
-              imageUrl={frame.imageUrl}
-              floorSize={floorSize}
-              gridCellSize={cellSize}
-              wallMesh={wallRef.current}
-              wallWidth={wallWidth}
-              ceilingHeight={ceilingHeight}
-              selected={selectedFrameId === frame.id}
-              onSelect={() => handleFrameSelect(frame.id)}
-              onDragStart={() => setIsDraggingFrame(true)}
-              onDragEnd={() => setIsDraggingFrame(false)}
-              onPositionChange={(position) => onFramePositionChange?.(frame.id, position)}
-            />
-          </group>
+          <Frame 
+            key={frame.id}
+            frameColor={frame.frameColor}
+            frameSize={frame.frameSize}
+            frameOrientation={frame.frameOrientation}
+            imageUrl={frame.imageUrl}
+            floorSize={floorSize}
+            gridCellSize={cellSize}
+            wallMesh={wallRef.current}
+            wallWidth={wallWidth}
+            ceilingHeight={ceilingHeight}
+            selected={selectedFrameId === frame.id}
+            onSelect={() => handleFrameSelect(frame.id)}
+            onDragStart={() => setIsDraggingFrame(true)}
+            onDragEnd={() => setIsDraggingFrame(false)}
+            onPositionChange={(position) => handlePositionUpdate(frame.id, position)}
+            framePosition={frame.position}
+          />
         ))}
 
         <OrbitControls 

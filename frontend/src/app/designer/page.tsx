@@ -20,6 +20,7 @@ export default function NewDesignPage() {
     setFrameColor,
     setFrameImage,
     setFrameOrientation,
+    setFramePosition,
     setFrameSize,
     setFrames,
     setFurnitureColor,
@@ -71,6 +72,7 @@ export default function NewDesignPage() {
         setFrameColor={setFrameColor}
         setFrameImage={setFrameImage}
         setFrameOrientation={setFrameOrientation}
+        setFramePosition={setFramePosition}
         setFrameSize={setFrameSize}
         setFurnitureColor={setFurnitureColor}
         setFurnitureDepth={setFurnitureDepth}

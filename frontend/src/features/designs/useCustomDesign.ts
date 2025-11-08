@@ -117,6 +117,10 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     updateFrame(index, { frameOrientation: orientation });
   };
 
+  const setFramePosition = (index: number, framePosition: [number, number, number]) => {
+    updateFrame(index, { position: framePosition });
+  }
+
   const deleteFrame = (index: number) => {
     setCustomDesign((prev) => ({
       ...prev,
@@ -178,6 +182,7 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFrameImage,
     setFrameSize,
     setFrameOrientation,
+    setFramePosition,
     deleteFrame,
     getSceneData,
     loadSceneData

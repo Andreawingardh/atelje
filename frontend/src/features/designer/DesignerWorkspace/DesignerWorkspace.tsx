@@ -33,6 +33,7 @@ interface DesignerWorkspaceProps {
     index: number,
     orientation: "portrait" | "landscape"
   ) => void;
+  setFramePosition: (index: number, position: [number, number, number]) => void;
   deleteFrame: (index: number) => void;
 }
 
@@ -56,6 +57,7 @@ export default function DesignerWorkspace({
   setFrameImage,
   setFrameSize,
   setFrameOrientation,
+  setFramePosition,
   deleteFrame,
 }: DesignerWorkspaceProps) {
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
@@ -158,6 +160,7 @@ export default function DesignerWorkspace({
           frames={customDesign.frames}
           selectedFrameId={selectedFrameId}
           onFrameSelect={setSelectedFrameId}
+          onFramePositionUpdate={setFramePosition}
           canvasRef={canvasRef}
         />
       )}

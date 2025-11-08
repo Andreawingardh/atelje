@@ -17,6 +17,7 @@ type FrameProps = {
     onSelect?: () => void;
     onDragStart?: () => void;
     onDragEnd?: () => void;
+    framePosition?: [number, number, number];
     onPositionChange?: (position: THREE.Vector3) => void;
 }
 
@@ -34,6 +35,7 @@ export const Frame: React.FC<FrameProps> = ({
     onSelect,
     onDragStart,
     onDragEnd,
+    framePosition = [0, 1.5, 0],
     onPositionChange
 }) => {
     const frameThickness = 4 * gridCellSize; // 4 cm thickness
@@ -42,6 +44,7 @@ export const Frame: React.FC<FrameProps> = ({
     const [position, setPosition] = useState({ x: 100, y: 150 });
     const dragOffset = useRef(new THREE.Vector3());
     const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
+    const isInitialized = useRef(false); // To prevent initial clamping effect before first position set
     
     const { camera, gl, raycaster } = useThree();
 
@@ -128,7 +131,7 @@ export const Frame: React.FC<FrameProps> = ({
 
       // Effect to clamp frame position when wall dimensions change
       useEffect(() => {
-        if (groupRef.current) {
+        if (groupRef.current && isInitialized.current) {
             const currentPos = new THREE.Vector3();
             groupRef.current.getWorldPosition(currentPos);
             
@@ -156,6 +159,15 @@ export const Frame: React.FC<FrameProps> = ({
         }
     }, [wallWidth, ceilingHeight, frameWidth, frameHeight]);
 
+    // Initialize position from props
+    useEffect(() => {
+        console.log('Frame position effect running:', framePosition, 'Z:', frameZPlacement);
+        if (groupRef.current && framePosition) {
+            groupRef.current.position.set(framePosition[0], framePosition[1], frameZPlacement);
+            console.log('Set position to:', framePosition[0], framePosition[1], frameZPlacement);
+            isInitialized.current = true;
+        }
+    }, [framePosition, frameZPlacement]);
 
     
     // Helper function to snap to our 1x1cm grid
@@ -275,7 +287,6 @@ export const Frame: React.FC<FrameProps> = ({
 
     return (
         <group
-            position={[0, 0, frameZPlacement]}
             ref={groupRef}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}

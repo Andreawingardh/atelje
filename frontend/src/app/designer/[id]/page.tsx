@@ -25,6 +25,7 @@ export default function DesignerPage() {
     setFrameColor,
     setFrameImage,
     setFrameOrientation,
+    setFramePosition,
     setFrameSize,
     setFrames,
     setFurnitureColor,
@@ -101,6 +102,7 @@ export default function DesignerPage() {
         setFrameColor={setFrameColor}
         setFrameImage={setFrameImage}
         setFrameOrientation={setFrameOrientation}
+        setFramePosition={setFramePosition}
         setFrameSize={setFrameSize}
         setFurnitureColor={setFurnitureColor}
         setFurnitureDepth={setFurnitureDepth}
