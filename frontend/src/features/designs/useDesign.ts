@@ -62,10 +62,32 @@ export function useDesign() {
         }
     }
 
-    async function saveDesign(designId: number, name: string, designData: string) {
+    async function saveDesign(designId: number, name: string, designData: string, screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) {
 
         try {
             setIsLoading(true)
+
+            if (screenshots) {
+                try {
+                    const { screenshotUrl, thumbnailUrl } = await uploadScreenshotsToR2(
+                        designId,
+                        screenshots.fullBlob,
+                        screenshots.thumbnailBlob
+                    );
+                    
+                    const response = await DesignService.updateDesign(designId, { 
+                        name, 
+                        designData,
+                        screenshotUrl,
+                        thumbnailUrl
+                    });
+                
+                    return response;
+                
+                } catch (screenshotError) {
+                    console.warn('Screenshot upload failed:', screenshotError);
+                }
+            }
             const response = await DesignService.updateDesign(designId, { name, designData })
             return response;
         } catch (error) {
