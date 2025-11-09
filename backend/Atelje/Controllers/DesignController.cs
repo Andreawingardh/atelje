@@ -18,6 +18,18 @@ public class DesignController(IDesignService designService, IR2Service r2Service
         var designs = await designService.GetAllDesignsAsync();
         return designs;
     }
+    
+    [HttpGet("my-designs", Name = "GetMyDesigns")]
+    public async Task<ActionResult<List<DesignDto>>> GetMyDesigns()
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+    
+        var designs = await designService.GetDesignsByUserIdAsync(userId);
+        return designs;
+    }
 
     [HttpGet("{id}", Name = "GetDesignById")]
     public async Task<ActionResult<DesignDto>> GetDesign(int id)
