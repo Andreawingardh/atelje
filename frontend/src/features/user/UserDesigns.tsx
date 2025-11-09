@@ -19,7 +19,7 @@ export default function UserDesigns() {
           return null;
         }
         try {
-          const designs = await DesignService.getAllDesigns();
+          const designs = await DesignService.getMyDesigns();
           console.log(designs);
           return designs;
         } catch (error) {

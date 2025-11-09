@@ -37,6 +37,16 @@ export class DesignService {
         });
     }
     /**
+     * @returns DesignDto OK
+     * @throws ApiError
+     */
+    public static getMyDesigns(): CancelablePromise<Array<DesignDto>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Design/my-designs',
+        });
+    }
+    /**
      * @param id
      * @returns DesignDto OK
      * @throws ApiError
