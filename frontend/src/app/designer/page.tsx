@@ -2,7 +2,6 @@
 
 import { useDesign } from "@/features/designs/useDesign";
 import { useRouter } from "next/navigation";
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import { useState } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
@@ -35,7 +34,10 @@ export default function NewDesignPage() {
     customDesign,
   } = useCustomDesign();
 
-  async function handleSave(screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) {
+  async function handleSave(screenshots?: {
+    fullBlob: Blob;
+    thumbnailBlob: Blob;
+  }) {
     const sceneData = getSceneData();
     try {
       const newDesign = await createDesign(designName, sceneData, screenshots);
@@ -55,7 +57,7 @@ export default function NewDesignPage() {
   }
 
   return (
-    <ProtectedRoute>
+    <>
       <p>DEBUG: This is the NEW design page</p>
       <h1>Designer 3D-tool</h1>
       {errorMessage && <p>{errorMessage}</p>}
@@ -82,6 +84,6 @@ export default function NewDesignPage() {
         deleteFrame={deleteFrame}
         customDesign={customDesign}
       />
-    </ProtectedRoute>
+    </>
   );
 }

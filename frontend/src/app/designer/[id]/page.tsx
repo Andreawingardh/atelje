@@ -5,7 +5,6 @@ import { useDesign } from "@/features/designs/useDesign";
 import { useState, useEffect } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useAuth } from "@/contexts/AuthContext";
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
 
@@ -86,7 +85,7 @@ export default function DesignerPage() {
   }
 
   return (
-    <ProtectedRoute>
+    <>
       <h1>this is the ID page</h1>
       {errorMessage && <p>{errorMessage}</p>}
       <DesignerWorkspace
@@ -112,6 +111,6 @@ export default function DesignerPage() {
         deleteFrame={deleteFrame}
         customDesign={customDesign}
       />
-    </ProtectedRoute>
+    </>
   );
 }

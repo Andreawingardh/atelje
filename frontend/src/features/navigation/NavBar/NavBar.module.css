@@ -1,0 +1,7 @@
+.navBarWrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    background-color: var(--terracotta);
+    color: var(--snowdrop)
+}
