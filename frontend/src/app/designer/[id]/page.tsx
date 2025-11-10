@@ -68,14 +68,14 @@ export default function DesignerPage() {
     }
   }, [currentDesign]);
 
-  async function handleSave() {
+  async function handleSave(screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) {
     const sceneData = getSceneData();
     try {
       if (!id) {
         setErrorMessage("couldn't find ID");
         return;
       }
-      await saveDesign(id, designName, sceneData);
+      await saveDesign(id, designName, sceneData, screenshots);
     } catch (error) {
       setErrorMessage(
         error instanceof ApiError

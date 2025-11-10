@@ -19,7 +19,28 @@ public class DesignService(AppDbContext context) : IDesignService
                 DesignData = d.DesignData,
                 CreatedAt = d.CreatedAt,
                 UpdatedAt = d.UpdatedAt,
-                UserId = d.UserId
+                UserId = d.UserId,
+                ScreenshotUrl = d.ScreenshotUrl,
+                ThumbnailUrl = d.ThumbnailUrl
+            })
+            .ToListAsync();
+    }
+
+    public async Task<List<DesignDto>> GetDesignsByUserIdAsync(string userId)
+    {
+        return await _context.Designs
+            .Where(d => d.UserId == userId)
+            .OrderByDescending(d => d.UpdatedAt)
+            .Select(d => new DesignDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                DesignData = d.DesignData,
+                CreatedAt = d.CreatedAt,
+                UpdatedAt = d.UpdatedAt,
+                UserId = d.UserId,
+                ScreenshotUrl = d.ScreenshotUrl,
+                ThumbnailUrl = d.ThumbnailUrl
             })
             .ToListAsync();
     }
@@ -37,7 +58,9 @@ public class DesignService(AppDbContext context) : IDesignService
             DesignData = design.DesignData,
             CreatedAt = design.CreatedAt,
             UpdatedAt = design.UpdatedAt,
-            UserId = design.UserId
+            UserId = design.UserId,
+            ScreenshotUrl = design.ScreenshotUrl,
+            ThumbnailUrl = design.ThumbnailUrl
         };
     }   
     
@@ -49,7 +72,9 @@ public class DesignService(AppDbContext context) : IDesignService
             DesignData = createDesignDto.DesignData,
             UserId = createDesignDto.UserId,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            ScreenshotUrl = createDesignDto.ScreenshotUrl,
+            ThumbnailUrl = createDesignDto.ThumbnailUrl
         };
 
         _context.Designs.Add(design);
@@ -62,7 +87,9 @@ public class DesignService(AppDbContext context) : IDesignService
             DesignData = design.DesignData,
             CreatedAt = design.CreatedAt,
             UpdatedAt = design.UpdatedAt,
-            UserId = design.UserId
+            UserId = design.UserId,
+            ScreenshotUrl = design.ScreenshotUrl,
+            ThumbnailUrl = design.ThumbnailUrl
         };
     }
     

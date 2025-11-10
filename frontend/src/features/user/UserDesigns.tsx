@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { DesignService, ApiError, DesignDto } from "@/api/generated";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function UserDesigns() {
   const [error, setError] = useState();
@@ -18,7 +19,7 @@ export default function UserDesigns() {
           return null;
         }
         try {
-          const designs = await DesignService.getAllDesigns();
+          const designs = await DesignService.getMyDesigns();
           console.log(designs);
           return designs;
         } catch (error) {
@@ -43,12 +44,30 @@ export default function UserDesigns() {
     <div>
       {error && <p>{error}</p>}
       <h1>My Designs</h1>
+
+      {isLoading && <p>Loading designs...</p>}
+    
       <div>
-        {designs?.map((design) => {
-          return <Link href={"/designer/" + design.id} key={design.id}><div key={design.id}>{design.name}</div></Link>;
-        })}
+        {designs?.map((design) => (
+          <Link href={`/designer/${design.id}`} key={design.id}>
+            {design.thumbnailUrl ? (
+              <Image
+                src={design.thumbnailUrl}
+                alt={design.name || 'Design preview'}
+                // Temporary fixed size, remove after styling
+                width={200}
+                height={200}
+              />
+            ) : (
+              <div>
+                <span>No Preview</span>
+              </div>
+            )}
+          
+            <div>{design.name}</div>
+          </Link>
+        ))}
       </div>
-      {isLoading && "Loading designs"}
     </div>
   );
 }
