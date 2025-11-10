@@ -320,20 +320,98 @@ export const Frame: React.FC<FrameProps> = ({
                 )}
             </mesh>
 
-            {/* Position display when dragging */}
-            {isDragging && (
-                <Html
-                    position={[0, 0 / 2 + 0.15, 0]}
-                    center
-                    style={{
-                        whiteSpace: 'nowrap',
-                        pointerEvents: 'none',
-                        userSelect: 'none'
-                    }}
-                >
-                    X: {position.x} cm <br></br> Y: {position.y} cm
-                </Html>
-            )}
+            {/* Position display and measurement lines when dragging */}
+            {isDragging && (() => {
+                const wallWidthMeters = wallWidth * gridCellSize;
+                const wallLeftEdge = -wallWidthMeters / 2;
+    
+                // Get current world position of the frame
+                const currentWorldPos = new THREE.Vector3();
+                if (groupRef.current) {
+                    groupRef.current.getWorldPosition(currentWorldPos);
+                }
+    
+                const frameLeftEdge = -(frameWidth / 2);
+                const frameBottomEdge = -(frameHeight / 2);
+                const lineZ = frameDepth / 2 + 0.01;
+    
+                // Calculate distances in local space
+                const distanceToWallLeft = wallLeftEdge - currentWorldPos.x;
+                const distanceToFloor = -currentWorldPos.y;
+
+                // Calculate line dimensions
+                const horizontalLineLength = Math.abs(frameLeftEdge - distanceToWallLeft);
+                const verticalLineLength = Math.abs(frameBottomEdge - distanceToFloor);
+    
+                return (
+                    <>
+                        {/* Horizontal line from frame left edge to wall left edge */}
+                        <mesh position={[
+                            (frameLeftEdge + distanceToWallLeft) / 2,
+                            0,
+                            lineZ
+                        ]}>
+                            <boxGeometry args={[horizontalLineLength, 0.005, 0.001]} />
+                            <meshBasicMaterial color="#636363" />
+                        </mesh>
+            
+                        <Html
+                            position={[
+                                frameLeftEdge - 0.5,
+                                0.1,
+                                lineZ
+                            ]}
+                            center
+                            style={{
+                                whiteSpace: 'nowrap',
+                                pointerEvents: 'none',
+                                userSelect: 'none'
+                            }}
+                        >
+                            <div style={{ 
+                                background: 'rgba(255,255,255,0.9)', 
+                                padding: '2px 6px',
+                                borderRadius: '3px',
+                                fontSize: '12px'
+                            }}>
+                                {position.x.toFixed(1)} cm
+                            </div>
+                        </Html>
+            
+                        {/* Vertical line from frame bottom to floor */}
+                        <mesh position={[
+                            0,
+                            (frameBottomEdge + distanceToFloor) / 2,
+                            lineZ
+                        ]}>
+                            <boxGeometry args={[0.005, verticalLineLength, 0.001]} />
+                            <meshBasicMaterial color="#636363" />
+                        </mesh>
+            
+                        <Html
+                            position={[
+                                0.05,
+                                frameBottomEdge - 0.3,
+                                lineZ
+                            ]}
+                            style={{
+                                whiteSpace: 'nowrap',
+                                pointerEvents: 'none',
+                                userSelect: 'none'
+                            }}
+                        >
+                            <div style={{ 
+                                background: 'rgba(255,255,255,0.9)', 
+                                padding: '2px 6px',
+                                borderRadius: '3px',
+                                fontSize: '12px'
+                            }}>
+                                {position.y.toFixed(1)} cm
+                            </div>
+                        </Html>
+                    </>
+                );
+            })()}
         </group>
     );
 };
