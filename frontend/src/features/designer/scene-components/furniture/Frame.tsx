@@ -368,14 +368,14 @@ export const Frame: React.FC<FrameProps> = ({
                                 userSelect: 'none'
                             }}
                         >
-                            <div style={{ 
+                            <p style={{ 
                                 background: 'rgba(255,255,255,0.9)', 
                                 padding: '3px 6px',
                                 borderRadius: '10px',
                                 fontSize: '12px'
                             }}>
                                 {Math.round(position.x)} cm
-                            </div>
+                            </p>
                         </Html>
             
                         {/* Vertical line from frame bottom to floor */}
@@ -400,14 +400,14 @@ export const Frame: React.FC<FrameProps> = ({
                                 userSelect: 'none'
                             }}
                         >
-                            <div style={{ 
+                            <p style={{ 
                                 background: 'rgba(255,255,255,0.9)', 
                                 padding: '3px 6px',
                                 borderRadius: '10px',
                                 fontSize: '12px'
                             }}>
                                 {Math.round(position.y)} cm
-                            </div>
+                            </p>
                         </Html>
                     </>
                 );
