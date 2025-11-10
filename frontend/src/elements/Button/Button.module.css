@@ -1,0 +1,32 @@
+.base {
+    font-size: 1.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    border: none;
+  }
+  
+  .primary {
+    background: var(--snowdrop);
+    color: var(--charcoal);
+  }
+
+  .primary :hover {
+    background: var(--snowdrop);
+    color: var(--charcoal);
+  }
+  
+  .secondary {
+    background: var(--terracotta);
+    color: var(--snowdrop);
+  }
+
+  .secondary:hover {
+    background: #8f412a;
+    color: var(--snowdrop);
+  }
+  
+  .disabled {
+    background: var(--dark-vanilla);
+    color: var(--vanilla);
+    cursor: not-allowed;
+  }
