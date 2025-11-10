@@ -28,6 +28,38 @@ export const stockPhotos: StockPhoto[] = [
     aspectRatio: 1.5
   },
   {
+    id: 'pug',
+    filename: 'pug-jc-gellidon-unsplash.jpg',
+    category: 'animals',
+    alt: 'A pug resting on the floor',
+    photographer: 'JC Gellidon',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'black-cat',
+    filename: 'black-cat-gio-bartlett-unsplash.jpg',
+    category: 'animals',
+    alt: 'A Black cat in profile',
+    photographer: 'Gio Bartlett',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'horse',
+    filename: 'horse-seth-fink-unsplash.jpg',
+    category: 'animals',
+    alt: 'A brown horse in daytime',
+    photographer: 'Seth Fink',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'bunny-rabbit',
+    filename: 'bunny-rabbit-erik-jan-leusink-unsplash.jpg',
+    category: 'animals',
+    alt: 'A rabbit lying down',
+    photographer: 'Erik Jan Leusink',
+    aspectRatio: 1.5
+  },
+  {
     id: 'children-on-bridge',
     filename: 'children-on-bridge-kevin-gent-unsplash.jpg',
     category: 'people',
@@ -41,6 +73,38 @@ export const stockPhotos: StockPhoto[] = [
     category: 'people',
     alt: 'A family flying a kite in a field',
     photographer: 'Klara Kulikova',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'family-in-forest',
+    filename: 'family-in-forest-andrew-yurkiv-unsplash.jpg',
+    category: 'people',
+    alt: 'A family walking in the forest',
+    photographer: 'Andrew Yurkiv',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'family-in-field',
+    filename: 'family-in-field-jessica-rockowitz-unsplash.jpg',
+    category: 'people',
+    alt: 'A family walking in a field',
+    photographer: 'Jessica Rockowitz',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'parent-playing-with-child',
+    filename: 'parent-playing-with-child-natasha-ivanchikhina-unsplash.jpg',
+    category: 'people',
+    alt: 'A parent holding their child in the air',
+    photographer: 'Natasha Ivanchikhina',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'family-on-the-beach',
+    filename: 'family-on-the-beach-devon-daniel-unsplash.jpg',
+    category: 'people',
+    alt: 'Parents with child sitting by the water',
+    photographer: 'Devon Daniel',
     aspectRatio: 1.5
   },
   {
@@ -107,20 +171,76 @@ export const stockPhotos: StockPhoto[] = [
     photographer: 'Joel Fulgencio',
     aspectRatio: 1.5
   },
+    {
+    id: 'golden-gate-bridge',
+    filename: 'golden-gate-bridge-maarten-van-den-heuvel-unsplash.jpg',
+    category: 'city',
+    alt: 'Golden gate bridge during daytime',
+    photographer: 'Maarten Van den Heuvel',
+    aspectRatio: 1.5
+  },
+    {
+    id: 'gothenburg-tram',
+    filename: 'gothenburg-tram-louise-krause-unsplash.jpg',
+    category: 'city',
+    alt: 'A tram in Gothenburg on the rail in daytime',
+    photographer: 'Louise Krause',
+    aspectRatio: 1.5
+  },
+    {
+    id: 'copenhagen-houses',
+    filename: 'copenhagen-houses-maksym-potapenko-unsplash.jpg',
+    category: 'city',
+    alt: 'Assorted-color buildings and a red boat during daytime',
+    photographer: 'Maksym Potapenko',
+    aspectRatio: 1.5
+  },
+    {
+    id: 'yellow-taxi',
+    filename: 'yellow-taxi-ross-sneddon-unsplash.jpg',
+    category: 'city',
+    alt: 'Yellow car on the street in daytime',
+    photographer: 'Ross Sneddon',
+    aspectRatio: 1.5
+  },
+    {
+    id: 'eiffel-tower',
+    filename: 'eiffel-tower-bw-jorge-gascon-Q-unsplash.jpg',
+    category: 'city',
+    alt: 'Closeup of Eiffel tower in black and white',
+    photographer: 'Ross Sneddon',
+    aspectRatio: 1.5
+  },
   {
-    id: 'vintage-birds',
-    filename: 'vintage-birds-print-mcgill-library-unsplash.jpg',
+    id: 'vintage-vase-of-flowers',
+    filename: 'vase-of-flowers-europeana-jan-davidsz-de-heem-unsplash.jpg',
     category: 'vintage',
-    alt: 'Vintage print of two blue birds',
-    photographer: 'McGill Library',
+    alt: 'Pink and white flowers with green leaves',
+    photographer: 'Jan Davidsz de Heem',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'portrait-woman',
+    filename: 'portrait-woman-birmingham-museums-trust-unsplash.jpg',
+    category: 'vintage',
+    alt: 'A woman in profile',
+    photographer: 'Birmingham mUSEUM Trust',
     aspectRatio: 1.5
   },
   {
     id: 'vintage-photo-swimmers',
     filename: 'vintage-photo-swimmers-colored-boston-public-library-unsplash.jpg',
     category: 'vintage',
-    alt: 'Vintage print of two blue birds',
+    alt: 'Vintage print of swimmers in a pool',
     photographer: 'Boston Public Library',
+    aspectRatio: 1.5
+  },
+  {
+    id: 'vintage-pink-rose',
+    filename: 'pink-rose-the-new-york-public-library-unsplash.jpg',
+    category: 'vintage',
+    alt: 'Vintage print of a pink rose',
+    photographer: 'The New York Public Library',
     aspectRatio: 1.5
   },
   {
@@ -198,8 +318,8 @@ export const stockPhotos: StockPhoto[] = [
 ];
 
 // Helper functions
-export const getPhotosByCategory = (category: PhotoCategory) => 
+export const getPhotosByCategory = (category: PhotoCategory) =>
   stockPhotos.filter(photo => photo.category === category);
 
-export const getPhotoById = (id: string) => 
+export const getPhotoById = (id: string) =>
   stockPhotos.find(photo => photo.id === id);
