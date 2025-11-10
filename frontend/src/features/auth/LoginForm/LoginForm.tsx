@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "./LoginForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
-import { ApiError } from "@/api/generated";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
