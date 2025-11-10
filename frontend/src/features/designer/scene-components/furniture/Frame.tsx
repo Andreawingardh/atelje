@@ -351,7 +351,7 @@ export const Frame: React.FC<FrameProps> = ({
                             0,
                             lineZ
                         ]}>
-                            <boxGeometry args={[horizontalLineLength, 0.005, 0.001]} />
+                            <boxGeometry args={[horizontalLineLength, 0.01, 0.001]} />
                             <meshBasicMaterial color="#636363" />
                         </mesh>
             
@@ -370,11 +370,11 @@ export const Frame: React.FC<FrameProps> = ({
                         >
                             <div style={{ 
                                 background: 'rgba(255,255,255,0.9)', 
-                                padding: '2px 6px',
-                                borderRadius: '3px',
+                                padding: '3px 6px',
+                                borderRadius: '10px',
                                 fontSize: '12px'
                             }}>
-                                {position.x.toFixed(1)} cm
+                                {Math.round(position.x)} cm
                             </div>
                         </Html>
             
@@ -384,7 +384,7 @@ export const Frame: React.FC<FrameProps> = ({
                             (frameBottomEdge + distanceToFloor) / 2,
                             lineZ
                         ]}>
-                            <boxGeometry args={[0.005, verticalLineLength, 0.001]} />
+                            <boxGeometry args={[0.01, verticalLineLength, 0.001]} />
                             <meshBasicMaterial color="#636363" />
                         </mesh>
             
@@ -402,11 +402,11 @@ export const Frame: React.FC<FrameProps> = ({
                         >
                             <div style={{ 
                                 background: 'rgba(255,255,255,0.9)', 
-                                padding: '2px 6px',
-                                borderRadius: '3px',
+                                padding: '3px 6px',
+                                borderRadius: '10px',
                                 fontSize: '12px'
                             }}>
-                                {position.y.toFixed(1)} cm
+                                {Math.round(position.y)} cm
                             </div>
                         </Html>
                     </>
