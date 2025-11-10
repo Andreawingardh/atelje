@@ -108,6 +108,7 @@ export default function DesignerWorkspace({
         setFurnitureWidth={setFurnitureWidth}
         furnitureHeight={customDesign.furnitureHeight}
         setFurnitureHeight={setFurnitureHeight}
+        wallWidth={customDesign.wallWidth}
       />
       <FrameForm
         frames={customDesign.frames}

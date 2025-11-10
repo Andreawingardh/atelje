@@ -31,7 +31,7 @@ interface Canvas3DProps {
 export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef } : Canvas3DProps) {
 
 const cellSize = 0.01; // 1 cm
-const floorSize = Math.max(wallWidth, 500);
+const floorSize = Math.max(wallWidth, 300);
 const minDistanceZoom = Math.max(2, floorSize / 200);
 const maxDistanceZoom = Math.max(5, floorSize / 80);
 
