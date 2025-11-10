@@ -72,6 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function login(email: string, password: string): Promise<void> {
     try {
+      setError(undefined);
+      setIsLoading(true);
       // 1. Call the generated login function
       const response = await AuthService.postApiAuthLogin({
         email,
@@ -96,11 +98,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ? error.body?.errors[0] || "Login failed"
           : "An unexpected error occurred"
       );
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function register(dto: RegisterDto): Promise<void> {
     try {
+      setIsLoading(true)
+      setError(undefined)
       const response = await AuthService.postApiAuthRegister(dto);
 
       const token = response.token;
@@ -118,6 +124,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ? error.body?.errors[0] || "Registration failed"
           : "An unexpected error occurred"
       );
+    } finally {
+      setIsLoading(false)
     }
   }
 
