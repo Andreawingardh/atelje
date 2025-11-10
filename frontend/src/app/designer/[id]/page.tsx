@@ -86,7 +86,7 @@ export default function DesignerPage() {
   }
 
   return (
-    <ProtectedRoute>
+    <>
       <h1>this is the ID page</h1>
       {errorMessage && <p>{errorMessage}</p>}
       <DesignerWorkspace
@@ -112,6 +112,6 @@ export default function DesignerPage() {
         deleteFrame={deleteFrame}
         customDesign={customDesign}
       />
-    </ProtectedRoute>
+    </>
   );
 }
