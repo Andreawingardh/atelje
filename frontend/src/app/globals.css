@@ -1,0 +1,16 @@
+/* Imports */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Variables */
+:root {
+  --terracotta: #9D4A31;
+  --cornflower-active: #6495ED;
+  --snowdrop: #FFFFFF;
+  --vanilla: #F9F6F3;
+  --dark-vanilla: #EEE9E3;
+  --rosie-danger: #A72D2D;
+  --stem-success: #488A3D;
+  --sunflower-seed: #47403C;
+  --charcoal: #2C2C2C;
+  --font-family: 'Poppins', sans-serif;
+}
