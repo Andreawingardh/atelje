@@ -11,7 +11,7 @@ export type ModalType = 'login' | 'register';
 
 export interface ModalContextType {
   currentModal: ModalType | null;
-  openModal: (modalType: "login" | "register") => void;
+  openModal: (modalType: ModalType) => void;
   closeModal: () => void;
 }
 
