@@ -6,8 +6,11 @@ import {
   useContext,
 } from "react";
 
+export type ModalType = 'login' | 'register';
+
+
 export interface ModalContextType {
-  currentModal: "login" | "register" | null;
+  currentModal: ModalType | null;
   openModal: (modalType: "login" | "register") => void;
   closeModal: () => void;
 }
@@ -19,11 +22,11 @@ export default function ModalProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [currentModal, setCurrentModal] = useState<"login" | "register" | null>(
+  const [currentModal, setCurrentModal] = useState<ModalType | null>(
     null
   );
 
-  function openModal(modalType: "login" | "register") {
+  function openModal(modalType: ModalType) {
     setCurrentModal(modalType);
   }
 
