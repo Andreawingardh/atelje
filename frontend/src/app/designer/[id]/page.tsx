@@ -5,7 +5,6 @@ import { useDesign } from "@/features/designs/useDesign";
 import { useState, useEffect } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useAuth } from "@/contexts/AuthContext";
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
 

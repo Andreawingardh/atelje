@@ -2,7 +2,6 @@
 
 import { useDesign } from "@/features/designs/useDesign";
 import { useRouter } from "next/navigation";
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import { useState } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
