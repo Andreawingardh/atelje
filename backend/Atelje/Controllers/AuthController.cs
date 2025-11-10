@@ -72,7 +72,6 @@ public class AuthController : ControllerBase
                                 <a href="{emailConfirmationUrl}">Click me</a>
                                 """;
 
-        var isEmailSent = true;
         try
         {
             await _emailSender.SendEmailAsync(user.Email, "Confirm your email", innerHtmlMessage);
@@ -80,8 +79,10 @@ public class AuthController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError("There was an error sending confirmation email: {Exception}", exception);
-            isEmailSent = false;
         }
+
+        user.LastEmailSentAt = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user);
 
 
         return Ok(new AuthResponseDto
@@ -92,7 +93,6 @@ public class AuthController : ControllerBase
             UserName = user.UserName!,
             DisplayName = user.DisplayName,
             EmailConfirmed = user.EmailConfirmed,
-            EmailSent = isEmailSent
         });
     }
 
@@ -212,13 +212,20 @@ public class AuthController : ControllerBase
         {
             return BadRequest();
         }
-        
+
 
         if (user.EmailConfirmed)
         {
             return Conflict(new { message = "Email is already confirmed" });
         }
-        
+
+        if (user.LastEmailSentAt.HasValue &&
+            (DateTime.UtcNow - user.LastEmailSentAt.Value).TotalMinutes < 2)
+        {
+            return BadRequest((new ErrorResponseDto
+                { Errors = ["Please wait 2 minutes before requesting another email"] }));
+        }
+
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         _logger.LogInformation("Email token: {EmailToken}", emailToken);
 
@@ -235,7 +242,6 @@ public class AuthController : ControllerBase
                                 <p>Please click the following URL to confirm your email</p>:
                                 <a href="{emailConfirmationUrl}">Click me</a>
                                 """;
-        var isEmailSent = true;
         try
         {
             await _emailSender.SendEmailAsync(user.Email!, "Confirm your email", innerHtmlMessage);
@@ -243,8 +249,10 @@ public class AuthController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError("There was an error sending confirmation email: {Exception}", exception);
-            isEmailSent = false;
         }
+
+        user.LastEmailSentAt = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user);
 
 
         return Ok(new AuthResponseDto
@@ -255,8 +263,6 @@ public class AuthController : ControllerBase
             UserName = user.UserName!,
             DisplayName = user.DisplayName,
             EmailConfirmed = user.EmailConfirmed,
-            EmailSent = isEmailSent
         });
-        
     }
 }

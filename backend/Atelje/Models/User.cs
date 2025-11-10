@@ -8,4 +8,5 @@ public class User : IdentityUser
     public string? DisplayName { get; set; }
     public DateTime CreatedAt { get; set; }
     public ICollection<Design>? Designs { get; set; }
+    public DateTime? LastEmailSentAt { get; set; }
 }
