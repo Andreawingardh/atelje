@@ -33,7 +33,7 @@ export default function FrameForm({ frames, onAddFrame, wallWidth, ceilingHeight
     const padding = 0.1; // 10cm padding
     const minX = -(wallWidthCm / 2) + (frameWidth / 2) + padding;
     const maxX = (wallWidthCm / 2) - (frameWidth / 2) - padding;
-    const minY = (frameHeight / 2) + padding;
+    const minY = (ceilingHeightCm / 2) + (frameHeight / 2) + padding;
     const maxY = ceilingHeightCm - (frameHeight / 2) - padding;
   
     const randomX = minX + Math.random() * (maxX - minX);
