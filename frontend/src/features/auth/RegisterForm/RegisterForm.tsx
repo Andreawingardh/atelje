@@ -11,7 +11,6 @@ export default function RegisterForm() {
   const [status, setStatus] = useState<"loading" | "success" | "error" | null>(
     null
   );
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export default function RegisterForm() {
   });
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    setStatus("loading")
+    setStatus("loading");
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -38,27 +37,17 @@ export default function RegisterForm() {
       displayName: displayName,
     };
 
-    try {
-      await register(user);
-      setStatus("success")
-    } catch (error) {
-      if (error instanceof ApiError) {
-        setErrorMessage(error.body.errors[0]);
-      } else {
-        setErrorMessage("An unexpected error occurred");
-      }
-      setStatus("error")
-    } finally {
-    }
+    await register(user);
+    if (error) setStatus("error");
+    if (!error) setStatus("success");
   }
-
 
   return (
     <>
       <h1 className={styles.title}>Sign up</h1>
       {status == "error" && (
         <p>
-          {error} {errorMessage}
+          {error}
         </p>
       )}
       <form className={styles.registerForm} onSubmit={handleSubmit}>
@@ -112,7 +101,9 @@ export default function RegisterForm() {
           required
         />
 
-        <button type="submit">{status == "loading" ? "Signing up..." : "Sign up"}</button>
+        <button type="submit">
+          {status == "loading" ? "Signing up..." : "Sign up"}
+        </button>
       </form>
     </>
   );

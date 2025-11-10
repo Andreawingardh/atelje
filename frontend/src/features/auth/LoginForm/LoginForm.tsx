@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "./LoginForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
-import { ApiError } from "@/api/generated";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const { user, login, isLoading, setIsLoading } = useAuth();
-  const [error, setError] = useState<string | null>(null);
+  const { user, login, isLoading, error} = useAuth();
   const router = useRouter();
 
 useEffect(() => {
@@ -23,18 +21,7 @@ useEffect(() => {
     const email = formData.get("email")!.toString();
     const password = formData.get("password")!.toString();
 
-    try {
-      setIsLoading(true);
-      await login(email, password);
-    } catch (error) {
-      if (error instanceof ApiError) {
-        setError(error.body.errors[0]);
-      } else {
-        setError("An unexpected error occurred");
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    await login(email, password);
   }
 
   return (
