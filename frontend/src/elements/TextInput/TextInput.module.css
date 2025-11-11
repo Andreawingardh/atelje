@@ -1,0 +1,26 @@
+.textInput {
+    border: none;
+    outline: none;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 1.25rem;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+}
+
+.textInput::placeholder {
+    color: var(--charcoal);
+}
+
+.vanillaTextInput {
+    background: var(--vanilla);
+    color: var(--charcoal);
+}
+
+.snowdropTextInput {
+    background: var(--snowdrop);
+    color: var(--charcoal);
+}

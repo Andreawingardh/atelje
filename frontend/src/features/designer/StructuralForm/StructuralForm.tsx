@@ -99,6 +99,7 @@ export default function StructuralForm({
           <input 
             id="birch-floor-parquet"
             type="radio"
+            name="flooring"
             value={"birch-floor-parquet"}
             checked={flooring === "birch-floor-parquet"}
             onChange={handleFlooringChange}
@@ -110,6 +111,7 @@ export default function StructuralForm({
           <input 
             id="birch-floor-herringbone"
             type="radio"
+            name="flooring"
             value={"birch-floor-herringbone"}
             checked={flooring === "birch-floor-herringbone"}
             onChange={handleFlooringChange}
@@ -121,6 +123,7 @@ export default function StructuralForm({
           <input 
             id="walnut-floor-parquet"
             type="radio"
+            name="flooring"
             value={"walnut-floor-parquet"}
             checked={flooring === "walnut-floor-parquet"}
             onChange={handleFlooringChange}
@@ -132,6 +135,7 @@ export default function StructuralForm({
           <input 
             id="walnut-floor-herringbone"
             type="radio"
+            name="flooring"
             value={"walnut-floor-herringbone"}
             checked={flooring === "walnut-floor-herringbone"}
             onChange={handleFlooringChange}
