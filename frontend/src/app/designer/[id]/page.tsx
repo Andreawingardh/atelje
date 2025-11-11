@@ -7,6 +7,7 @@ import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useAuth } from "@/contexts/AuthContext";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
+import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
 
 export default function DesignerPage() {
   const params = useParams();
@@ -42,6 +43,8 @@ export default function DesignerPage() {
   } = useCustomDesign();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   const { user } = useAuth();
 
