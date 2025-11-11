@@ -299,7 +299,7 @@ export const Frame: React.FC<FrameProps> = ({
                     frameHeight,
                     frameDepth
                 ]} />
-                <meshStandardMaterial color={frameColor} /> {/* temporary color change on select for dev */}
+                <meshStandardMaterial color={frameColor} />
             </mesh>
 
             {/* Selection border - only visible when selected */}
