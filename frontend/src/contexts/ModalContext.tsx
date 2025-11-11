@@ -8,15 +8,28 @@ import {
   SetStateAction,
 } from "react";
 
-export type ModalType = 'login' | 'register' | 'confirmation-close';
-
+export type ModalType =
+  | "login"
+  | "register"
+  | "confirmation-close"
+  | "save-design";
 
 export interface ModalContextType {
   currentModal: ModalType | null;
   openModal: (modalType: ModalType) => void;
   closeModal: () => void;
-  modalCallbacks: { onConfirm: (() => void) | null, onCancel: (() => void) | null },
-  setModalCallbacks: Dispatch<SetStateAction<{ onConfirm: (() => void) | null, onCancel: (() => void) | null }>>
+  modalCallbacks: {
+    onConfirm: (() => void) | null;
+    onCancel: (() => void) | null;
+    saveDesignName: (((name: string) => void) | null);
+  };
+  setModalCallbacks: Dispatch<
+    SetStateAction<{
+      onConfirm: (() => void) | null;
+      onCancel: (() => void) | null;
+      saveDesignName: ((name: string) => void) | null;
+    }>
+  >;
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -26,10 +39,12 @@ export default function ModalProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [currentModal, setCurrentModal] = useState<ModalType | null>(
-    null
-  );
-const [modalCallbacks, setModalCallbacks] = useState<{onConfirm: (() => void) | null, onCancel: (() => void) | null}>({ onConfirm: null, onCancel: null });
+  const [currentModal, setCurrentModal] = useState<ModalType | null>(null);
+  const [modalCallbacks, setModalCallbacks] = useState<{
+    onConfirm: (() => void) | null;
+    onCancel: (() => void) | null;
+    saveDesignName: ((name: string) => void) | null;
+  }>({ onConfirm: null, onCancel: null, saveDesignName: null });
 
   function openModal(modalType: ModalType) {
     setCurrentModal(modalType);
@@ -40,7 +55,15 @@ const [modalCallbacks, setModalCallbacks] = useState<{onConfirm: (() => void) | 
   }
 
   return (
-    <ModalContext.Provider value={{ currentModal, openModal, closeModal, modalCallbacks, setModalCallbacks }}>
+    <ModalContext.Provider
+      value={{
+        currentModal,
+        openModal,
+        closeModal,
+        modalCallbacks,
+        setModalCallbacks,
+      }}
+    >
       {children}
     </ModalContext.Provider>
   );
