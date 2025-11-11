@@ -37,6 +37,8 @@ export default function DesignerPage() {
     addFrame,
     deleteFrame,
     customDesign,
+    markAsSaved,
+    hasUnsavedChanges
   } = useCustomDesign();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -67,14 +69,20 @@ export default function DesignerPage() {
     }
   }, [currentDesign]);
 
-  async function handleSave(screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) {
+  async function handleSave(screenshots?: {
+    fullBlob: Blob;
+    thumbnailBlob: Blob;
+  }) {
     const sceneData = getSceneData();
     try {
       if (!id) {
         setErrorMessage("couldn't find ID");
         return;
       }
-      await saveDesign(id, designName, sceneData, screenshots);
+      const result = await saveDesign(id, designName, sceneData, screenshots);
+      if (result) {
+        markAsSaved();
+      }
     } catch (error) {
       setErrorMessage(
         error instanceof ApiError
@@ -83,6 +91,8 @@ export default function DesignerPage() {
       );
     }
   }
+
+     console.log('Has unsaved changes:', hasUnsavedChanges);
 
   return (
     <>

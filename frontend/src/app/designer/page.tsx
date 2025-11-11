@@ -6,12 +6,15 @@ import { useState } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
+import { useModal } from "@/contexts/ModalContext";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
   const router = useRouter();
   const [designName, setDesignName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { openModal } = useModal();
+
 
   const {
     getSceneData,
