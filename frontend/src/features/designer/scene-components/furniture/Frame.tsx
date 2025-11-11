@@ -284,6 +284,27 @@ export const Frame: React.FC<FrameProps> = ({
         }
     }, [imageUrl]);
 
+    // Adjust image based on aspect ratio
+    useEffect(() => {
+        if (ImageTexture) {
+            const imageAspect = ImageTexture.image.width / ImageTexture.image.height;
+            const frameAspect = frameWidth / frameHeight;
+            const scale = imageAspect > frameAspect 
+                ? frameAspect / imageAspect  // Crop sides
+                : imageAspect / frameAspect; // Crop top/bottom
+        
+            ImageTexture.repeat.set(
+                imageAspect > frameAspect ? scale : 1,
+                imageAspect > frameAspect ? 1 : scale
+            );
+            ImageTexture.offset.set(
+                imageAspect > frameAspect ? (1 - scale) / 2 : 0,
+                imageAspect > frameAspect ? 0 : (1 - scale) / 2
+            );
+        
+            ImageTexture.needsUpdate = true;
+        }
+    }, [ImageTexture, frameWidth, frameHeight]);
 
     return (
         <group
