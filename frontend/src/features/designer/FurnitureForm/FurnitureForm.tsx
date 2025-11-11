@@ -1,5 +1,5 @@
 import styles from "./FurnitureForm.module.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDebouncedNumericInput } from "../../designs/useDebouncedNumericInput";
 
 interface FurnitureColor {
@@ -16,6 +16,7 @@ interface FurnitureFormProps {
   setFurnitureDepth: (value: number) => void;
   furnitureHeight: number;
   setFurnitureHeight: (value: number) => void;
+  wallWidth: number;
 }
 
 export default function FurnitureForm({
@@ -26,14 +27,15 @@ export default function FurnitureForm({
   furnitureDepth,
   setFurnitureDepth,
   furnitureHeight,
-  setFurnitureHeight
+  setFurnitureHeight,
+  wallWidth
 }: FurnitureFormProps) {
   const MIN_FURNITURE_DEPTH = 80;
   const MAX_FURNITURE_DEPTH = 200;
-  const MIN_FURNITURE_WIDTH = 100;
-  const MAX_FURNITURE_WIDTH = 500;
-  const MIN_FURNITURE_HEIGHT = 40;
-  const MAX_FURNITURE_HEIGHT = 150;
+  const MIN_FURNITURE_WIDTH = 110;
+  const MAX_FURNITURE_WIDTH = wallWidth;
+  const MIN_FURNITURE_HEIGHT = 70;
+  const MAX_FURNITURE_HEIGHT = 100;
 
   const furnitureDepthControl = useDebouncedNumericInput(
     furnitureDepth,
@@ -54,6 +56,12 @@ export default function FurnitureForm({
     MIN_FURNITURE_HEIGHT,
     MAX_FURNITURE_HEIGHT
   );
+  useEffect(() => {
+    if (furnitureWidth > wallWidth) {
+      setFurnitureWidth(wallWidth);
+    }
+  }, [wallWidth]);
+
   const handleSofaColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFurnitureColor({
       ...furnitureColor,

@@ -4,15 +4,19 @@ import {
   createContext,
   useState,
   useContext,
+  Dispatch,
+  SetStateAction,
 } from "react";
 
-export type ModalType = 'login' | 'register';
+export type ModalType = 'login' | 'register' | 'confirmation-close';
 
 
 export interface ModalContextType {
   currentModal: ModalType | null;
   openModal: (modalType: ModalType) => void;
   closeModal: () => void;
+  modalCallbacks: { onConfirm: (() => void) | null, onCancel: (() => void) | null },
+  setModalCallbacks: Dispatch<SetStateAction<{ onConfirm: (() => void) | null, onCancel: (() => void) | null }>>
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -25,6 +29,7 @@ export default function ModalProvider({
   const [currentModal, setCurrentModal] = useState<ModalType | null>(
     null
   );
+const [modalCallbacks, setModalCallbacks] = useState<{onConfirm: (() => void) | null, onCancel: (() => void) | null}>({ onConfirm: null, onCancel: null });
 
   function openModal(modalType: ModalType) {
     setCurrentModal(modalType);
@@ -35,7 +40,7 @@ export default function ModalProvider({
   }
 
   return (
-    <ModalContext.Provider value={{ currentModal, openModal, closeModal }}>
+    <ModalContext.Provider value={{ currentModal, openModal, closeModal, modalCallbacks, setModalCallbacks }}>
       {children}
     </ModalContext.Provider>
   );

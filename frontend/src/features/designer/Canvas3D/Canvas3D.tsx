@@ -31,14 +31,31 @@ interface Canvas3DProps {
 export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef } : Canvas3DProps) {
 
 const cellSize = 0.01; // 1 cm
-const floorSize = Math.max(wallWidth, 500);
-const minDistanceZoom = Math.max(2, floorSize / 200);
-const maxDistanceZoom = Math.max(5, floorSize / 80);
+const floorSize = Math.max(wallWidth, 300);
 
 const YPosition = ceilingHeight * cellSize;
 const pointLightHeight = YPosition * 1.0;
 const directionalLightHeight = YPosition * 3.33;
-const cameraDistance = Math.max(5, floorSize * cellSize * 3, YPosition * 1.67);
+
+const cameraYPosition = Math.max(0.5, YPosition * 0.6);
+// Camera distance adjustment based on wall width
+const minWall = 300;
+const maxWall = 900;
+const t = Math.max(0, Math.min(1, (wallWidth - minWall) / (maxWall - minWall)));
+
+const cameraDistance = THREE.MathUtils.lerp(
+  6,   // Camera distance for small wall (300)
+  4,   // Camera distance for large wall (900)
+  t
+);
+
+const minDistanceZoom = cameraDistance * 0.3;
+const maxDistanceZoom = cameraDistance;
+
+// ZoomSpeed adjustment based on wall width (distance)
+const zoomSpeed = 0.8 + (wallWidth / 10000);
+
+const orbitTargetY = cameraYPosition - 0.15;
 
 const wallRef = useRef<THREE.Mesh>(null);
 
@@ -59,6 +76,7 @@ const handlePositionUpdate = (frameId: string, position: THREE.Vector3) => {
   return (
     <section className={styles.designerWindow}>
       <Canvas
+        key={`${wallWidth}-${ceilingHeight}`}
         gl={{ preserveDrawingBuffer: true }}
         onCreated={(state) => {
           if (canvasRef) {
@@ -66,7 +84,7 @@ const handlePositionUpdate = (frameId: string, position: THREE.Vector3) => {
           }
         }}
         camera={{ 
-          position: [0, 0, cameraDistance],
+          position: [0, cameraYPosition, cameraDistance],
           fov: 30,
           near: 1,
           far: 100
@@ -124,12 +142,13 @@ const handlePositionUpdate = (frameId: string, position: THREE.Vector3) => {
           enableRotate={isDraggingFrame ? false : true} // Disable rotation when a frame is selected
           minDistance={minDistanceZoom}
           maxDistance={maxDistanceZoom}
-          maxPolarAngle={Math.PI / 2 - 0.1} // Prevent camera from going below floor
+          minPolarAngle={Math.PI / 4}
+          maxPolarAngle={Math.PI / 2} // Prevent camera from going below floor
           minAzimuthAngle={-Math.PI / 6}      // limit left rotation (~-30°)
           maxAzimuthAngle={Math.PI / 6}       // limit right rotation (~+30°)
-          target={[0, 1.5, 0]}
+          target={[0, orbitTargetY, 0]}
           rotateSpeed={0.2}
-          zoomSpeed={0.2}
+          zoomSpeed={zoomSpeed}
         />
       </Canvas>
     </section>

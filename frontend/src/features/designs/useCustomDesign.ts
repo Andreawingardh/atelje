@@ -35,7 +35,7 @@ export type DesignData = {
 
 
 export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
-  const [customDesign, setCustomDesign] = useState<CustomDesign>({
+  const [customDesign, setCustomDesignInternal] = useState<CustomDesign>({
     wallWidth: initialDesign?.wallWidth ?? 500,
     ceilingHeight: initialDesign?.ceilingHeight ?? 300,
     wallColor: initialDesign?.wallColor ?? "#DEDEDE",
@@ -46,6 +46,21 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     furnitureHeight: initialDesign?.furnitureHeight ?? 85,
     frames: initialDesign?.frames ?? []
   });
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const setCustomDesign = (
+  updater: CustomDesign | ((prev: CustomDesign) => CustomDesign),
+  markAsUnsaved = true
+) => {
+  if (markAsUnsaved) {
+    setHasUnsavedChanges(true);
+  }
+  setCustomDesignInternal(updater);
+  };
+  
+  const markAsSaved = () => {
+    setHasUnsavedChanges(false);
+  }
 
   // Structural helper functions
   const setWallWidth = (value: number) => {
@@ -152,15 +167,17 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
 
   const loadSceneData = useCallback((jsonString: string): void => {
     const currentDesign: DesignData = JSON.parse(jsonString)
-    setWallWidth(currentDesign.wall.width);
-    setCeilingHeight(currentDesign.wall.height)
-    setWallColor(currentDesign.wall.color)
-    setFlooring(currentDesign.flooring)
-    setFurnitureColor(currentDesign.sofa.color)
-    setFurnitureDepth(currentDesign.sofa.depth)
-    setFurnitureWidth(currentDesign.sofa.width)
-    setFurnitureHeight(currentDesign.sofa.height)
-    setFrames(currentDesign.frames || [])
+  setCustomDesign({
+    wallWidth: currentDesign.wall.width,
+    ceilingHeight: currentDesign.wall.height,
+    wallColor: currentDesign.wall.color,
+    flooring: currentDesign.flooring,
+    furnitureColor: currentDesign.sofa.color,
+    furnitureDepth: currentDesign.sofa.depth,
+    furnitureWidth: currentDesign.sofa.width,
+    furnitureHeight: currentDesign.sofa.height,
+    frames: currentDesign.frames || []
+  }, false);
   }, [])
 
 
@@ -185,6 +202,8 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFramePosition,
     deleteFrame,
     getSceneData,
-    loadSceneData
+    loadSceneData,
+    hasUnsavedChanges,
+    markAsSaved
   };
 }
