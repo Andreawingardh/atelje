@@ -5,23 +5,33 @@
     border: none;
   }
   
-  .primary {
+  .snowdrop {
     background: var(--snowdrop);
     color: var(--charcoal);
   }
 
-  .primary:hover {
+  .snowdrop:hover {
     background: var(--vanilla);
     color: var(--charcoal);
   }
   
-  .secondary {
+  .terracotta {
     background: var(--terracotta);
     color: var(--snowdrop);
   }
 
-  .secondary:hover {
+  .terracotta:hover {
     background: var(--terracotta-dark);
+    color: var(--snowdrop);
+  }
+
+  .cornflower {
+    background: var(--cornflower-active);
+    color: var(--snowdrop);
+  }
+
+  .cornflower:hover {
+    background: var(--cornflower-dark);
     color: var(--snowdrop);
   }
   
