@@ -25,7 +25,7 @@ export default function StructuralForm({
 }: StructuralFormProps) {
   // Define min and max values
   const MIN_WALL = 300;
-  const MAX_WALL = 1000;
+  const MAX_WALL = 900;
   const MIN_CEILING = 210;
   const MAX_CEILING = 500;
 

@@ -37,10 +37,17 @@ const YPosition = ceilingHeight * cellSize;
 const pointLightHeight = YPosition * 1.0;
 const directionalLightHeight = YPosition * 3.33;
 
-const cameraYPosition = Math.max(0.5, YPosition * 0.4);
+const cameraYPosition = Math.max(0.5, YPosition * 0.6);
 // Camera distance adjustment based on wall width
-const distanceMultiplier = 1.0 + (1000 - wallWidth) / 2000;
-const cameraDistance = Math.max(3, floorSize * cellSize * distanceMultiplier, YPosition * 0.9);
+const minWall = 300;
+const maxWall = 900;
+const t = Math.max(0, Math.min(1, (wallWidth - minWall) / (maxWall - minWall)));
+
+const cameraDistance = THREE.MathUtils.lerp(
+  6,   // Camera distance for small wall (300)
+  4,   // Camera distance for large wall (900)
+  t
+);
 
 const minDistanceZoom = cameraDistance * 0.3;
 const maxDistanceZoom = cameraDistance;
@@ -48,7 +55,7 @@ const maxDistanceZoom = cameraDistance;
 // ZoomSpeed adjustment based on wall width (distance)
 const zoomSpeed = 0.8 + (wallWidth / 10000);
 
-const orbitTargetY = Math.max(0.8, YPosition * 0.35);
+const orbitTargetY = cameraYPosition - 0.15;
 
 const wallRef = useRef<THREE.Mesh>(null);
 
