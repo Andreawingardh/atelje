@@ -2,7 +2,6 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { apiClient } from "@/lib/api-client";
 import LogOutButton from "@/features/auth/LogOutButton/LogOutButton";
-import Button from "@/elements/Button/Button";
 
 type HealthResponse = {
   status: string;
@@ -16,8 +15,6 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Button variant="secondary" buttonText="Sign in"/>
-        <Button variant="secondary" buttonText="Sign in"/>
         <Image
           className={styles.logo}
           src="/next.svg"

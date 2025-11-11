@@ -1,6 +1,6 @@
 .base {
     font-size: 1.25rem;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 1rem;
     border-radius: 30px;
     border: none;
   }
@@ -10,8 +10,8 @@
     color: var(--charcoal);
   }
 
-  .primary :hover {
-    background: var(--snowdrop);
+  .primary:hover {
+    background: var(--vanilla);
     color: var(--charcoal);
   }
   
@@ -21,7 +21,7 @@
   }
 
   .secondary:hover {
-    background: #8f412a;
+    background: var(--terracotta-dark);
     color: var(--snowdrop);
   }
   
