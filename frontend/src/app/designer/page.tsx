@@ -2,19 +2,20 @@
 
 import { useDesign } from "@/features/designs/useDesign";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
 import { useModal } from "@/contexts/ModalContext";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
+import useBlockNavigation from "@/lib/useBlockNavigation";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
   const router = useRouter();
   const [designName, setDesignName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { openModal } = useModal();
+  const { openModal, setModalCallbacks } = useModal();
 
   const {
     getSceneData,
@@ -38,7 +39,22 @@ export default function NewDesignPage() {
     hasUnsavedChanges,
   } = useCustomDesign();
 
+  const { isAttemptingNavigation, proceedNavigation, cancelNavigation } =
+    useBlockNavigation(hasUnsavedChanges);
+
   useUnsavedChangesWarning(hasUnsavedChanges);
+
+  useEffect(() => {
+    if (!isAttemptingNavigation) {
+      return;
+    }
+
+    setModalCallbacks({
+      onConfirm: proceedNavigation,
+      onCancel: cancelNavigation,
+    });
+    openModal("confirmation-close");
+  }, [isAttemptingNavigation]);
 
   async function handleSave(screenshots?: {
     fullBlob: Blob;
