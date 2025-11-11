@@ -34,6 +34,16 @@
     background: var(--cornflower-dark);
     color: var(--snowdrop);
   }
+
+  .rosie {
+    background: var(--rosie-danger);
+    color: var(--snowdrop);
+  }
+
+  .rosie:hover {
+    background: var(--rosie-danger-dark);
+    color: var(--snowdrop);
+  }
   
   .disabled {
     background: var(--dark-vanilla);
