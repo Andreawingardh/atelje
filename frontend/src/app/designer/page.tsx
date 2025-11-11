@@ -2,17 +2,20 @@
 
 import { useDesign } from "@/features/designs/useDesign";
 import { useRouter } from "next/navigation";
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
+import { useModal } from "@/contexts/ModalContext";
+import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
+import useBlockNavigation from "@/lib/useBlockNavigation";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
   const router = useRouter();
   const [designName, setDesignName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { openModal, setModalCallbacks } = useModal();
 
   const {
     getSceneData,
@@ -33,9 +36,30 @@ export default function NewDesignPage() {
     addFrame,
     deleteFrame,
     customDesign,
+    hasUnsavedChanges,
   } = useCustomDesign();
 
-  async function handleSave(screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) {
+  const { isAttemptingNavigation, proceedNavigation, cancelNavigation } =
+    useBlockNavigation(hasUnsavedChanges);
+
+  useUnsavedChangesWarning(hasUnsavedChanges);
+
+  useEffect(() => {
+    if (!isAttemptingNavigation) {
+      return;
+    }
+
+    setModalCallbacks({
+      onConfirm: proceedNavigation,
+      onCancel: cancelNavigation,
+    });
+    openModal("confirmation-close");
+  }, [isAttemptingNavigation]);
+
+  async function handleSave(screenshots?: {
+    fullBlob: Blob;
+    thumbnailBlob: Blob;
+  }) {
     const sceneData = getSceneData();
     try {
       const newDesign = await createDesign(designName, sceneData, screenshots);
@@ -55,7 +79,7 @@ export default function NewDesignPage() {
   }
 
   return (
-    <ProtectedRoute>
+    <>
       <p>DEBUG: This is the NEW design page</p>
       <h1>Designer 3D-tool</h1>
       {errorMessage && <p>{errorMessage}</p>}
@@ -82,6 +106,6 @@ export default function NewDesignPage() {
         deleteFrame={deleteFrame}
         customDesign={customDesign}
       />
-    </ProtectedRoute>
+    </>
   );
 }

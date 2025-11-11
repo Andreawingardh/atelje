@@ -1,5 +1,5 @@
 import styles from "./StructuralForm.module.css";
-import React from "react";
+import React, { useState } from "react";
 import { useDebouncedNumericInput } from "../../designs/useDebouncedNumericInput";
 
 interface StructuralFormProps {
@@ -24,10 +24,14 @@ export default function StructuralForm({
   setFlooring,
 }: StructuralFormProps) {
   // Define min and max values
-  const MIN_WALL = 500;
+  const MIN_WALL = 300;
   const MAX_WALL = 900;
-  const MIN_CEILING = 200;
+  const MIN_CEILING = 210;
   const MAX_CEILING = 500;
+
+  const [showFormElement, setShowFormElement] = useState<
+    "measurements" | "wall-color" | "flooring" | null
+  >(null);
 
   const wallWidthControl = useDebouncedNumericInput(
     wallWidth,
@@ -52,46 +56,85 @@ export default function StructuralForm({
   };
 
   return (
-    <form className={styles.structuralForm}>
-      <div className={styles.formGroup}>
-        <label htmlFor="wallWidth">Wall Width (cm):</label>
-        <input
-          id="wallWidth"
-          type="number"
-          min={MIN_WALL}
-          max={MAX_WALL}
-          value={wallWidthControl.inputValue}
-          onChange={wallWidthControl.handleChange}
-          className={styles.input}
-        />
-      </div>
+    <div className={styles.structuralForm}>
+      <button
+        onClick={() => {
+          if (showFormElement == "measurements") {
+            setShowFormElement(null);
+          } else {
+            setShowFormElement("measurements");
+          }
+        }}
+      >
+        Measurements
+      </button>
+      {showFormElement == "measurements" && (
+        <>
+          <div className={styles.formGroup}>
+            <label htmlFor="wallWidth">Wall Width (cm):</label>
+            <input
+              id="wallWidth"
+              type="number"
+              min={MIN_WALL}
+              max={MAX_WALL}
+              value={wallWidthControl.inputValue}
+              onChange={wallWidthControl.handleChange}
+              className={styles.input}
+            />
+          </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="ceilingHeight">Ceiling Height (cm):</label>
-        <input
-          id="ceilingHeight"
-          type="number"
-          min={MIN_CEILING}
-          max={MAX_CEILING}
-          value={ceilingHeightControl.inputValue}
-          onChange={ceilingHeightControl.handleChange}
-          className={styles.input}
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label htmlFor="wallColor">Wall Color:</label>
-        <div className={styles.colorPickerContainer}>
-          <input 
-            id="wallColor"
-            type="color"
-            value={wallColor}
-            onChange={handleWallColorChange}
-            className={styles.colorInput}
-          />
-          <span className={styles.hexCode}>{wallColor}</span>
+          <div className={styles.formGroup}>
+            <label htmlFor="ceilingHeight">Ceiling Height (cm):</label>
+            <input
+              id="ceilingHeight"
+              type="number"
+              min={MIN_CEILING}
+              max={MAX_CEILING}
+              value={ceilingHeightControl.inputValue}
+              onChange={ceilingHeightControl.handleChange}
+              className={styles.input}
+            />
+          </div>
+        </>
+      )}
+      <button
+        onClick={() => {
+          if (showFormElement == "wall-color") {
+            setShowFormElement(null);
+          } else {
+            setShowFormElement("wall-color");
+          }
+        }}
+      >
+        Wall color
+      </button>
+      {showFormElement == "wall-color" && (
+        <div className={styles.formGroup}>
+          <label htmlFor="wallColor">Wall Color:</label>
+          <div className={styles.colorPickerContainer}>
+            <input
+              id="wallColor"
+              type="color"
+              value={wallColor}
+              onChange={handleWallColorChange}
+              className={styles.colorInput}
+            />
+            <span className={styles.hexCode}>{wallColor}</span>
+          </div>
         </div>
-        </div>
+      )}
+      <button
+        onClick={() => {
+          if (showFormElement == "flooring") {
+            setShowFormElement(null);
+          } else {
+            setShowFormElement("flooring");
+          }
+        }}
+      >
+        Flooring
+      </button>
+      {showFormElement == "flooring" && (
         <div className={styles.formGroup}>
         <label htmlFor="Flooring">Flooring</label>
         <div className={styles.colorPickerContainer}>
@@ -144,7 +187,8 @@ export default function StructuralForm({
           walnut herringbone
           </label>
         </div>
-      </div>
-    </form>
+       </div>
+      )}
+    </div>
   );
 }

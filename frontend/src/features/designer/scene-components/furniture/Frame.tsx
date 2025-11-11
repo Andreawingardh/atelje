@@ -284,6 +284,27 @@ export const Frame: React.FC<FrameProps> = ({
         }
     }, [imageUrl]);
 
+    // Adjust image based on aspect ratio
+    useEffect(() => {
+        if (ImageTexture) {
+            const imageAspect = ImageTexture.image.width / ImageTexture.image.height;
+            const frameAspect = frameWidth / frameHeight;
+            const scale = imageAspect > frameAspect 
+                ? frameAspect / imageAspect  // Crop sides
+                : imageAspect / frameAspect; // Crop top/bottom
+        
+            ImageTexture.repeat.set(
+                imageAspect > frameAspect ? scale : 1,
+                imageAspect > frameAspect ? 1 : scale
+            );
+            ImageTexture.offset.set(
+                imageAspect > frameAspect ? (1 - scale) / 2 : 0,
+                imageAspect > frameAspect ? 0 : (1 - scale) / 2
+            );
+        
+            ImageTexture.needsUpdate = true;
+        }
+    }, [ImageTexture, frameWidth, frameHeight]);
 
     return (
         <group
@@ -299,8 +320,34 @@ export const Frame: React.FC<FrameProps> = ({
                     frameHeight,
                     frameDepth
                 ]} />
-                <meshStandardMaterial color={selected ? "#000000" : frameColor} /> {/* temporary color change on select for dev */}
+                <meshStandardMaterial color={frameColor} />
             </mesh>
+
+            {/* Selection border - only visible when selected */}
+            {selected && (
+                <>
+                    {/* Top border */}
+                    <mesh position={[0, frameHeight / 2, 0]}>
+                        <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                    {/* Bottom border */}
+                    <mesh position={[0, -frameHeight / 2, 0]}>
+                        <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                    {/* Left border */}
+                    <mesh position={[-frameWidth / 2, 0, 0]}>
+                        <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                    {/* Right border */}
+                    <mesh position={[frameWidth / 2, 0, 0]}>
+                        <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                </>
+            )}
 
             {/* Inner frame (cutout) */}
             <mesh position={[0, 0, frameDepth * 0.15]}>
@@ -320,20 +367,98 @@ export const Frame: React.FC<FrameProps> = ({
                 )}
             </mesh>
 
-            {/* Position display when dragging */}
-            {isDragging && (
-                <Html
-                    position={[0, 0 / 2 + 0.15, 0]}
-                    center
-                    style={{
-                        whiteSpace: 'nowrap',
-                        pointerEvents: 'none',
-                        userSelect: 'none'
-                    }}
-                >
-                    X: {position.x} cm <br></br> Y: {position.y} cm
-                </Html>
-            )}
+            {/* Position display and measurement lines when dragging */}
+            {isDragging && (() => {
+                const wallWidthMeters = wallWidth * gridCellSize;
+                const wallLeftEdge = -wallWidthMeters / 2;
+    
+                // Get current world position of the frame
+                const currentWorldPos = new THREE.Vector3();
+                if (groupRef.current) {
+                    groupRef.current.getWorldPosition(currentWorldPos);
+                }
+    
+                const frameLeftEdge = -(frameWidth / 2);
+                const frameBottomEdge = -(frameHeight / 2);
+                const lineZ = frameDepth / 2 + 0.01;
+    
+                // Calculate distances in local space
+                const distanceToWallLeft = wallLeftEdge - currentWorldPos.x;
+                const distanceToFloor = -currentWorldPos.y;
+
+                // Calculate line dimensions
+                const horizontalLineLength = Math.abs(frameLeftEdge - distanceToWallLeft);
+                const verticalLineLength = Math.abs(frameBottomEdge - distanceToFloor);
+    
+                return (
+                    <>
+                        {/* Horizontal line from frame left edge to wall left edge */}
+                        <mesh position={[
+                            (frameLeftEdge + distanceToWallLeft) / 2,
+                            0,
+                            lineZ
+                        ]}>
+                            <boxGeometry args={[horizontalLineLength, 0.01, 0.001]} />
+                            <meshBasicMaterial color="#636363" />
+                        </mesh>
+            
+                        <Html
+                            position={[
+                                frameLeftEdge - 0.5,
+                                0.1,
+                                lineZ
+                            ]}
+                            center
+                            style={{
+                                whiteSpace: 'nowrap',
+                                pointerEvents: 'none',
+                                userSelect: 'none'
+                            }}
+                        >
+                            <p style={{ 
+                                background: 'rgba(255,255,255,0.9)', 
+                                padding: '3px 6px',
+                                borderRadius: '10px',
+                                fontSize: '12px'
+                            }}>
+                                {Math.round(position.x)} cm
+                            </p>
+                        </Html>
+            
+                        {/* Vertical line from frame bottom to floor */}
+                        <mesh position={[
+                            0,
+                            (frameBottomEdge + distanceToFloor) / 2,
+                            lineZ
+                        ]}>
+                            <boxGeometry args={[0.01, verticalLineLength, 0.001]} />
+                            <meshBasicMaterial color="#636363" />
+                        </mesh>
+            
+                        <Html
+                            position={[
+                                0.05,
+                                frameBottomEdge - 0.3,
+                                lineZ
+                            ]}
+                            style={{
+                                whiteSpace: 'nowrap',
+                                pointerEvents: 'none',
+                                userSelect: 'none'
+                            }}
+                        >
+                            <p style={{ 
+                                background: 'rgba(255,255,255,0.9)', 
+                                padding: '3px 6px',
+                                borderRadius: '10px',
+                                fontSize: '12px'
+                            }}>
+                                {Math.round(position.y)} cm
+                            </p>
+                        </Html>
+                    </>
+                );
+            })()}
         </group>
     );
 };
