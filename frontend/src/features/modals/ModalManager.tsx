@@ -6,6 +6,7 @@ import LoginForm from "../auth/LoginForm/LoginForm";
 import RegisterForm from "../auth/RegisterForm/RegisterForm";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
+import ConfirmationCloseModal from "./ConfirmationCloseModal";
 
 export default function ModalManager() {
   const { currentModal, closeModal } = useModal();
@@ -22,6 +23,7 @@ export default function ModalManager() {
   const modalMap: Record<ModalType, React.ReactNode> = {
     login: <LoginForm />,
     register: <RegisterForm />,
+    "confirmation-close": <ConfirmationCloseModal />
   };
 
   return (
