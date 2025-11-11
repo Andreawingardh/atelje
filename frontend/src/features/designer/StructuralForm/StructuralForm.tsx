@@ -24,9 +24,9 @@ export default function StructuralForm({
   setFlooring,
 }: StructuralFormProps) {
   // Define min and max values
-  const MIN_WALL = 300;
+  const MIN_WALL = 250;
   const MAX_WALL = 1000;
-  const MIN_CEILING = 240;
+  const MIN_CEILING = 210;
   const MAX_CEILING = 500;
 
   const wallWidthControl = useDebouncedNumericInput(
