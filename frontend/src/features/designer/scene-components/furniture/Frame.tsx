@@ -299,8 +299,34 @@ export const Frame: React.FC<FrameProps> = ({
                     frameHeight,
                     frameDepth
                 ]} />
-                <meshStandardMaterial color={selected ? "#000000" : frameColor} /> {/* temporary color change on select for dev */}
+                <meshStandardMaterial color={frameColor} /> {/* temporary color change on select for dev */}
             </mesh>
+
+            {/* Selection border - only visible when selected */}
+            {selected && (
+                <>
+                    {/* Top border */}
+                    <mesh position={[0, frameHeight / 2, 0]}>
+                        <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                    {/* Bottom border */}
+                    <mesh position={[0, -frameHeight / 2, 0]}>
+                        <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                    {/* Left border */}
+                    <mesh position={[-frameWidth / 2, 0, 0]}>
+                        <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                    {/* Right border */}
+                    <mesh position={[frameWidth / 2, 0, 0]}>
+                        <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
+                        <meshBasicMaterial color="#5877c9" />
+                    </mesh>
+                </>
+            )}
 
             {/* Inner frame (cutout) */}
             <mesh position={[0, 0, frameDepth * 0.15]}>
