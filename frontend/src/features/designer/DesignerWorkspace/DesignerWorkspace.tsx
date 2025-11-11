@@ -1,6 +1,6 @@
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
-import { useState, useRef } from "react";
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
+import { useState, useRef, useEffect } from "react";
+import styles from "./DesignerWorkspace.module.css";
 import FurnitureForm, { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import StructuralForm from "../StructuralForm/StructuralForm";
 import SingleFrameForm from "../SingleFrameForm/SingleFrameForm";
@@ -12,7 +12,10 @@ import { captureScreenshot } from "@/lib/screenshotCapture";
 interface DesignerWorkspaceProps {
   designName: string;
   onDesignNameChange: (name: string) => void;
-  onSave: (screenshots?: { fullBlob: Blob; thumbnailBlob: Blob }) => Promise<void>;
+  onSave: (screenshots?: {
+    fullBlob: Blob;
+    thumbnailBlob: Blob;
+  }) => Promise<void>;
   isLoading: boolean;
   error?: string;
   // Add these from useCustomDesign:
@@ -61,12 +64,15 @@ export default function DesignerWorkspace({
   deleteFrame,
 }: DesignerWorkspaceProps) {
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+  const [showSideBarForm, setShowSideBarForm] = useState<
+    "frames" | "sofa" | "single-frame"
+  >("frames");
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const handleSaveClick = async () => {
     if (!canvasRef.current) {
-      console.error('Canvas not ready');
+      console.error("Canvas not ready");
       await onSave(); // Save without screenshots
       return;
     }
@@ -86,9 +92,13 @@ export default function DesignerWorkspace({
   const selectedFrame =
     selectedFrameIndex !== -1 ? customDesign.frames[selectedFrameIndex] : null;
 
+  useEffect(() => {
+    if (selectedFrame) setShowSideBarForm("single-frame");
+    if (!selectedFrame) setShowSideBarForm("frames");
+  }, [selectedFrame]);
+
   return (
-    <ProtectedRoute>
-      <h1>Designer 3D-tool</h1>
+    <>
       <StructuralForm
         wallWidth={customDesign.wallWidth}
         setWallWidth={setWallWidth}
@@ -99,51 +109,63 @@ export default function DesignerWorkspace({
         flooring={customDesign.flooring}
         setFlooring={setFlooring}
       />
-      <FurnitureForm
-        furnitureColor={customDesign.furnitureColor}
-        setFurnitureColor={setFurnitureColor}
-        furnitureDepth={customDesign.furnitureDepth}
-        furnitureWidth={customDesign.furnitureWidth}
-        setFurnitureDepth={setFurnitureDepth}
-        setFurnitureWidth={setFurnitureWidth}
-        furnitureHeight={customDesign.furnitureHeight}
-        setFurnitureHeight={setFurnitureHeight}
-      />
-      <FrameForm
-        frames={customDesign.frames}
-        wallWidth={customDesign.wallWidth}
-        ceilingHeight={customDesign.ceilingHeight}
-        gridCellSize={0.01}
-        onAddFrame={addFrame}
-      />
+      <div className={styles.formSideBar}>
+        <button onClick={() => setShowSideBarForm("frames")}>Frames</button>
+        <button onClick={() => setShowSideBarForm("sofa")}>Sofa</button>
 
-      {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
-      {selectedFrame && selectedFrameIndex !== -1 && (
-        <div>
-          <h3>Edit Selected Frame</h3>
-          <SingleFrameForm
+        {showSideBarForm == "frames" && (
+          <FrameForm
             frames={customDesign.frames}
-            id={selectedFrame.id}
-            frameColor={selectedFrame.frameColor || "#ac924f"}
-            setFrameColor={(color) => setFrameColor(selectedFrameIndex, color)}
-            imageUrl={selectedFrame.imageUrl}
-            setFrameImage={(url) => setFrameImage(selectedFrameIndex, url!)}
-            frameSize={selectedFrame.frameSize || "70x50"}
-            setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
-            frameOrientation={selectedFrame.frameOrientation || "portrait"}
-            setFrameOrientation={(orientation) =>
-              setFrameOrientation(
-                selectedFrameIndex,
-                orientation as "portrait" | "landscape"
-              )
-            }
-            onDelete={() => {
-              deleteFrame(selectedFrameIndex);
-              setSelectedFrameId(null);
-            }}
+            wallWidth={customDesign.wallWidth}
+            ceilingHeight={customDesign.ceilingHeight}
+            gridCellSize={0.01}
+            onAddFrame={addFrame}
           />
-        </div>
-      )}
+        )}
+
+        {showSideBarForm == "sofa" && (
+          <FurnitureForm
+            furnitureColor={customDesign.furnitureColor}
+            setFurnitureColor={setFurnitureColor}
+            furnitureDepth={customDesign.furnitureDepth}
+            furnitureWidth={customDesign.furnitureWidth}
+            setFurnitureDepth={setFurnitureDepth}
+            setFurnitureWidth={setFurnitureWidth}
+            furnitureHeight={customDesign.furnitureHeight}
+            setFurnitureHeight={setFurnitureHeight}
+          />
+        )}
+
+        {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
+        {selectedFrame && selectedFrameIndex !== -1 && showSideBarForm == "single-frame" && (
+          <div>
+            <h3>Edit Selected Frame</h3>
+            <SingleFrameForm
+              frames={customDesign.frames}
+              id={selectedFrame.id}
+              frameColor={selectedFrame.frameColor || "#ac924f"}
+              setFrameColor={(color) =>
+                setFrameColor(selectedFrameIndex, color)
+              }
+              imageUrl={selectedFrame.imageUrl}
+              setFrameImage={(url) => setFrameImage(selectedFrameIndex, url!)}
+              frameSize={selectedFrame.frameSize || "70x50"}
+              setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
+              frameOrientation={selectedFrame.frameOrientation || "portrait"}
+              setFrameOrientation={(orientation) =>
+                setFrameOrientation(
+                  selectedFrameIndex,
+                  orientation as "portrait" | "landscape"
+                )
+              }
+              onDelete={() => {
+                deleteFrame(selectedFrameIndex);
+                setSelectedFrameId(null);
+              }}
+            />
+          </div>
+        )}
+      </div>
 
       {isLoading ? (
         <div>Loading design...</div>
@@ -170,9 +192,11 @@ export default function DesignerWorkspace({
           onChange={(e) => onDesignNameChange(e.target.value)}
           placeholder={designName || "Give your design a name"}
         />
-        <button onClick={handleSaveClick}>{isLoading ? "Saving" : "Save"}</button>
+        <button onClick={handleSaveClick}>
+          {isLoading ? "Saving" : "Save"}
+        </button>
         {error && <p>{error}</p>}
       </div>
-    </ProtectedRoute>
+    </>
   );
 }
