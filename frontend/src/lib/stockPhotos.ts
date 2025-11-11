@@ -6,8 +6,6 @@ export interface StockPhoto {
   category: PhotoCategory;
   alt: string;
   photographer: string;
-
-  aspectRatio?: number;
 }
 
 export const stockPhotos: StockPhoto[] = [
