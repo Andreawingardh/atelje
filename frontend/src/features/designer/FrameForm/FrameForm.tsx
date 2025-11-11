@@ -21,13 +21,23 @@ interface FrameFormProps {
 
 export default function FrameForm({ frames, onAddFrame, wallWidth, ceilingHeight, gridCellSize }: FrameFormProps) {
 
-  const getRandomPosition = (): [number, number, number] => {
+  const frameSizes = [
+    { size: '70x100', label: '70x100 cm' },
+    { size: '50x70', label: '50x70 cm' },
+    { size: '40x50', label: '40x50 cm' },
+    { size: '30x40', label: '30x40 cm' },
+    { size: '30x30', label: '30x30 cm' },
+    { size: '20x30', label: '20x30 cm' },
+    { size: '13x18', label: '13x18 cm' }
+  ]
+  const getRandomPosition = (frameSize: string): [number, number, number] => {
     const wallWidthCm = wallWidth * gridCellSize;
     const ceilingHeightCm = ceilingHeight * gridCellSize;
   
   // Frame size will be dynamic based on selection
-    const frameWidth = 0.7;
-    const frameHeight = 0.5;
+    const [width, height] = frameSize.split('x').map(Number);
+    const frameWidth = (width || 50) * gridCellSize;
+    const frameHeight = (height || 70) * gridCellSize;
   
   // Calculate safe bounds (frame center positions)
     const padding = 0.1; // 10cm padding
@@ -51,23 +61,29 @@ export default function FrameForm({ frames, onAddFrame, wallWidth, ceilingHeight
     return `/stock-photos/${photo.filename}`;
   };
 
-  const handleAddFrame = () => {
+  const handleAddFrame = (size: string) => {
     const newFrame: FrameData = {
       id: `frame-${Date.now()}`,
       frameColor: '#ac924f',
-      frameSize: '70x50',
+      frameSize: size,
       frameOrientation: 'portrait',
       imageUrl: getRandomImageUrl(),
-      position: getRandomPosition() // Position will be changed later to work with collisions etc
+      position: getRandomPosition(size)
     };
     onAddFrame(newFrame);
   };
 
   return (
     <div className={styles.frameForm}>
-      <button onClick={handleAddFrame} className={styles.addButton}>
-        Add Frame
-      </button>
+      {frameSizes.map(({ size, label }) => (
+        <button 
+          key={size}
+          onClick={() => handleAddFrame(size)}
+          className={styles.addFrameButton}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   );
 }
