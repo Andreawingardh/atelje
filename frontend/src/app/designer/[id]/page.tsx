@@ -46,6 +46,8 @@ export default function DesignerPage() {
     customDesign,
     markAsSaved,
     hasUnsavedChanges,
+    occupiedPositions,
+    addOccupiedPosition
   } = useCustomDesign();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -143,6 +145,8 @@ export default function DesignerPage() {
         deleteFrame={deleteFrame}
         customDesign={customDesign}
         hasUnsavedChanges={hasUnsavedChanges}
+        occupiedPositions={occupiedPositions}
+        addOccupiedPosition={addOccupiedPosition}
       />
     </ProtectedRoute>
   );

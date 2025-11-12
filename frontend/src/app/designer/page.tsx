@@ -37,7 +37,9 @@ export default function NewDesignPage() {
     deleteFrame,
     customDesign,
     hasUnsavedChanges,
-    markAsSaved
+    markAsSaved,
+    occupiedPositions,
+    addOccupiedPosition
   } = useCustomDesign();
 
   const { isAttemptingNavigation, proceedNavigation, cancelNavigation, allowNextNavigation } =
@@ -109,6 +111,8 @@ export default function NewDesignPage() {
         deleteFrame={deleteFrame}
         customDesign={customDesign}
         hasUnsavedChanges={hasUnsavedChanges}
+        occupiedPositions={occupiedPositions}
+        addOccupiedPosition={addOccupiedPosition}
       />
     </>
   );
