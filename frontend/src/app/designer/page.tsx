@@ -89,6 +89,7 @@ export default function NewDesignPage() {
         onSave={handleSave}
         isLoading={isLoading}
         error={error}
+        screenshotUrl={null}
         setCeilingHeight={setCeilingHeight}
         setWallWidth={setWallWidth}
         setWallColor={setWallColor}
