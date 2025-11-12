@@ -59,7 +59,7 @@ export default function StructuralForm({
 
   return (
     <div className={styles.structuralForm}>
-      <div className={showFormElement == "measurements" ? styles.openFormGroup : ""}>
+      <div className={showFormElement == "measurements"  ? styles.openFormGroup : styles.formGroup}>
       <button
         className={styles.structuralFormButton}
         onClick={() => {
@@ -99,7 +99,7 @@ export default function StructuralForm({
         </>
       )}
       </div>
-      <div className={showFormElement == "wall-color" ? styles.openFormGroup : ""}>
+      <div className={showFormElement == "wall-color"  ? styles.openFormGroup : styles.formGroup}>
       <button
       className={styles.structuralFormButton}
         onClick={() => {
@@ -126,7 +126,7 @@ export default function StructuralForm({
         </>
       )}
       </div>
-      <div className={showFormElement == "flooring" ? styles.openFormGroup : ""}>
+      <div className={showFormElement == "flooring" ? styles.openFormGroup : styles.formGroup}>
       <button
       className={styles.structuralFormButton}
         onClick={() => {
