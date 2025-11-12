@@ -9,6 +9,7 @@ public class CreateDesignDto
 {
     [Required]
     [MinLength(3)]
+    [MaxLength(25)]
     public required string Name { get; set; }
     
     [Required]

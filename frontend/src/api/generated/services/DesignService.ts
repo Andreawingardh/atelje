@@ -84,12 +84,12 @@ export class DesignService {
     }
     /**
      * @param id
-     * @returns DesignDto OK
+     * @returns any OK
      * @throws ApiError
      */
     public static deleteDesign(
         id: number,
-    ): CancelablePromise<DesignDto> {
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/Design/{id}',
