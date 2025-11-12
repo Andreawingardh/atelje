@@ -8,6 +8,7 @@ import FrameForm from "../FrameForm/FrameForm";
 import Canvas3D from "../Canvas3D/Canvas3D";
 import { FrameData } from "../FrameForm/FrameForm";
 import { captureScreenshot } from "@/lib/screenshotCapture";
+import { DownloadScreenshotButton } from "@/elements/DownloadScreenshotButton/DownloadScreenshotButton";
 import styles from "./DesignerWorkspace.module.css";
 import { useModal } from "@/contexts/ModalContext";
 
@@ -20,6 +21,7 @@ interface DesignerWorkspaceProps {
   }) => Promise<void>;
   isLoading: boolean;
   error?: string;
+  screenshotUrl?: string | null;
   // Add these from useCustomDesign:
   customDesign: ReturnType<typeof useCustomDesign>["customDesign"];
   setWallWidth: (width: number) => void;
@@ -49,6 +51,7 @@ export default function DesignerWorkspace({
   onSave,
   isLoading,
   error,
+  screenshotUrl,
   customDesign,
   setWallWidth,
   setCeilingHeight,
@@ -140,6 +143,10 @@ export default function DesignerWorkspace({
         <button onClick={handleSaveClick}>
           {isLoading ? "Saving" : "Save"}
         </button>
+        <DownloadScreenshotButton 
+          screenshotUrl={screenshotUrl}
+          designName={designName || 'design'}
+        />
         {error && <p>{error}</p>}
       </div>
       <div className={styles.sideBarForm}>

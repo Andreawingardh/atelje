@@ -124,6 +124,7 @@ export default function DesignerPage() {
         onSave={handleSave}
         isLoading={isLoading}
         error={error}
+        screenshotUrl={currentDesign?.screenshotUrl}
         setCeilingHeight={setCeilingHeight}
         setWallWidth={setWallWidth}
         setWallColor={setWallColor}
