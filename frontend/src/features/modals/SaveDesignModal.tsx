@@ -16,7 +16,7 @@ export default function SaveDesignModal() {
       <input
         value={designName}
         onChange={(e) => setDesignName(e.target.value)}
-        placeholder={designName || "Give your design a name"}
+        placeholder={designName }
       />
       <button
         type="submit"

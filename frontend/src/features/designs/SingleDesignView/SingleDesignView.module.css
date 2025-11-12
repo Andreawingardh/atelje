@@ -1,0 +1,4 @@
+.informationWrapper {
+    display: flex;
+    flex-direction: row;
+}

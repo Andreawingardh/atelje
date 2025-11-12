@@ -32,7 +32,7 @@ type ModalConfig = {
     };
     callbacks: {
       onDelete?: () => void;
-      saveDesignName: (name: string) => void;
+      saveDesignName?: (designId: number, name: string) => void;
     };
   };
   "confirmation-close": {
@@ -44,12 +44,12 @@ type ModalConfig = {
   };
 };
 
-type ModalRequiresConfig<T extends ModalType> =
-  ModalConfig[T]["data"] extends never
-    ? ModalConfig[T]["callbacks"] extends never
-      ? false // Both are never = no config needed
-      : true // Has callbacks = needs config
-    : true; // Has data = needs config
+// type ModalRequiresConfig<T extends ModalType> =
+//   ModalConfig[T]["data"] extends never
+//     ? ModalConfig[T]["callbacks"] extends never
+//       ? false // Both are never = no config needed
+//       : true // Has callbacks = needs config
+//     : true; // Has data = needs config
 
 export interface ModalContextType {
   modalState: ModalState;
