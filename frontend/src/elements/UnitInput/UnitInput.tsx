@@ -14,7 +14,6 @@ export default function UnitInput({
   className = "",
   ...props
 }: UnitInputProps) {
-  const [currentInput, setCurrentInput] = useState(String(value));
 
   return (
     <div className={styles.unitInputWrapper} style={{width: units === 'HEX' ? '8.125rem' : '5.75rem'}}>
