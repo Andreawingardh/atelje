@@ -95,14 +95,6 @@ export default function DesignerWorkspace({
   }, [designName]);
 
   const handleSave = async () => {
-    if (!designName) {
-      setModalCallbacks({
-        onConfirm: null,
-        onCancel: null,
-        saveDesignName: onDesignNameChange,
-      });
-      openModal("save-design");
-    }
 
     if (!canvasRef.current) {
       console.error("Canvas not ready");
