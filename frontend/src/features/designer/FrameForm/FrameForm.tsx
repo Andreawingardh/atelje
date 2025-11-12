@@ -11,15 +11,33 @@ export interface FrameData {
   position: [number, number, number];
 }
 
+interface OccupiedPosition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  frameId: string;
+}
+
 interface FrameFormProps {
   frames: FrameData[];
   wallWidth: number;
   ceilingHeight: number;
   gridCellSize: number;
+  occupiedPositions: OccupiedPosition[];
   onAddFrame: (frame: FrameData) => void;
+  onAddOccupiedPosition: (position: OccupiedPosition) => void;
 }
 
-export default function FrameForm({ frames, onAddFrame, wallWidth, ceilingHeight, gridCellSize }: FrameFormProps) {
+export default function FrameForm({ 
+  frames, 
+  onAddFrame, 
+  wallWidth, 
+  ceilingHeight, 
+  gridCellSize,
+  occupiedPositions,
+  onAddOccupiedPosition
+}: FrameFormProps) {
 
   const frameSizes = [
     { size: '70x100', label: '70x100 cm' },
@@ -29,48 +47,73 @@ export default function FrameForm({ frames, onAddFrame, wallWidth, ceilingHeight
     { size: '30x30', label: '30x30 cm' },
     { size: '20x30', label: '20x30 cm' },
     { size: '13x18', label: '13x18 cm' }
-  ]
-  const getRandomPosition = (frameSize: string): [number, number, number] => {
-    const wallWidthCm = wallWidth * gridCellSize;
-    const ceilingHeightCm = ceilingHeight * gridCellSize;
-  
-  // Frame size will be dynamic based on selection
+  ];
+
+  const checkOverlap = (
+    rect1: { x: number; y: number; width: number; height: number },
+    rect2: { x: number; y: number; width: number; height: number },
+    padding: number = 0.03 // 3cm padding
+  ): boolean => {
+    return !(
+      rect1.x + rect1.width / 2 + padding < rect2.x - rect2.width / 2 ||
+      rect1.x - rect1.width / 2 - padding > rect2.x + rect2.width / 2 ||
+      rect1.y + rect1.height / 2 + padding < rect2.y - rect2.height / 2 ||
+      rect1.y - rect1.height / 2 - padding > rect2.y + rect2.height / 2
+    );
+  };
+
+  const getRandomPosition = (frameSize: string, frameId: string): [number, number, number] | null => {
     const [width, height] = frameSize.split('x').map(Number);
     const frameWidth = (width || 50) * gridCellSize;
     const frameHeight = (height || 70) * gridCellSize;
-  
-  // Calculate safe bounds (frame center positions)
-    const padding = 0.1; // 10cm padding
+    
+    const wallWidthCm = wallWidth * gridCellSize;
+    const ceilingHeightCm = ceilingHeight * gridCellSize;
+    
+    const padding = 0.1; // 10 cm padding from edges
     const minX = -(wallWidthCm / 2) + (frameWidth / 2) + padding;
     const maxX = (wallWidthCm / 2) - (frameWidth / 2) - padding;
     const minY = (ceilingHeightCm / 2) + (frameHeight / 2) + padding;
     const maxY = ceilingHeightCm - (frameHeight / 2) - padding;
-  
-    const randomX = minX + Math.random() * (maxX - minX);
-    const randomY = minY + Math.random() * (maxY - minY);
-  
-    return [randomX, randomY, 0];
+
+    for (let i = 0; i < 200; i++) {
+      const x = minX + Math.random() * (maxX - minX);
+      const y = minY + Math.random() * (maxY - minY);
+      
+      const newFrame = { x, y, width: frameWidth, height: frameHeight, frameId };
+      
+      if (!occupiedPositions.some(occupied => checkOverlap(newFrame, occupied))) {
+        onAddOccupiedPosition(newFrame);
+        return [x, y, 0];
+      }
+    }
+    
+    return null;
   };
 
   const getRandomImageUrl = (): string => {
-    if (stockPhotos.length === 0) {
-      return '/mountains-field-flowers-daniela-kokina-unsplash.jpg';
-    }
+    if (stockPhotos.length === 0) return '/mountains-field-flowers-daniela-kokina-unsplash.jpg';
     const randomIndex = Math.floor(Math.random() * stockPhotos.length);
-    const photo = stockPhotos[randomIndex]!;
-    return `/stock-photos/${photo.filename}`;
+    return `/stock-photos/${stockPhotos[randomIndex]!.filename}`;
   };
 
   const handleAddFrame = (size: string) => {
-    const newFrame: FrameData = {
-      id: `frame-${Date.now()}`,
+    const frameId = `frame-${Date.now()}`;
+    const position = getRandomPosition(size, frameId);
+    
+    if (!position) {
+      alert('Wall is full! Remove or move some frames.');
+      return;
+    }
+    
+    onAddFrame({
+      id: frameId,
       frameColor: '#ac924f',
       frameSize: size,
       frameOrientation: 'portrait',
       imageUrl: getRandomImageUrl(),
-      position: getRandomPosition(size)
-    };
-    onAddFrame(newFrame);
+      position
+    });
   };
 
   return (
