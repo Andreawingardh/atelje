@@ -104,10 +104,6 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCustomDesign((prev) => ({ ...prev, furnitureHeight: value }));
   };
 
-  const setFrames = (value: FrameData[]) => {
-    setCustomDesign((prev) => ({ ...prev, frames: value }));
-  };
-
   // Frame helper functions
   const addFrame = (frame: FrameData) => {
     setCustomDesign((prev) => ({ 
@@ -266,7 +262,6 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFurnitureDepth,
     setFurnitureWidth,
     setFurnitureHeight,
-    setFrames,
     addFrame,
     updateFrame,
     setFrameColor,

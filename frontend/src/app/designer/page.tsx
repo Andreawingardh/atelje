@@ -25,7 +25,6 @@ export default function NewDesignPage() {
     setFrameOrientation,
     setFramePosition,
     setFrameSize,
-    setFrames,
     setFurnitureColor,
     setFurnitureDepth,
     setFurnitureHeight,

@@ -33,7 +33,6 @@ export default function DesignerPage() {
     setFrameOrientation,
     setFramePosition,
     setFrameSize,
-    setFrames,
     setFurnitureColor,
     setFurnitureDepth,
     setFurnitureHeight,
