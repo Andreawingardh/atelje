@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import Button from "@/elements/Button/Button";
 import { useRouter } from "next/navigation";
 
 export default function LogOutButton() {
@@ -12,5 +13,5 @@ export default function LogOutButton() {
     router.push("/login");
   }
 
-  return <button onClick={handleOnClick}>Logout</button>;
+  return <Button onClick={handleOnClick} variant="snowdrop" buttonText="Log out"></Button>;
 }

@@ -1,8 +1,11 @@
 .base {
-    font-size: 1.25rem;
+    font-size: 1rem;
+    font-weight: 400;
     padding: 0.3rem 1rem;
     border-radius: 30px;
     border: none;
+    height: fit-content;
+    cursor: pointer;
   }
   
   .snowdrop {
