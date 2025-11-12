@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDebouncedNumericInput } from "../../designs/useDebouncedNumericInput";
 import UnitInput from "@/elements/UnitInput/UnitInput";
 import CircleColorInput from "@/elements/CircleColorInput/CircleColorInput";
+import Background from "three/src/renderers/common/Background.js";
 
 interface StructuralFormProps {
   wallWidth: number;
@@ -115,6 +116,16 @@ export default function StructuralForm({
       {showFormElement == "wall-color" && (
         <>
           <label htmlFor="wallColor" className={styles.visuallyHiddenLabel}>Wall color</label>
+          <div className={styles.wallColorContainer}>
+            <div 
+              className={styles.colorInputWrapper}
+              onClick={() => document.getElementById('wallColor')?.click()}
+            >
+              <div 
+                className={styles.colorInputDisplay}
+                style={{ backgroundColor: wallColor }}
+              />
+            </div>
             <input
               id="wallColor"
               type="color"
@@ -122,7 +133,8 @@ export default function StructuralForm({
               onChange={handleWallColorChange}
               className={styles.colorInput}
             />
-            <span className={styles.hexCode}>{wallColor}</span>
+            <span className={styles.hexCode} /* style={{background:`${wallColor}`}} */>{wallColor}</span>
+          </div>
         </>
       )}
       </div>
