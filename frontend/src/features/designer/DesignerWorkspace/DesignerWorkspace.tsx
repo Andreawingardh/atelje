@@ -10,6 +10,7 @@ import { FrameData } from "../FrameForm/FrameForm";
 import { captureScreenshot } from "@/lib/screenshotCapture";
 import styles from "./DesignerWorkspace.module.css";
 import { useModal } from "@/contexts/ModalContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface DesignerWorkspaceProps {
   designName: string;
@@ -65,8 +66,10 @@ export default function DesignerWorkspace({
   setFrameOrientation,
   setFramePosition,
   deleteFrame,
-  hasUnsavedChanges
+  hasUnsavedChanges,
 }: DesignerWorkspaceProps) {
+  const { user } = useAuth();
+  const [pendingAction, setPendingAction] = useState<"save" | null>(null);
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
   const [showSideBar, setShowSideBar] = useState<
     "frames" | "sofa" | "single-frame"
@@ -76,6 +79,11 @@ export default function DesignerWorkspace({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const handleSaveClick = () => {
+    if (!user) {
+      setPendingAction("save");
+      openModal("login");
+      return;
+    }
     if (!designName) {
       setModalCallbacks({
         onConfirm: null,
@@ -84,18 +92,33 @@ export default function DesignerWorkspace({
       });
       openModal("save-design");
     } else {
-      handleSave()
+      handleSave();
     }
   };
 
   useEffect(() => {
+    console.log("Auth check:", { pendingAction, user: !!user });
+    if (pendingAction === "save" && user) {
+      console.log("Opening save-design modal");
+      setPendingAction(null);
+      setModalCallbacks({
+        onConfirm: null,
+        onCancel: null,
+        saveDesignName: onDesignNameChange,
+      });
+      openModal("save-design");
+    }
+  }, [pendingAction, user]);
+
+  useEffect(() => {
+    console.log("Design name changed:", { designName, hasUnsavedChanges });
     if (designName && hasUnsavedChanges) {
+      console.log("Calling handleSave");
       handleSave();
     }
   }, [designName]);
 
   const handleSave = async () => {
-
     if (!canvasRef.current) {
       console.error("Canvas not ready");
       await onSave(); // Save without screenshots
@@ -137,7 +160,7 @@ export default function DesignerWorkspace({
         setFlooring={setFlooring}
       />
       <div>
-        <button onClick={handleSaveClick}>
+        <button onClick={handleSaveClick} disabled={!hasUnsavedChanges}>
           {isLoading ? "Saving" : "Save"}
         </button>
         {error && <p>{error}</p>}
