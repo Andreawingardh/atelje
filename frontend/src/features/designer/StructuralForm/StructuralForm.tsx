@@ -1,6 +1,8 @@
 import styles from "./StructuralForm.module.css";
 import React, { useState } from "react";
 import { useDebouncedNumericInput } from "../../designs/useDebouncedNumericInput";
+import UnitInput from "@/elements/UnitInput/UnitInput";
+import CircleColorInput from "@/elements/CircleColorInput/CircleColorInput";
 
 interface StructuralFormProps {
   wallWidth: number;
@@ -57,7 +59,9 @@ export default function StructuralForm({
 
   return (
     <div className={styles.structuralForm}>
+      <div className={showFormElement == "measurements" ? styles.openFormGroup : ""}>
       <button
+        className={styles.structuralFormButton}
         onClick={() => {
           if (showFormElement == "measurements") {
             setShowFormElement(null);
@@ -66,38 +70,38 @@ export default function StructuralForm({
           }
         }}
       >
-        Measurements
+        <img src="/icons/rouler-icon.svg" alt="Measurements Icon" className={styles.buttonIcon} />
       </button>
       {showFormElement == "measurements" && (
         <>
-          <div className={styles.formGroup}>
-            <label htmlFor="wallWidth">Wall Width (cm):</label>
-            <input
-              id="wallWidth"
-              type="number"
-              min={MIN_WALL}
-              max={MAX_WALL}
-              value={wallWidthControl.inputValue}
-              onChange={wallWidthControl.handleChange}
-              className={styles.input}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="ceilingHeight">Ceiling Height (cm):</label>
-            <input
-              id="ceilingHeight"
-              type="number"
-              min={MIN_CEILING}
-              max={MAX_CEILING}
-              value={ceilingHeightControl.inputValue}
-              onChange={ceilingHeightControl.handleChange}
-              className={styles.input}
-            />
-          </div>
+          <label htmlFor="ceilingHeight">Ceiling height</label>
+          <UnitInput
+            id="ceilingHeight"
+            type="number"
+            min={MIN_CEILING}
+            max={MAX_CEILING}
+            units="cm"
+            value={ceilingHeightControl.inputValue}
+            onChange={ceilingHeightControl.handleChange}
+            className={styles.input}
+          />
+          <label htmlFor="wallWidth">Wall width</label>
+          <UnitInput
+            id="wallWidth"
+            type="number"
+            min={MIN_WALL}
+            max={MAX_WALL}
+            units="cm"
+            value={wallWidthControl.inputValue}
+            onChange={wallWidthControl.handleChange}
+            className={styles.input}
+          />
         </>
       )}
+      </div>
+      <div className={showFormElement == "wall-color" ? styles.openFormGroup : ""}>
       <button
+      className={styles.structuralFormButton}
         onClick={() => {
           if (showFormElement == "wall-color") {
             setShowFormElement(null);
@@ -106,12 +110,11 @@ export default function StructuralForm({
           }
         }}
       >
-        Wall color
+        <img src="/icons/walls-icon.svg" alt="Wall Color Icon" className={styles.buttonIcon} />
       </button>
       {showFormElement == "wall-color" && (
-        <div className={styles.formGroup}>
-          <label htmlFor="wallColor">Wall Color:</label>
-          <div className={styles.colorPickerContainer}>
+        <>
+          <label htmlFor="wallColor" className={styles.visuallyHiddenLabel}>Wall color</label>
             <input
               id="wallColor"
               type="color"
@@ -120,10 +123,12 @@ export default function StructuralForm({
               className={styles.colorInput}
             />
             <span className={styles.hexCode}>{wallColor}</span>
-          </div>
-        </div>
+        </>
       )}
+      </div>
+      <div className={showFormElement == "flooring" ? styles.openFormGroup : ""}>
       <button
+      className={styles.structuralFormButton}
         onClick={() => {
           if (showFormElement == "flooring") {
             setShowFormElement(null);
@@ -132,63 +137,56 @@ export default function StructuralForm({
           }
         }}
       >
-        Flooring
+        <img src="/icons/flooring-icon.svg" alt="Flooring Icon" className={styles.buttonIcon} />
       </button>
       {showFormElement == "flooring" && (
-        <div className={styles.formGroup}>
-        <label htmlFor="Flooring">Flooring</label>
+        <>
+        <label htmlFor="Flooring" className={styles.visuallyHiddenLabel}>Flooring</label>
         <div className={styles.colorPickerContainer}>
-          <label htmlFor="birch-floor-parquet" className={styles.flooringLabel}>
-          <input 
+          <CircleColorInput
             id="birch-floor-parquet"
-            type="radio"
+            label="birch parquet"
+            imageSrc="/3D-textures/birch-floor-parquet/albedo.jpg"
             name="flooring"
             value={"birch-floor-parquet"}
             checked={flooring === "birch-floor-parquet"}
             onChange={handleFlooringChange}
             className={styles.flooringInput}
           />
-          birch parquet
-          </label>
-          <label htmlFor="birch-floor-herringbone" className={styles.flooringLabel}>
-          <input 
+          <CircleColorInput 
             id="birch-floor-herringbone"
-            type="radio"
+            label="birch herringbone"
+            imageSrc="/3D-textures/birch-floor-herringbone/albedo.jpg"
             name="flooring"
             value={"birch-floor-herringbone"}
             checked={flooring === "birch-floor-herringbone"}
             onChange={handleFlooringChange}
             className={styles.flooringInput}
           />
-          birch herringbone
-          </label>
-          <label htmlFor="walnut-floor-parquet" className={styles.flooringLabel}>
-          <input 
+          <CircleColorInput 
             id="walnut-floor-parquet"
-            type="radio"
+            label="walnut parquet"
+            imageSrc="/3D-textures/walnut-floor-parquet/albedo.jpg"
             name="flooring"
             value={"walnut-floor-parquet"}
             checked={flooring === "walnut-floor-parquet"}
             onChange={handleFlooringChange}
             className={styles.flooringInput}
           />
-          walnut parquet
-          </label>
-          <label htmlFor="walnut-floor-herringbone" className={styles.flooringLabel}>
-          <input 
+          <CircleColorInput 
             id="walnut-floor-herringbone"
-            type="radio"
+            label="walnut herringbone"
+            imageSrc="/3D-textures/walnut-floor-herringbone/albedo.jpg"
             name="flooring"
             value={"walnut-floor-herringbone"}
             checked={flooring === "walnut-floor-herringbone"}
             onChange={handleFlooringChange}
             className={styles.flooringInput}
           />
-          walnut herringbone
-          </label>
         </div>
-       </div>
+        </>
       )}
+      </div>
     </div>
   );
 }

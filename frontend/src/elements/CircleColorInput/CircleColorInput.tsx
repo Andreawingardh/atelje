@@ -3,7 +3,7 @@ import styles from './CircleColorInput.module.css';
 
 export interface CircleColorInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  imageSrc?: string; // Later we'll use it like: imageSrc="/3D-textures/birch-floor-parquet/albedo.jpg"
+  imageSrc?: string;
   color?: string;
   label: string;
   checked?: boolean;
