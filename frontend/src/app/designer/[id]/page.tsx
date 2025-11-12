@@ -10,6 +10,7 @@ import { ApiError } from "@/api/generated";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
 import useBlockNavigation from "@/lib/useBlockNavigation";
 import { useModal } from "@/contexts/ModalContext";
+import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 
 export default function DesignerPage() {
   const params = useParams();
@@ -115,7 +116,7 @@ export default function DesignerPage() {
   console.log("Has unsaved changes:", hasUnsavedChanges);
 
   return (
-    <>
+    <ProtectedRoute>
       <h1>this is the ID page</h1>
       {errorMessage && <p>{errorMessage}</p>}
       <DesignerWorkspace
@@ -143,6 +144,6 @@ export default function DesignerPage() {
         customDesign={customDesign}
         hasUnsavedChanges={hasUnsavedChanges}
       />
-    </>
+    </ProtectedRoute>
   );
 }

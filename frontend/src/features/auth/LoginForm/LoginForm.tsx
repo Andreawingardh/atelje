@@ -4,9 +4,11 @@ import React, { useEffect } from "react";
 import styles from "./LoginForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/contexts/ModalContext";
 
 export default function LoginForm() {
-  const { user, login, isLoading, error} = useAuth();
+  const { user, login, isLoading, error } = useAuth();
+  const { openModal } = useModal();
   const router = useRouter();
 
 useEffect(() => {
@@ -57,6 +59,7 @@ useEffect(() => {
 
         <button type="submit">{isLoading ? "Logging in..." : "Log In"}</button>
       </form>
+      <button onClick={() => openModal("register")}>Do not have an account? Sign up!</button>
     </>
   );
 }

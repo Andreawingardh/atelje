@@ -5,9 +5,11 @@ import styles from "./RegisterForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { ApiError, RegisterDto } from "@/api/generated";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/contexts/ModalContext";
 
 export default function RegisterForm() {
   const { user, register, isLoading, error } = useAuth();
+  const { openModal } = useModal();
   const [status, setStatus] = useState<"loading" | "success" | "error" | null>(
     null
   );
@@ -105,6 +107,7 @@ export default function RegisterForm() {
           {status == "loading" ? "Signing up..." : "Sign up"}
         </button>
       </form>
+            <button onClick={() => openModal("login")}>Already have an account? Sign in!</button>
     </>
   );
 }
