@@ -1,16 +1,16 @@
 import { useAuth } from "@/contexts/AuthContext";
 import styles from "./UserDesigns.module.css";
-import { notFound } from "next/navigation";
 import { DesignService, ApiError, DesignDto } from "@/api/generated";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useModal } from "@/contexts/ModalContext";
 
 export default function UserDesigns() {
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const [designs, setDesigns] = useState<DesignDto[]>();
+  const { openModal } = useModal();
 
   useEffect(() => {
     (async () => {
@@ -49,7 +49,7 @@ export default function UserDesigns() {
     
       <div>
         {designs?.map((design) => (
-          <Link href={`/designer/${design.id}`} key={design.id}>
+          <button onClick={() => openModal("single-design-view")} key={design.id}>
             {design.thumbnailUrl ? (
               <Image
                 src={design.thumbnailUrl}
@@ -65,7 +65,7 @@ export default function UserDesigns() {
             )}
           
             <div>{design.name}</div>
-          </Link>
+          </button>
         ))}
       </div>
     </div>

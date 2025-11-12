@@ -8,30 +8,32 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import ConfirmationCloseModal from "./ConfirmationCloseModal";
 import SaveDesignModal from "./SaveDesignModal";
+import SingleDesignView from "../designs/SingleDesignView/SingleDesignView";
 
 export default function ModalManager() {
-  const { currentModal, closeModal } = useModal();
+  const { modalState, closeModal } = useModal();
   const { user } = useAuth();
 
   useEffect(() => {
-    if ((currentModal == "login" || currentModal == "register") && user) {
+    if ((modalState.type == "login" || modalState.type == "register") && user) {
       closeModal();
     }
-  }, [user, closeModal, currentModal]);
+  }, [user, closeModal, modalState.type]);
 
-  if (currentModal == null) return null;
+  if (modalState.type == null) return null;
 
   const modalMap: Record<ModalType, React.ReactNode> = {
     login: <LoginForm />,
     register: <RegisterForm />,
     "confirmation-close": <ConfirmationCloseModal />,
-    "save-design": <SaveDesignModal />
+    "save-design": <SaveDesignModal />,
+    "single-design-view": <SingleDesignView />,
   };
 
   return (
     <div onClick={closeModal} className={styles.backdrop}>
       <div onClick={(e) => e.stopPropagation()} className={styles.modalContent}>
-        {modalMap[currentModal]}
+        {modalMap[modalState.type]}
       </div>
     </div>
   );

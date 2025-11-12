@@ -77,7 +77,7 @@ export default function DesignerWorkspace({
   const [showSideBar, setShowSideBar] = useState<
     "frames" | "sofa" | "single-frame"
   >("frames");
-  const { openModal, setModalCallbacks } = useModal();
+  const { openModal} = useModal();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -88,12 +88,7 @@ export default function DesignerWorkspace({
       return;
     }
     if (!designName) {
-      setModalCallbacks({
-        onConfirm: null,
-        onCancel: null,
-        saveDesignName: onDesignNameChange,
-      });
-      openModal("save-design");
+      openModal("save-design", {callbacks: {saveDesignName: onDesignNameChange}});
     } else {
       handleSave();
     }
@@ -104,12 +99,7 @@ export default function DesignerWorkspace({
     if (pendingAction === "save" && user) {
       console.log("Opening save-design modal");
       setPendingAction(null);
-      setModalCallbacks({
-        onConfirm: null,
-        onCancel: null,
-        saveDesignName: onDesignNameChange,
-      });
-      openModal("save-design");
+      openModal("save-design", {callbacks: {saveDesignName: onDesignNameChange}});
     }
   }, [pendingAction, user]);
 
