@@ -367,8 +367,8 @@ export const Frame: React.FC<FrameProps> = ({
                 )}
             </mesh>
 
-            {/* Position display and measurement lines when dragging */}
-            {isDragging && (() => {
+            {/* Position display and measurement lines when selected */}
+            {selected && (() => {
                 const wallWidthMeters = wallWidth * gridCellSize;
                 const wallLeftEdge = -wallWidthMeters / 2;
     
