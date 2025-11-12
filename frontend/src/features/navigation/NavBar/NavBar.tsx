@@ -5,6 +5,8 @@ import styles from "./NavBar.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
+import Button from "@/elements/Button/Button";
+import LogOutButton from "@/features/auth/LogOutButton/LogOutButton";
 
 export default function NavBar() {
   const { openModal } = useModal();
@@ -32,25 +34,33 @@ export default function NavBar() {
     router.push("/dashboard");
   }
 
+  function handleDesignerClick() {
+    router.push("/designer");
+  }
+
+  function handleLogoClick() {
+    router.push("/");
+  }
+
   return (
     <nav className={styles.navBarWrapper}>
-      <h1>Ateljé</h1>
+      <h1 onClick={handleLogoClick} className={styles.navLogo}>Ateljé</h1>
+      <div className={styles.navButtons}>
+        <Button onClick={handleDesignerClick} name="designerButton" variant="snowdrop" buttonText="Design tool"/>
       {status == "unauthorized" && (
         <>
-          <button onClick={handleLoginClick} name="loginButton">
-            Sign in
-          </button>
-          <button onClick={handleRegisterClick} name="registerButton">
-            Sign up
-          </button>
+          <Button onClick={handleLoginClick} name="loginButton" variant="snowdrop" buttonText="Sign in"/>
+          <Button onClick={handleRegisterClick} name="registerButton" variant="snowdrop" buttonText="Sign up"/>
         </>
       )}
 
       {status == "authorized" && (
-        <button onClick={handleProfileClick} name="profileButton">
-          Profile
-        </button>
+        <>
+        <Button onClick={handleProfileClick} name="profileButton" variant="snowdrop" buttonText="Profile"/>
+        <LogOutButton/>
+        </>
       )}
+      </div>
     </nav>
   );
 }
