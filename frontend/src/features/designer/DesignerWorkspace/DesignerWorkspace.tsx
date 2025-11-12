@@ -13,6 +13,14 @@ import styles from "./DesignerWorkspace.module.css";
 import { useModal } from "@/contexts/ModalContext";
 import { useAuth } from "@/contexts/AuthContext";
 
+interface OccupiedPosition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  frameId: string;
+}
+
 interface DesignerWorkspaceProps {
   designName: string;
   onDesignNameChange: (name: string) => void;
@@ -44,6 +52,8 @@ interface DesignerWorkspaceProps {
   setFramePosition: (index: number, position: [number, number, number]) => void;
   deleteFrame: (index: number) => void;
   hasUnsavedChanges: boolean;
+  occupiedPositions: OccupiedPosition[];
+  addOccupiedPosition: (position: OccupiedPosition) => void;
 }
 
 export default function DesignerWorkspace({
@@ -70,6 +80,8 @@ export default function DesignerWorkspace({
   setFramePosition,
   deleteFrame,
   hasUnsavedChanges,
+  occupiedPositions,
+  addOccupiedPosition,
 }: DesignerWorkspaceProps) {
   const { user } = useAuth();
   const [pendingAction, setPendingAction] = useState<"save" | null>(null);
@@ -181,7 +193,9 @@ export default function DesignerWorkspace({
             wallWidth={customDesign.wallWidth}
             ceilingHeight={customDesign.ceilingHeight}
             gridCellSize={0.01}
+            occupiedPositions={occupiedPositions}
             onAddFrame={addFrame}
+            onAddOccupiedPosition={addOccupiedPosition}
           />
         )}
         {showSideBar == "sofa" && (

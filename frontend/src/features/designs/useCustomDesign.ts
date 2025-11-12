@@ -33,6 +33,13 @@ export type DesignData = {
   flooring: string;
 };
 
+interface OccupiedPosition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  frameId: string;
+}
 
 export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
   const [customDesign, setCustomDesignInternal] = useState<CustomDesign>({
@@ -47,6 +54,8 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     frames: initialDesign?.frames ?? []
   });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const [occupiedPositions, setOccupiedPositions] = useState<OccupiedPosition[]>([])
 
   const setCustomDesign = (
   updater: CustomDesign | ((prev: CustomDesign) => CustomDesign),
@@ -95,10 +104,6 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setCustomDesign((prev) => ({ ...prev, furnitureHeight: value }));
   };
 
-  const setFrames = (value: FrameData[]) => {
-    setCustomDesign((prev) => ({ ...prev, frames: value }));
-  };
-
   // Frame helper functions
   const addFrame = (frame: FrameData) => {
     setCustomDesign((prev) => ({ 
@@ -125,24 +130,76 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
   };
 
   const setFrameSize = (index: number, size: string) => {
+    const frame = customDesign.frames[index];
+    if (!frame) return;
+  
     updateFrame(index, { frameSize: size });
+    updateOccupiedPositionDimensions(frame.id, size, frame.frameOrientation);
   };
 
   const setFrameOrientation = (index: number, orientation: 'portrait' | 'landscape') => {
+    const frame = customDesign.frames[index];
+    if (!frame) return;
+  
     updateFrame(index, { frameOrientation: orientation });
+    updateOccupiedPositionDimensions(frame.id, frame.frameSize, orientation);
   };
 
   const setFramePosition = (index: number, framePosition: [number, number, number]) => {
+    const frame = customDesign.frames[index];
+    if (!frame) return;
+  
     updateFrame(index, { position: framePosition });
+  
+    setOccupiedPositions(prev => 
+    prev.map(pos => 
+      pos.frameId === frame.id
+        ? { ...pos, x: framePosition[0], y: framePosition[1] }
+        : pos
+      )
+    );
+
+    updateOccupiedPositionDimensions(frame.id, frame.frameSize, frame.frameOrientation);
   }
 
   const deleteFrame = (index: number) => {
+    const frame = customDesign.frames[index];
+    if (frame) {
+      setOccupiedPositions(prev => 
+        prev.filter(pos => pos.frameId !== frame.id)
+      );
+    }
     setCustomDesign((prev) => ({
       ...prev,
       frames: prev.frames.filter((frame, i) => i !== index)
     }));
   };
 
+  // Occupied positions helper functions
+  const addOccupiedPosition = (position: OccupiedPosition) => {
+    setOccupiedPositions(prev => [...prev, position]);
+  };
+
+  const updateOccupiedPositionDimensions = (frameId: string, frameSize: string, frameOrientation: 'portrait' | 'landscape') => {
+    const [width, height] = frameSize.split('x').map(Number);
+    const gridCellSize = 0.01;
+  
+    const isPortrait = frameOrientation === 'portrait';
+    const frameWidth = isPortrait 
+      ? Math.min(width || 50, height || 70) * gridCellSize
+      : Math.max(width || 50, height || 70) * gridCellSize;
+    const frameHeight = isPortrait
+      ? Math.max(width || 50, height || 70) * gridCellSize
+      : Math.min(width || 50, height || 70) * gridCellSize;
+  
+    setOccupiedPositions(prev => 
+      prev.map(pos => 
+        pos.frameId === frameId
+          ? { ...pos, width: frameWidth, height: frameHeight }
+          : pos
+      )
+    );
+  };
 
 
   // Inside useCustomDesign:
@@ -178,6 +235,19 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     furnitureHeight: currentDesign.sofa.height,
     frames: currentDesign.frames || []
   }, false);
+  // Rebuild occupied positions from loaded frames
+    const gridCellSize = 0.01;
+    const newOccupiedPositions = currentDesign.frames.map(frame => {
+      const [width, height] = frame.frameSize.split('x').map(Number);
+      return {
+        x: frame.position[0],
+        y: frame.position[1],
+        width: (width || 50) * gridCellSize,
+        height: (height || 70) * gridCellSize,
+        frameId: frame.id
+      };
+    });
+    setOccupiedPositions(newOccupiedPositions);
   }, [])
 
 
@@ -192,7 +262,6 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     setFurnitureDepth,
     setFurnitureWidth,
     setFurnitureHeight,
-    setFrames,
     addFrame,
     updateFrame,
     setFrameColor,
@@ -204,6 +273,8 @@ export function useCustomDesign(initialDesign?: Partial<CustomDesign>) {
     getSceneData,
     loadSceneData,
     hasUnsavedChanges,
-    markAsSaved
+    markAsSaved,
+    occupiedPositions,
+    addOccupiedPosition
   };
 }
