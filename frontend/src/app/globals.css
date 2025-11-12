@@ -4,11 +4,14 @@
 /* Variables */
 :root {
   --terracotta: #9D4A31;
+  --terracotta-dark: #8f412a;
   --cornflower-active: #6495ED;
+  --cornflower-dark: #557ACD;
   --snowdrop: #FFFFFF;
   --vanilla: #F9F6F3;
   --dark-vanilla: #EEE9E3;
   --rosie-danger: #A72D2D;
+  --rosie-danger-dark: #922626;
   --stem-success: #488A3D;
   --sunflower-seed: #47403C;
   --charcoal: #2C2C2C;

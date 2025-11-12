@@ -136,66 +136,58 @@ export default function StructuralForm({
       </button>
       {showFormElement == "flooring" && (
         <div className={styles.formGroup}>
-          <label htmlFor="Flooring">Flooring</label>
-          <div className={styles.colorPickerContainer}>
-            <label
-              htmlFor="birch-floor-parquet"
-              className={styles.flooringLabel}
-            >
-              <input
-                id="birch-floor-parquet"
-                type="radio"
-                value={"birch-floor-parquet"}
-                checked={flooring === "birch-floor-parquet"}
-                onChange={handleFlooringChange}
-                className={styles.flooringInput}
-              />
-              birch parquet
-            </label>
-            <label
-              htmlFor="birch-floor-herringbone"
-              className={styles.flooringLabel}
-            >
-              <input
-                id="birch-floor-herringbone"
-                type="radio"
-                value={"birch-floor-herringbone"}
-                checked={flooring === "birch-floor-herringbone"}
-                onChange={handleFlooringChange}
-                className={styles.flooringInput}
-              />
-              birch herringbone
-            </label>
-            <label
-              htmlFor="walnut-floor-parquet"
-              className={styles.flooringLabel}
-            >
-              <input
-                id="walnut-floor-parquet"
-                type="radio"
-                value={"walnut-floor-parquet"}
-                checked={flooring === "walnut-floor-parquet"}
-                onChange={handleFlooringChange}
-                className={styles.flooringInput}
-              />
-              walnut parquet
-            </label>
-            <label
-              htmlFor="walnut-floor-herringbone"
-              className={styles.flooringLabel}
-            >
-              <input
-                id="walnut-floor-herringbone"
-                type="radio"
-                value={"walnut-floor-herringbone"}
-                checked={flooring === "walnut-floor-herringbone"}
-                onChange={handleFlooringChange}
-                className={styles.flooringInput}
-              />
-              walnut herringbone
-            </label>
-          </div>
+        <label htmlFor="Flooring">Flooring</label>
+        <div className={styles.colorPickerContainer}>
+          <label htmlFor="birch-floor-parquet" className={styles.flooringLabel}>
+          <input 
+            id="birch-floor-parquet"
+            type="radio"
+            name="flooring"
+            value={"birch-floor-parquet"}
+            checked={flooring === "birch-floor-parquet"}
+            onChange={handleFlooringChange}
+            className={styles.flooringInput}
+          />
+          birch parquet
+          </label>
+          <label htmlFor="birch-floor-herringbone" className={styles.flooringLabel}>
+          <input 
+            id="birch-floor-herringbone"
+            type="radio"
+            name="flooring"
+            value={"birch-floor-herringbone"}
+            checked={flooring === "birch-floor-herringbone"}
+            onChange={handleFlooringChange}
+            className={styles.flooringInput}
+          />
+          birch herringbone
+          </label>
+          <label htmlFor="walnut-floor-parquet" className={styles.flooringLabel}>
+          <input 
+            id="walnut-floor-parquet"
+            type="radio"
+            name="flooring"
+            value={"walnut-floor-parquet"}
+            checked={flooring === "walnut-floor-parquet"}
+            onChange={handleFlooringChange}
+            className={styles.flooringInput}
+          />
+          walnut parquet
+          </label>
+          <label htmlFor="walnut-floor-herringbone" className={styles.flooringLabel}>
+          <input 
+            id="walnut-floor-herringbone"
+            type="radio"
+            name="flooring"
+            value={"walnut-floor-herringbone"}
+            checked={flooring === "walnut-floor-herringbone"}
+            onChange={handleFlooringChange}
+            className={styles.flooringInput}
+          />
+          walnut herringbone
+          </label>
         </div>
+       </div>
       )}
     </div>
   );

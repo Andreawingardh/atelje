@@ -1,0 +1,24 @@
+.unitInputWrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    background: var(--dark-vanilla);
+    color: var(--charcoal);
+    font-size: 1.25rem;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+}
+
+.unitInput {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 4ch;
+    font-size: 1.25rem;
+    color: var(--charcoal);
+}
+
+.unitInput::placeholder {
+    color: var(--charcoal);
+}
