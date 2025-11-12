@@ -51,7 +51,7 @@ export default function NewDesignPage() {
 
     setModalCallbacks({
       onConfirm: proceedNavigation,
-      onCancel: cancelNavigation,
+      onCancel: cancelNavigation, saveDesignName: null
     });
     openModal("confirmation-close");
   }, [isAttemptingNavigation]);
@@ -105,6 +105,7 @@ export default function NewDesignPage() {
         addFrame={addFrame}
         deleteFrame={deleteFrame}
         customDesign={customDesign}
+        hasUnsavedChanges={hasUnsavedChanges}
       />
     </>
   );

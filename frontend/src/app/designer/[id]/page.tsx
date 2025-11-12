@@ -84,7 +84,7 @@ export default function DesignerPage() {
       return;
     }
 
-    setModalCallbacks({onConfirm: proceedNavigation, onCancel: cancelNavigation});
+    setModalCallbacks({onConfirm: proceedNavigation, onCancel: cancelNavigation, saveDesignName: null});
     openModal("confirmation-close");
   }, [isAttemptingNavigation]);
 
@@ -140,6 +140,7 @@ export default function DesignerPage() {
         addFrame={addFrame}
         deleteFrame={deleteFrame}
         customDesign={customDesign}
+        hasUnsavedChanges={hasUnsavedChanges}
       />
     </>
   );

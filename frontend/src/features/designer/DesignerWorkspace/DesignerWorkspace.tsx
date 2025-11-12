@@ -9,6 +9,7 @@ import Canvas3D from "../Canvas3D/Canvas3D";
 import { FrameData } from "../FrameForm/FrameForm";
 import { captureScreenshot } from "@/lib/screenshotCapture";
 import styles from "./DesignerWorkspace.module.css";
+import { useModal } from "@/contexts/ModalContext";
 
 interface DesignerWorkspaceProps {
   designName: string;
@@ -39,6 +40,7 @@ interface DesignerWorkspaceProps {
   ) => void;
   setFramePosition: (index: number, position: [number, number, number]) => void;
   deleteFrame: (index: number) => void;
+  hasUnsavedChanges: boolean;
 }
 
 export default function DesignerWorkspace({
@@ -63,15 +65,37 @@ export default function DesignerWorkspace({
   setFrameOrientation,
   setFramePosition,
   deleteFrame,
+  hasUnsavedChanges
 }: DesignerWorkspaceProps) {
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
   const [showSideBar, setShowSideBar] = useState<
     "frames" | "sofa" | "single-frame"
   >("frames");
+  const { openModal, setModalCallbacks } = useModal();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const handleSaveClick = async () => {
+  const handleSaveClick = () => {
+    if (!designName) {
+      setModalCallbacks({
+        onConfirm: null,
+        onCancel: null,
+        saveDesignName: onDesignNameChange,
+      });
+      openModal("save-design");
+    } else {
+      handleSave()
+    }
+  };
+
+  useEffect(() => {
+    if (designName && hasUnsavedChanges) {
+      handleSave();
+    }
+  }, [designName]);
+
+  const handleSave = async () => {
+
     if (!canvasRef.current) {
       console.error("Canvas not ready");
       await onSave(); // Save without screenshots
@@ -98,6 +122,8 @@ export default function DesignerWorkspace({
     if (selectedFrame) setShowSideBar("single-frame");
   }, [selectedFrame]);
 
+  console.log(designName);
+
   return (
     <>
       <StructuralForm
@@ -110,6 +136,12 @@ export default function DesignerWorkspace({
         flooring={customDesign.flooring}
         setFlooring={setFlooring}
       />
+      <div>
+        <button onClick={handleSaveClick}>
+          {isLoading ? "Saving" : "Save"}
+        </button>
+        {error && <p>{error}</p>}
+      </div>
       <div className={styles.sideBarForm}>
         <button onClick={() => setShowSideBar("frames")}>Frames</button>
         <button onClick={() => setShowSideBar("sofa")}>Sofa</button>
@@ -168,7 +200,6 @@ export default function DesignerWorkspace({
             </div>
           )}
       </div>
-
       {isLoading ? (
         <div>Loading design...</div>
       ) : (
@@ -188,17 +219,6 @@ export default function DesignerWorkspace({
           canvasRef={canvasRef}
         />
       )}
-      <div>
-        <input
-          value={designName}
-          onChange={(e) => onDesignNameChange(e.target.value)}
-          placeholder={designName || "Give your design a name"}
-        />
-        <button onClick={handleSaveClick}>
-          {isLoading ? "Saving" : "Save"}
-        </button>
-        {error && <p>{error}</p>}
-      </div>
     </>
   );
 }
