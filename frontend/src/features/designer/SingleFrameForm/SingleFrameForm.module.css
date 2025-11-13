@@ -132,3 +132,38 @@
   height: 1.5rem;
   pointer-events: none;
 }
+
+/* Size selector */
+.sizeSelector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sizeOption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: fit-content;
+  padding: 0.2rem 0.55rem;
+  background: var(--snowdrop);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.sizeOption:hover {
+  border-color: var(--cornflower-active);
+}
+
+.sizeOption:has(input:checked) {
+  border-color: var(--cornflower-active);
+}
+
+/* Delete button */
+
+.deleteButton {
+  align-self: flex-end;
+}
