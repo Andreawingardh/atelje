@@ -9,7 +9,6 @@ import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWor
 import { ApiError } from "@/api/generated";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
-import Button from "@/elements/Button/Button";
 
 export default function DesignerPage() {
   const params = useParams();
