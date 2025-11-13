@@ -9,6 +9,7 @@ import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWor
 import { ApiError } from "@/api/generated";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
+import Button from "@/elements/Button/Button";
 
 export default function DesignerPage() {
   const params = useParams();
@@ -106,6 +107,7 @@ export default function DesignerPage() {
       <h1>this is the ID page</h1>
       {errorMessage && <p>{errorMessage}</p>}
       {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
+        <button onClick={() => {router.back()}}>Back</button>
       <DesignerWorkspace
         designName={designName}
         onDesignNameChange={setDesignName}

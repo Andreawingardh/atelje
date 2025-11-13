@@ -63,12 +63,16 @@ export default function NewDesignPage() {
 
   return (
     <>
-      <p>DEBUG: This is the NEW design page</p>
       <h1>Designer 3D-tool</h1>
       {errorMessage && <p>{errorMessage}</p>}
-      {hasUnsavedChanges && (
-        <div>⚠️ You have unsaved changes</div>
-      )}
+      {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
+      <button
+        onClick={() => {
+          router.back();
+        }}
+      >
+        Back
+      </button>
       <DesignerWorkspace
         designName={designName}
         onDesignNameChange={setDesignName}
