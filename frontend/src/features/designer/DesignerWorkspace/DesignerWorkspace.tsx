@@ -250,6 +250,7 @@ export default function DesignerWorkspace({
           onFrameSelect={setSelectedFrameId}
           onFramePositionUpdate={setFramePosition}
           canvasRef={canvasRef}
+          occupiedPositions={occupiedPositions}
         />
       )}
     </>

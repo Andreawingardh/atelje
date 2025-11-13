@@ -27,9 +27,16 @@ interface Canvas3DProps {
   onFramePositionChange?: (frameId: string, position: THREE.Vector3) => void;
   onFramePositionUpdate?: (index: number, position: [number, number, number]) => void;
   canvasRef?: React.RefObject<HTMLCanvasElement | null>;
+  occupiedPositions: Array<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    frameId: string;
+  }>;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef } : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef, occupiedPositions } : Canvas3DProps) {
 
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 300);
@@ -161,6 +168,7 @@ const handlePanControls = () => {
             onDragEnd={() => setIsDraggingFrame(false)}
             onPositionChange={(position) => handlePositionUpdate(frame.id, position)}
             framePosition={frame.position}
+            occupiedPositions={occupiedPositions.filter(pos => pos.frameId !== frame.id)}
           />
         ))}
 
