@@ -18,6 +18,8 @@ export default function SingleDesignView() {
     setDesign(modalState.data.design);
   }, []);
 
+  if (!design) return null;
+
   if (design) {
     return (
       <>
