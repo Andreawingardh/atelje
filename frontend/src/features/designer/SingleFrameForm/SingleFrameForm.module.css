@@ -4,9 +4,18 @@
   gap: 1rem;
 }
 
-.formDivider {
+.formDividerDark {
   height: 3px;
   background-color: var(--sunflower-seed);
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: none;
+}
+
+.formDivider {
+  height: 3px;
+  background-color: var(--dark-vanilla);
   margin: 0.5rem 0;
   border: none;
   border-radius: 9999px;

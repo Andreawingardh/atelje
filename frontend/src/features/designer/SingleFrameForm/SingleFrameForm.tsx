@@ -71,7 +71,7 @@ export default function SingleFrameForm({
   return (
     <form className={styles.frameForm}>
       <h3 className={styles.formTitle}>Modify frame</h3>
-      <hr className={styles.formDivider} />
+      <hr className={styles.formDividerDark} />
       <div className={styles.singleFrameForm}>
         <label className={styles.singleFrameLabel}>Color
           <div className={styles.colorPickerContainer}>
@@ -93,6 +93,7 @@ export default function SingleFrameForm({
             />
           </div>
         </label>
+        <hr className={styles.formDivider} />
         <div className={styles.formGroup}>
           <label htmlFor="imageUrl" className={styles.singleFrameLabel}>Picture</label>
           <div className={styles.categoryButtons}>
@@ -124,8 +125,10 @@ export default function SingleFrameForm({
             ))}
           </div>
         </div>
+        <hr className={styles.formDivider} />
         <div className={styles.formGroup}>
           <label className={styles.singleFrameLabel}>Orientation</label>
+          <p>{frameOrientation}</p>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <label htmlFor="landscapeOrientation" className={styles.orientationSelect}>
               <input
@@ -154,6 +157,7 @@ export default function SingleFrameForm({
           </div>
         </div>
         <div className={styles.formGroup}>
+        <hr className={styles.formDivider} />
           <label className={styles.singleFrameLabel}>Size</label>
           <div className={styles.sizeSelector}>
             <label className={styles.sizeOption}>
