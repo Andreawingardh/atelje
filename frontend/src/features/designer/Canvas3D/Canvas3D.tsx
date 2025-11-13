@@ -56,6 +56,9 @@ const maxDistanceZoom = cameraDistance;
 // ZoomSpeed adjustment based on wall width (distance)
 const zoomSpeed = 0.8 + (wallWidth / 10000);
 
+const minPanSpeed = 0.6;
+const maxPanSpeed = 3.0;
+
 const orbitTargetY = cameraYPosition - 0.15;
 
 const maxPanX = THREE.MathUtils.lerp(0.15, 2.5, t);
@@ -82,6 +85,11 @@ const handlePanControls = () => {
   if (!controlsRef.current) return;
 
   const controls = controlsRef.current;
+
+  // Calculate current zoom factor based on camera distance and update dynamically
+  const currentDistance = controls.object.position.distanceTo(controls.target);
+  const zoomFactor = (currentDistance - minDistanceZoom) / (maxDistanceZoom - minDistanceZoom);
+  controls.panSpeed = THREE.MathUtils.lerp(maxPanSpeed, minPanSpeed, zoomFactor);
 
   // Clamp panning based on wall size
   controls.target.x = THREE.MathUtils.clamp(controls.target.x, -maxPanX, maxPanX);
