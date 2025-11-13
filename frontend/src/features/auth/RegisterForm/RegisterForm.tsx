@@ -237,7 +237,6 @@ export default function RegisterForm() {
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    setStatus("loading");
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -281,7 +280,7 @@ export default function RegisterForm() {
   return (
     <>
       <h1 className={styles.title}>Sign up</h1>
-      {status == "error" && <p>{error}</p>}
+      {error && <p>{error}</p>}
       <form className={styles.registerForm} onSubmit={handleSubmit}>
         <label className={styles.registerLabel} htmlFor="username">
           Username
