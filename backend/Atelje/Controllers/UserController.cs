@@ -1,10 +1,10 @@
+using System.Security.Claims;
 using Atelje.DTOs.User;
 using Atelje.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Atelje.Controllers;
-
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,6 +17,7 @@ public class UserController(IUserService userService) : ControllerBase
         var users = await userService.GetAllUsersAsync();
         return users;
     }
+
     [HttpGet("{id}", Name = "GetUserById")]
     public async Task<ActionResult<UserDto>> GetUser(string id)
     {
@@ -36,6 +37,11 @@ public class UserController(IUserService userService) : ControllerBase
     [HttpPut("{id}", Name = "UpdateUserById")]
     public async Task<ActionResult<UserDto>> UpdateUserById(string id, UpdateUserDto dto)
     {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId != id)
+            return Forbid();
+
         var user = await userService.UpdateUserAsync(id, dto);
         if (user == null) return NotFound();
         return user;
@@ -44,6 +50,11 @@ public class UserController(IUserService userService) : ControllerBase
     [HttpDelete("{id}", Name = "DeleteUserById")]
     public async Task<IActionResult> DeleteUserById(string id)
     {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId != id)
+            return Forbid();
+
         var deleted = await userService.DeleteUserAsync(id);
 
         if (!deleted) return NotFound();
