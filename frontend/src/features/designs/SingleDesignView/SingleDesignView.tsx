@@ -20,7 +20,6 @@ export default function SingleDesignView() {
 
   if (!design) return null;
 
-  if (design) {
     return (
       <>
         <Image
@@ -94,4 +93,4 @@ export default function SingleDesignView() {
       </>
     );
   }
-}
+
