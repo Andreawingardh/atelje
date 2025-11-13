@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree, ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { checkCollision, findNearestFreePosition } from '@/lib/frameCollisionUtils';
 
 type FrameProps = {
     frameColor: string;
@@ -55,77 +56,6 @@ export const Frame: React.FC<FrameProps> = ({
     const isInitialized = useRef(false); // To prevent initial clamping effect before first position set
     
     const { camera, gl, raycaster } = useThree();
-
-    const checkOverlap = (
-        rect1: { x: number; y: number; width: number; height: number },
-        rect2: { x: number; y: number; width: number; height: number },
-        padding: number = 0.03 // 3cm padding
-    ): boolean => {
-        return !(
-            rect1.x + rect1.width / 2 + padding < rect2.x - rect2.width / 2 ||
-            rect1.x - rect1.width / 2 - padding > rect2.x + rect2.width / 2 ||
-            rect1.y + rect1.height / 2 + padding < rect2.y - rect2.height / 2 ||
-            rect1.y - rect1.height / 2 - padding > rect2.y + rect2.height / 2
-        );
-    };
-
-    // Check if a position collides with any occupied positions
-    const checkCollision = (pos: THREE.Vector3): boolean => {
-        const [width, height] = frameSize.split('x').map(Number);
-        
-        const isPortrait = frameOrientation === 'portrait';
-        const currentFrameWidth = isPortrait 
-            ? Math.min(width || 50, height || 70) * gridCellSize
-            : Math.max(width || 50, height || 70) * gridCellSize;
-        const currentFrameHeight = isPortrait
-            ? Math.max(width || 50, height || 70) * gridCellSize
-            : Math.min(width || 50, height || 70) * gridCellSize;
-        
-        const newFrame = { 
-            x: pos.x, 
-            y: pos.y, 
-            width: currentFrameWidth, 
-            height: currentFrameHeight 
-        };
-        
-        return occupiedPositions.some(occupied => 
-            checkOverlap(newFrame, occupied, 0.01)
-        );
-    };
-
-    // Find nearest free position using spiral search
-    const findNearestFreePosition = (targetPos: THREE.Vector3): THREE.Vector3 => {
-        if (!checkCollision(targetPos)) {
-            return targetPos;
-        }
-    
-        // Try positions in expanding spiral outward from target
-        const maxRadius = 2;
-        const radiusStep = 0.05; // 5cm steps
-        const angleSteps = 16; // Check 16 positions per circle
-    
-        for (let radius = radiusStep; radius <= maxRadius; radius += radiusStep) {
-            for (let i = 0; i < angleSteps; i++) {
-                const angle = (Math.PI * 2 * i) / angleSteps;
-            
-                const testPos = new THREE.Vector3(
-                    targetPos.x + Math.cos(angle) * radius,
-                    targetPos.y + Math.sin(angle) * radius,
-                    targetPos.z
-                );
-            
-                // Clamp to wall boundaries
-                const clampedPos = clampToWallBoundaries(testPos);
-            
-                // Check for free position
-                if (!checkCollision(clampedPos)) {
-                    return clampedPos;
-                }
-            }
-        }
-        
-        return clampToWallBoundaries(targetPos);
-    };
 
     //calculating Z-position based on floor size
     const floorDimension = floorSize * gridCellSize;
@@ -343,13 +273,11 @@ export const Frame: React.FC<FrameProps> = ({
             }
         
             // Test collision detection
-            const hasCollision = checkCollision(currentPos);
-            console.log('Collision detected:', hasCollision);
+            const hasCollision = checkCollision(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions);
 
             if (hasCollision) {
-                console.log('Collision detected! Finding nearest free position...');
                 // Find nearest free position
-                const freePos = findNearestFreePosition(currentPos);
+                const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries);
             
                 // Move frame to the free position
                 if (groupRef.current) {
