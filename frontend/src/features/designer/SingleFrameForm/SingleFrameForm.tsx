@@ -124,10 +124,11 @@ export default function SingleFrameForm({
             ))}
           </div>
         </div>
-        <div className={styles.formGroup}>
+          <div className={styles.formGroup}>
           <label className={styles.singleFrameLabel}>Orientation</label>
-          <div>
-            <label htmlFor="landscapeOrientation">
+          <p>{frameOrientation}</p>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <label htmlFor="landscapeOrientation" className={styles.orientationSelect}>
               <input
                 id="landscapeOrientation"
                 type="radio"
@@ -135,11 +136,11 @@ export default function SingleFrameForm({
                 value="landscape"
                 checked={frameOrientation === "landscape"}
                 onChange={handleSetFrameOrientation}
-                className={styles.input}
+                className={styles.visuallyHidden}
               />
-              Landscape
+              <img src="/icons/landscape-icon.svg" alt="Landscape" className={styles.orientationIcon} />
             </label>
-            <label htmlFor="portraitOrientation">
+            <label htmlFor="portraitOrientation" className={styles.orientationSelect}>
               <input
                 id="portraitOrientation"
                 type="radio"
@@ -147,9 +148,9 @@ export default function SingleFrameForm({
                 value="portrait"
                 checked={frameOrientation === "portrait"}
                 onChange={handleSetFrameOrientation}
-                className={styles.input}
+                className={styles.visuallyHidden}
               />
-              Portrait
+              <img src="/icons/portrait-icon.svg" alt="Portrait" className={styles.orientationIcon} />
             </label>
           </div>
         </div>
