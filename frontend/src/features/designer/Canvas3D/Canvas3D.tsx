@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { Floor } from "../scene-components/structural/Floor";
 import { Wall } from "../scene-components/structural/Wall";
 import { Ceiling } from "../scene-components/structural/Ceiling";
@@ -55,9 +56,16 @@ const maxDistanceZoom = cameraDistance;
 // ZoomSpeed adjustment based on wall width (distance)
 const zoomSpeed = 0.8 + (wallWidth / 10000);
 
+const minPanSpeed = 0.6;
+const maxPanSpeed = 3.0;
+
 const orbitTargetY = cameraYPosition - 0.15;
 
+const maxPanX = THREE.MathUtils.lerp(0.15, 2.5, t);
+const maxPanY = THREE.MathUtils.lerp(0.3, 1.0, t);
+
 const wallRef = useRef<THREE.Mesh>(null);
+const controlsRef = useRef<OrbitControlsImpl>(null);
 
 // Use internal state if no external state is provided (backward compatibility)
 const [internalSelectedFrameId, setInternalSelectedFrameId] = useState<string | null>(null);
@@ -71,6 +79,26 @@ const handlePositionUpdate = (frameId: string, position: THREE.Vector3) => {
   if (frameIndex !== -1 && onFramePositionUpdate) {
     onFramePositionUpdate(frameIndex, [position.x, position.y, position.z]);
   }
+};
+
+const handlePanControls = () => {
+  if (!controlsRef.current) return;
+
+  const controls = controlsRef.current;
+
+  // Calculate current zoom factor based on camera distance and update dynamically
+  const currentDistance = controls.object.position.distanceTo(controls.target);
+  const zoomFactor = (currentDistance - minDistanceZoom) / (maxDistanceZoom - minDistanceZoom);
+  controls.panSpeed = THREE.MathUtils.lerp(maxPanSpeed, minPanSpeed, zoomFactor);
+
+  // Clamp panning based on wall size
+  controls.target.x = THREE.MathUtils.clamp(controls.target.x, -maxPanX, maxPanX);
+  controls.target.y = THREE.MathUtils.clamp(
+    controls.target.y,
+    orbitTargetY - maxPanY,
+    orbitTargetY + maxPanY
+  );
+  controls.target.z = THREE.MathUtils.clamp(controls.target.z, -maxPanX, maxPanX);
 };
 
   return (
@@ -137,7 +165,8 @@ const handlePositionUpdate = (frameId: string, position: THREE.Vector3) => {
         ))}
 
         <OrbitControls 
-          enablePan={false}
+          ref={controlsRef}
+          enablePan={true}
           enableZoom={true}
           enableRotate={isDraggingFrame ? false : true} // Disable rotation when a frame is selected
           minDistance={minDistanceZoom}
@@ -149,6 +178,7 @@ const handlePositionUpdate = (frameId: string, position: THREE.Vector3) => {
           target={[0, orbitTargetY, 0]}
           rotateSpeed={0.2}
           zoomSpeed={zoomSpeed}
+          onChange={handlePanControls}
         />
       </Canvas>
     </section>
