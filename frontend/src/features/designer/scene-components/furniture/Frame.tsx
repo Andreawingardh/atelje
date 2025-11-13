@@ -161,10 +161,8 @@ export const Frame: React.FC<FrameProps> = ({
 
     // Initialize position from props
     useEffect(() => {
-        console.log('Frame position effect running:', framePosition, 'Z:', frameZPlacement);
         if (groupRef.current && framePosition) {
             groupRef.current.position.set(framePosition[0], framePosition[1], frameZPlacement);
-            console.log('Set position to:', framePosition[0], framePosition[1], frameZPlacement);
             isInitialized.current = true;
         }
     }, [framePosition, frameZPlacement]);
@@ -267,14 +265,12 @@ export const Frame: React.FC<FrameProps> = ({
     useEffect(() => {
         if (imageUrl) {
             const loader = new THREE.TextureLoader();
-            console.log('Loading texture from URL:', imageUrl);
             loader.load(
                 imageUrl,
                 (loadedTexture) => {
                     loadedTexture.colorSpace = THREE.SRGBColorSpace;
                     loadedTexture.needsUpdate = true;
                     setImageTexture(loadedTexture);
-                    console.log('Texture loaded successfully');
                 },
                 undefined,
                 (error) => {
