@@ -47,6 +47,16 @@
     background: var(--rosie-danger-dark);
     color: var(--snowdrop);
   }
+
+  .darkVanilla {
+    background: var(--dark-vanilla);
+    color: var(--charcoal);
+  }
+
+  .darkVanilla:hover {
+    background: var(--dark-vanilla-dark);
+    color: var(--charcoal);
+  }
   
   .disabled {
     background: var(--dark-vanilla);

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { FrameData } from "../FrameForm/FrameForm";
 import { stockPhotos, PhotoCategory, getPhotosByCategory } from "@/lib/stockPhotos";
 import Image from 'next/image';
+import Button from "@/elements/Button/Button";
 
 interface singleFrameFormProps {
   frames: FrameData[];
@@ -69,28 +70,42 @@ export default function SingleFrameForm({
 
   return (
     <form className={styles.frameForm}>
-      <div className={styles.colorGroup}>
-        <label>Color</label>
-        <div className={styles.colorPickerContainer}>
-          <input
-            type="color"
-            value={frameColor}
-            onChange={handleFrameColorChange}
-            className={styles.colorInput}
-          />
-        </div>
+      <h3 className={styles.formTitle}>Modify frame</h3>
+      <hr className={styles.formDivider} />
+      <div className={styles.singleFrameForm}>
+        <label className={styles.singleFrameLabel}>Color
+          <div className={styles.colorPickerContainer}>
+            <div 
+              className={styles.colorInputWrapper}
+              onClick={() => document.getElementById('frameColor')?.click()}
+            >
+              <div 
+                className={styles.colorInputDisplay}
+                style={{ backgroundColor: frameColor }}
+              />
+            </div>
+            <input
+              id="frameColor"
+              type="color"
+              value={frameColor}
+              onChange={handleFrameColorChange}
+              className={styles.colorInput}
+            />
+          </div>
+        </label>
         <div className={styles.formGroup}>
-          <label htmlFor="imageUrl">Picture</label>
+          <label htmlFor="imageUrl" className={styles.singleFrameLabel}>Picture</label>
           <div className={styles.categoryButtons}>
             {categories.map(category => (
-              <button
+              <Button
                 key={category}
                 type="button"
+                variant={selectedCategory === category ? "cornflower" : "darkVanilla"}
+                buttonText={category.charAt(0).toUpperCase() + category.slice(1)}
                 onClick={() => setSelectedCategory(category)}
-                className={`${styles.categoryButton} ${selectedCategory === category ? styles.active : ''}`}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
-              </button>
+              </Button>
             ))}
           </div>
           <div className={styles.photoGrid}>
@@ -110,7 +125,7 @@ export default function SingleFrameForm({
           </div>
         </div>
         <div className={styles.formGroup}>
-          <label>Orientation</label>
+          <label className={styles.singleFrameLabel}>Orientation</label>
           <div>
             <label htmlFor="landscapeOrientation">
               <input
@@ -139,7 +154,7 @@ export default function SingleFrameForm({
           </div>
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="frameSize">Size</label>
+          <label htmlFor="frameSize" className={styles.singleFrameLabel}>Size</label>
           <label htmlFor="frameSizeLable">
           <input
             id="frameSize"

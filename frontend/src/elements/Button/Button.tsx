@@ -3,7 +3,7 @@ import styles from "./Button.module.css";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "snowdrop" | "terracotta" | "cornflower" | "rosie";
+  variant?: "snowdrop" | "terracotta" | "cornflower" | "rosie" | "darkVanilla";
   buttonText?: string;
   buttonIcon?: React.ReactNode;
 }
@@ -21,6 +21,7 @@ export default function Button({
         terracotta: styles.terracotta,
         cornflower: styles.cornflower,
         rosie: styles.rosie,
+        darkVanilla: styles.darkVanilla,
       }[variant];
       
   return (
