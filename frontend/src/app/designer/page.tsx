@@ -2,20 +2,17 @@
 
 import { useDesign } from "@/features/designs/useDesign";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
-import { useModal } from "@/contexts/ModalContext";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
-import useBlockNavigation from "@/lib/useBlockNavigation";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
   const router = useRouter();
   const [designName, setDesignName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { openModal } = useModal();
 
   const {
     getSceneData,
@@ -36,26 +33,11 @@ export default function NewDesignPage() {
     deleteFrame,
     customDesign,
     hasUnsavedChanges,
-    markAsSaved,
     occupiedPositions,
-    addOccupiedPosition
+    addOccupiedPosition,
   } = useCustomDesign();
 
-  const { isAttemptingNavigation, proceedNavigation, cancelNavigation, allowNextNavigation } =
-    useBlockNavigation(hasUnsavedChanges);
-
   useUnsavedChangesWarning(hasUnsavedChanges);
-
-  useEffect(() => {
-    if (!isAttemptingNavigation) {
-      return;
-    }
-
-    openModal("confirmation-close", {
-      callbacks: { onConfirm: proceedNavigation, onCancel: cancelNavigation },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAttemptingNavigation]);
 
   async function handleSave(screenshots?: {
     fullBlob: Blob;
@@ -67,7 +49,6 @@ export default function NewDesignPage() {
       console.log("About to create design with sceneData:", sceneData);
       console.log("Parsed:", JSON.parse(sceneData));
       if (newDesign) {
-        allowNextNavigation();
         router.push(`/designer/${newDesign.id}`);
       }
     } catch (error) {
@@ -85,6 +66,9 @@ export default function NewDesignPage() {
       <p>DEBUG: This is the NEW design page</p>
       <h1>Designer 3D-tool</h1>
       {errorMessage && <p>{errorMessage}</p>}
+      {hasUnsavedChanges && (
+        <div>⚠️ You have unsaved changes</div>
+      )}
       <DesignerWorkspace
         designName={designName}
         onDesignNameChange={setDesignName}
