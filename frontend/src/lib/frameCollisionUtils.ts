@@ -68,14 +68,22 @@ export const findNearestFreePosition = (
   targetPos: THREE.Vector3,
   frameDimensions: FrameDimensions,
   occupiedPositions: OccupiedPosition[],
-  clampToWallBoundaries: (pos: THREE.Vector3) => THREE.Vector3
-): THREE.Vector3 => {
+  clampToWallBoundaries: (pos: THREE.Vector3) => THREE.Vector3,
+  wallWidth: number,
+  ceilingHeight: number
+): THREE.Vector3 | null => {
   if (!checkCollision(targetPos, frameDimensions, occupiedPositions)) {
     return targetPos;
   }
+
+  const { gridCellSize } = frameDimensions;
+  
+  // Calculate maximum search radius to cover entire wall
+  const wallWidthM = wallWidth * gridCellSize;
+  const wallHeightM = ceilingHeight * gridCellSize;
   
   // Try positions in expanding spiral outward from target
-  const maxRadius = 2;
+  const maxRadius = Math.max(wallWidthM, wallHeightM);
   const radiusStep = 0.05; // 5cm steps
   const angleSteps = 16; // Check 16 positions per circle
   
@@ -99,5 +107,6 @@ export const findNearestFreePosition = (
     }
   }
   
-  return clampToWallBoundaries(targetPos);
+  console.warn('No free position found on entire wall');
+  return null;
 };

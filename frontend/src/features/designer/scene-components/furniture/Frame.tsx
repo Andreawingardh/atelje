@@ -54,6 +54,7 @@ export const Frame: React.FC<FrameProps> = ({
     const dragOffset = useRef(new THREE.Vector3());
     const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     const isInitialized = useRef(false); // To prevent initial clamping effect before first position set
+    const [hasCollision, setHasCollision] = useState(false);
     
     const { camera, gl, raycaster } = useThree();
 
@@ -241,6 +242,9 @@ export const Frame: React.FC<FrameProps> = ({
         
         // Clamp to wall boundaries
         newPosition = clampToWallBoundaries(newPosition);
+
+        // Check for collision while dragging and update state
+        setHasCollision(checkCollision(newPosition, { frameSize, frameOrientation, gridCellSize }, occupiedPositions));
     
         // Apply the new position
         if (groupRef.current.parent) {
@@ -271,31 +275,42 @@ export const Frame: React.FC<FrameProps> = ({
             }
         
             // Test collision detection
-            const hasCollision = checkCollision(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions);
+            const collisionDetected = checkCollision(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions);
 
-            if (hasCollision) {
+            setHasCollision(collisionDetected);
+
+            if (collisionDetected) {
                 // Find nearest free position
-                const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries);
+                const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries, wallWidth, ceilingHeight);
             
-                // Move frame to the free position
-                if (groupRef.current) {
-                    if (groupRef.current.parent) {
-                        const localPosition = groupRef.current.parent.worldToLocal(freePos.clone());
-                        groupRef.current.position.copy(localPosition);
-                    } else {
-                        groupRef.current.position.copy(freePos);
+                if (freePos) {
+                    // Move frame to the free position
+                    if (groupRef.current) {
+                        if (groupRef.current.parent) {
+                            const localPosition = groupRef.current.parent.worldToLocal(freePos.clone());
+                            groupRef.current.position.copy(localPosition);
+                        } else {
+                            groupRef.current.position.copy(freePos);
+                        }
+                
+                        // Update position display
+                        const displayPos = worldToLowerLeft(freePos);
+                        setPosition({
+                            x: Math.round(displayPos.x / gridCellSize),
+                            y: Math.round(displayPos.y / gridCellSize)
+                        });
+                
+                        // Notify parent of new position
+                        onPositionChange?.(freePos);
                     }
-                
-                    // Update position display
-                    const displayPos = worldToLowerLeft(freePos);
-                    setPosition({
-                        x: Math.round(displayPos.x / gridCellSize),
-                        y: Math.round(displayPos.y / gridCellSize)
-                    });
-                
-                    // Notify parent of new position
-                    onPositionChange?.(freePos);
+                } else {
+                    // No free position found anywhere on wall
+                    alert('Wall is completely full! Remove some frames.');
+                    console.error('Cannot place frame - wall is full');
                 }
+            } else {
+                // Clear collision state when released without collision
+                setHasCollision(false);
             }
 
             setIsDragging(false);
@@ -368,22 +383,22 @@ export const Frame: React.FC<FrameProps> = ({
                     {/* Top border */}
                     <mesh position={[0, frameHeight / 2, 0]}>
                         <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                     {/* Bottom border */}
                     <mesh position={[0, -frameHeight / 2, 0]}>
                         <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                     {/* Left border */}
                     <mesh position={[-frameWidth / 2, 0, 0]}>
                         <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                     {/* Right border */}
                     <mesh position={[frameWidth / 2, 0, 0]}>
                         <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                 </>
             )}
