@@ -25,7 +25,6 @@ export default function NewDesignPage() {
     setFrameOrientation,
     setFramePosition,
     setFrameSize,
-    setFrames,
     setFurnitureColor,
     setFurnitureDepth,
     setFurnitureHeight,
@@ -37,9 +36,12 @@ export default function NewDesignPage() {
     deleteFrame,
     customDesign,
     hasUnsavedChanges,
+    markAsSaved,
+    occupiedPositions,
+    addOccupiedPosition
   } = useCustomDesign();
 
-  const { isAttemptingNavigation, proceedNavigation, cancelNavigation } =
+  const { isAttemptingNavigation, proceedNavigation, cancelNavigation, allowNextNavigation } =
     useBlockNavigation(hasUnsavedChanges);
 
   useUnsavedChangesWarning(hasUnsavedChanges);
@@ -65,6 +67,7 @@ export default function NewDesignPage() {
       console.log("About to create design with sceneData:", sceneData);
       console.log("Parsed:", JSON.parse(sceneData));
       if (newDesign) {
+        allowNextNavigation();
         router.push(`/designer/${newDesign.id}`);
       }
     } catch (error) {
@@ -106,6 +109,8 @@ export default function NewDesignPage() {
         deleteFrame={deleteFrame}
         customDesign={customDesign}
         hasUnsavedChanges={hasUnsavedChanges}
+        occupiedPositions={occupiedPositions}
+        addOccupiedPosition={addOccupiedPosition}
       />
     </>
   );

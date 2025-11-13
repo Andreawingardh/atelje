@@ -2,10 +2,9 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-bottom: 16px;
     background: var(--dark-vanilla);
     color: var(--charcoal);
-    font-size: 1.25rem;
+    font-size: 1rem;
     padding: 0.3rem 1rem;
     border-radius: 30px;
 }
@@ -15,10 +14,22 @@
     outline: none;
     background: transparent;
     width: 4ch;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--charcoal);
 }
 
 .unitInput::placeholder {
     color: var(--charcoal);
+}
+
+/* Chrome, Safari, Edge, Opera */
+.unitInput::-webkit-outer-spin-button,
+.unitInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.unitInput[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

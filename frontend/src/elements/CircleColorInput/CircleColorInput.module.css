@@ -18,8 +18,9 @@
     border-radius: 50%;
     border: 3px solid transparent;
     background-size: cover;
+    background-size: 500%;
     background-position: center;
-    transition: border-color 0.2s;
+    background-repeat: no-repeat;
   }
   
   .flooringCircle.selected {

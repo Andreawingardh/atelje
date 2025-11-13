@@ -13,6 +13,7 @@ const useBlockNavigation = (
   const [nextRoute, setNextRoute] = useState<string | null>(null);
   const originalPushRef = useRef(router.push); // Store original router.push
   const lastLocationRef = useRef<string | null>(null); // Store last visited route    // Check if navigation is allowed
+  const bypassNextNavigationRef = useRef<boolean>(false); // A ref to allow us to byPass the hook when necessary (for example when saving a design in the designer reroutes us to the new designer[id] page)
   const canNavigate = (url: string) => {
     const { pathname } = new URL(url, window.location.origin);
     return allowedRoutes.some(
@@ -21,7 +22,15 @@ const useBlockNavigation = (
   };
   useEffect(() => {
     const handleNavigation = (url: string) => {
-      if (!shouldBlock || canNavigate(url) || url === pathname) {
+      if (
+        !shouldBlock ||
+        canNavigate(url) ||
+        url === pathname ||
+        bypassNextNavigationRef.current
+      ) {
+        if (bypassNextNavigationRef.current) {
+          bypassNextNavigationRef.current = false;
+        }
         originalPushRef.current(url);
         return;
       }
@@ -74,7 +83,17 @@ const useBlockNavigation = (
   const cancelNavigation = useCallback(() => {
     setIsAttemptingNavigation(false);
     setNextRoute(null);
-  }, []);
-  return { isAttemptingNavigation, proceedNavigation, cancelNavigation };
+
+  };
+
+  const allowNextNavigation = () => {
+    bypassNextNavigationRef.current = true;
+  };
+  return {
+    isAttemptingNavigation,
+    proceedNavigation,
+    cancelNavigation,
+    allowNextNavigation,
+  };
 };
 export default useBlockNavigation;
