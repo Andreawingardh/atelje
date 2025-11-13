@@ -72,34 +72,11 @@
   margin-bottom: 12px;
 }
 
-.categoryButton {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.categoryButton:hover {
-  background: #f0f0f0;
-}
-
-.categoryButton.active {
-  background: #6495ED;
-  color: white;
-  border-color: #6495ED;
-}
-
 .photoGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 8px;
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
 }
 
 .photoThumbnail {
@@ -110,10 +87,10 @@
 }
 
 .photoThumbnail:hover {
-  border-color: #6495ED;
+  border-color: var(--cornflower-active);
 }
 
 .photoThumbnail.selected {
-  border-color: #6495ED;
+  border-color: var(--cornflower-active);
   border-width: 3px;
 }
