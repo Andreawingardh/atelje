@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree, ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { checkCollision, findNearestFreePosition } from '@/lib/frameCollisionUtils';
 
 type FrameProps = {
     frameColor: string;
@@ -19,6 +20,13 @@ type FrameProps = {
     onDragEnd?: () => void;
     framePosition?: [number, number, number];
     onPositionChange?: (position: THREE.Vector3) => void;
+    occupiedPositions?: Array<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        frameId: string;
+    }>;
 }
 
 export const Frame: React.FC<FrameProps> = ({
@@ -36,7 +44,8 @@ export const Frame: React.FC<FrameProps> = ({
     onDragStart,
     onDragEnd,
     framePosition = [0, 1.5, 0],
-    onPositionChange
+    onPositionChange,
+    occupiedPositions = []
 }) => {
     const frameThickness = 4 * gridCellSize; // 4 cm thickness
     const groupRef = useRef<THREE.Group>(null);
@@ -255,6 +264,40 @@ export const Frame: React.FC<FrameProps> = ({
 
     const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
         if (isDragging) {
+            // Get current position
+            const currentPos = new THREE.Vector3();
+            if (groupRef.current) {
+                groupRef.current.getWorldPosition(currentPos);
+            }
+        
+            // Test collision detection
+            const hasCollision = checkCollision(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions);
+
+            if (hasCollision) {
+                // Find nearest free position
+                const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries);
+            
+                // Move frame to the free position
+                if (groupRef.current) {
+                    if (groupRef.current.parent) {
+                        const localPosition = groupRef.current.parent.worldToLocal(freePos.clone());
+                        groupRef.current.position.copy(localPosition);
+                    } else {
+                        groupRef.current.position.copy(freePos);
+                    }
+                
+                    // Update position display
+                    const displayPos = worldToLowerLeft(freePos);
+                    setPosition({
+                        x: Math.round(displayPos.x / gridCellSize),
+                        y: Math.round(displayPos.y / gridCellSize)
+                    });
+                
+                    // Notify parent of new position
+                    onPositionChange?.(freePos);
+                }
+            }
+
             setIsDragging(false);
             onDragEnd?.();
             (e.target as HTMLElement).releasePointerCapture(e.pointerId);
