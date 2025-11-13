@@ -18,37 +18,37 @@ export function useDesign() {
             setSucceeded(false)
             setIsLoading(true);
             // Create design (without screenshots)
-            const design = await DesignService.createDesign({ 
-                name, 
-                userId: user!.userId, 
-                designData: sceneData 
+            const design = await DesignService.createDesign({
+                name,
+                userId: user!.userId,
+                designData: sceneData
             });
-            
+
             // If screenshots provided, upload them
             if (screenshots && design.id) {
                 try {
-                    
+
                     const { screenshotUrl, thumbnailUrl } = await uploadScreenshotsToR2(
                         design.id,
                         screenshots.fullBlob,
                         screenshots.thumbnailBlob
                     );
-                    
+
                     // Update design with screenshot URLs
                     const updatedDesign = await DesignService.updateDesign(design.id, {
                         screenshotUrl,
                         thumbnailUrl
                     });
-                    
+
                     return updatedDesign;
-                    
+
                 } catch (screenshotError) {
                     console.warn('Screenshot upload failed, but design was saved:', screenshotError);
                     // Design saved without screenshots
                     return design;
                 }
             }
-            
+
             return design;
         } catch (error) {
             setError(
@@ -74,16 +74,16 @@ export function useDesign() {
                         screenshots.fullBlob,
                         screenshots.thumbnailBlob
                     );
-                    
-                    const response = await DesignService.updateDesign(designId, { 
-                        name, 
+
+                    const response = await DesignService.updateDesign(designId, {
+                        name,
                         designData,
                         screenshotUrl,
                         thumbnailUrl
                     });
-                
+
                     return response;
-                
+
                 } catch (screenshotError) {
                     console.warn('Screenshot upload failed:', screenshotError);
                 }
@@ -124,8 +124,58 @@ export function useDesign() {
 
 
     }, [])
+
+    const getMyDesigns = async () => {
+        if (!user) {
+            return null;
+        }
+        try {
+            const designs = await DesignService.getMyDesigns();
+            console.log(designs);
+            return designs;
+        } catch (error) {
+            setError(
+                error instanceof ApiError
+                    ? error.body?.errors?.[0] ||
+                    "There was an error getting the designs"
+                    : "An unexpected error occurred"
+            );
+            return undefined;
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const deleteDesign = async (id: number) => {
+        try {
+            await DesignService.deleteDesign(id);
+            console.log("About to call onDelete callback");
+
+        } catch (error) {
+            setError(
+                error instanceof ApiError
+                    ? error.body?.errors?.[0] || "There was an error deleting the design"
+                    : "An unexpected error occurred"
+            );
+        }
+    } // For SingleDesignView
+    const updateDesignName = async (id: number, name: string) => {
+        try {
+            // 1. Make API call to update design name
+            await DesignService.updateDesign(id, {
+                name: name
+            });
+        } catch (error) {
+            setError(
+                error instanceof ApiError
+                    ? error.body?.errors?.[0] || "There was an error updating the design name"
+                    : "An unexpected error occurred"
+            );
+        }
+    }
+    // For SingleDesignView
     return {
-        createDesign, saveDesign, loadDesign, currentDesign, error, isLoading, succeeded
+        createDesign, saveDesign, loadDesign, getMyDesigns, deleteDesign, updateDesignName, currentDesign, error, isLoading, succeeded
     }
 
 }

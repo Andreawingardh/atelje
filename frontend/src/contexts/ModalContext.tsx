@@ -1,5 +1,6 @@
 "use client";
 
+import { DesignDto } from "@/api/generated";
 import { createContext, useState, useContext } from "react";
 
 export type ModalType = keyof ModalConfig;
@@ -28,10 +29,10 @@ type ModalConfig = {
   };
   "single-design-view": {
     data: {
-      designId: number;
+      design: DesignDto;
     };
     callbacks: {
-      onDelete?: () => void;
+      onDelete?: (id: number) => void;
       saveDesignName?: (designId: number, name: string) => void;
     };
   };

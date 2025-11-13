@@ -1,76 +1,47 @@
 import { useAuth } from "@/contexts/AuthContext";
 import styles from "./UserDesigns.module.css";
-import { DesignService, ApiError, DesignDto } from "@/api/generated";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useModal } from "@/contexts/ModalContext";
-import { useCustomDesign } from "../designs/useCustomDesign";
 import { useDesign } from "../designs/useDesign";
+import { DesignDto } from "@/api/generated";
 
 export default function UserDesigns() {
-  const [error, setError] = useState();
-  const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const [designs, setDesigns] = useState<DesignDto[]>();
   const { openModal } = useModal();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { getMyDesigns, deleteDesign, updateDesignName, error, isLoading } =
+    useDesign();
 
   useEffect(() => {
-    console.log("useEffect triggered, refreshTrigger:", refreshTrigger);
     (async () => {
-      const getAllDesigns = async () => {
+      const getDesigns = async () => {
         if (!user) {
           return null;
         }
-        try {
-          const designs = await DesignService.getMyDesigns();
-          console.log(designs);
-          return designs;
-        } catch (error) {
-          setError(
-            error instanceof ApiError
-              ? error.body?.errors?.[0] ||
-                  "There was an error loading the designs"
-              : "An unexpected error occurred"
-          );
-          return undefined;
-        } finally {
-          setIsLoading(false);
-        }
+        const result = await getMyDesigns();
+        return result;
       };
-      const designs = await getAllDesigns();
-      if (designs != undefined) {
+      const designs = await getDesigns();
+      if (designs != undefined && designs != null) {
         setDesigns(designs);
       }
     })();
   }, [user, refreshTrigger]);
 
-  function handleRefreshTrigger() {
-    console.log(
-      "handleRefreshTrigger called, current refreshTrigger:",
-      refreshTrigger
-    );
+  async function handleDeleteClick(id: number) {
+    await deleteDesign(id);
     setRefreshTrigger((prev) => prev + 1);
   }
 
   async function handleSaveDesignName(designId: number, newName: string) {
-    try {
-      // 1. Make API call to update design name
-      await DesignService.updateDesign(designId, {
-        name: newName
-      });
+    await updateDesignName(designId, newName);
 
-      // 2. Update the designs array in state
-      setDesigns((prev) =>
-        prev?.map((d) => (d.id === designId ? { ...d, name: newName } : d))
-      );
-    } catch (error) {
-      setError(
-        error instanceof ApiError
-          ? error.body?.errors?.[0] || "There was an error loading the designs"
-          : "An unexpected error occurred"
-      );
-    }
+    // 2. Update the designs array in state
+    setDesigns((prev) =>
+      prev?.map((d) => (d.id === designId ? { ...d, name: newName } : d))
+    );
   }
 
   return (
@@ -85,8 +56,11 @@ export default function UserDesigns() {
           <button
             onClick={() =>
               openModal("single-design-view", {
-                data: { designId: design.id },
-                callbacks: { onDelete: handleRefreshTrigger, saveDesignName: handleSaveDesignName },
+                data: { design: design },
+                callbacks: {
+                  onDelete: handleDeleteClick,
+                  saveDesignName: handleSaveDesignName,
+                },
               })
             }
             key={design.id}
