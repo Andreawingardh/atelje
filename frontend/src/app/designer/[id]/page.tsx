@@ -8,7 +8,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
-import { useModal } from "@/contexts/ModalContext";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 
 export default function DesignerPage() {
@@ -17,7 +16,6 @@ export default function DesignerPage() {
   const router = useRouter();
 
   const { user } = useAuth();
-  const { openModal } = useModal();
 
   const { saveDesign, loadDesign, currentDesign, isLoading, error } =
     useDesign();
