@@ -178,7 +178,6 @@ const handlePanControls = () => {
           target={[0, orbitTargetY, 0]}
           rotateSpeed={0.2}
           zoomSpeed={zoomSpeed}
-          panSpeed={1.5}
           onChange={handlePanControls}
         />
       </Canvas>
