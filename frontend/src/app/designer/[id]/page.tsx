@@ -106,6 +106,7 @@ export default function DesignerPage() {
       <h1>this is the ID page</h1>
       {errorMessage && <p>{errorMessage}</p>}
       {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
+        <button onClick={() => {router.back()}}>Back</button>
       <DesignerWorkspace
         designName={designName}
         onDesignNameChange={setDesignName}
