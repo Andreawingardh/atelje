@@ -1,7 +1,7 @@
 //This hook was written by Deepak V on Medium: https://medium.com/@deepak.v2701/next-js-prevent-navigation-handle-back-button-page-reload-with-userouter-fbead4d69051
 //It monkey-patches the router.push("/url") in order to allow it to take in parameters that checks if the user is trying to navigate away from a page with unsaved changes. We use this on our designer and designer[id] pages in order to show a modal to confirm that the user wants to leave.
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 const useBlockNavigation = (
   shouldBlock: boolean,
@@ -64,17 +64,17 @@ const useBlockNavigation = (
       window.removeEventListener("popstate", handleBackButton);
     };
   }, [shouldBlock, pathname]); // Proceed or Cancel Navigation
-  const proceedNavigation = () => {
+  const proceedNavigation = useCallback(() => {
     if (nextRoute) {
       setIsAttemptingNavigation(false);
-      originalPushRef.current(nextRoute); // Navigate to previous or next route
+      originalPushRef.current(nextRoute);
       setNextRoute(null);
     }
-  };
-  const cancelNavigation = () => {
+  }, [nextRoute]);
+  const cancelNavigation = useCallback(() => {
     setIsAttemptingNavigation(false);
     setNextRoute(null);
-  };
+  }, []);
   return { isAttemptingNavigation, proceedNavigation, cancelNavigation };
 };
 export default useBlockNavigation;

@@ -87,6 +87,7 @@ export default function DesignerPage() {
     openModal("confirmation-close", {
       callbacks: { onConfirm: proceedNavigation, onCancel: cancelNavigation },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAttemptingNavigation]);
 
   //this saves the design

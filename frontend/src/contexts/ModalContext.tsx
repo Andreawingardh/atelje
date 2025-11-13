@@ -5,13 +5,6 @@ import { createContext, useState, useContext } from "react";
 
 export type ModalType = keyof ModalConfig;
 
-// export type ModalType =
-//   | "login"
-//   | "register"
-//   | "confirmation-close"
-//   | "save-design"
-//   | "single-design-view";
-
 type ModalConfig = {
   login: {
     data: never;
@@ -44,13 +37,6 @@ type ModalConfig = {
     };
   };
 };
-
-// type ModalRequiresConfig<T extends ModalType> =
-//   ModalConfig[T]["data"] extends never
-//     ? ModalConfig[T]["callbacks"] extends never
-//       ? false // Both are never = no config needed
-//       : true // Has callbacks = needs config
-//     : true; // Has data = needs config
 
 export interface ModalContextType {
   modalState: ModalState;
