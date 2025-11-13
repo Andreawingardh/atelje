@@ -119,13 +119,23 @@ export default function FrameForm({
   return (
     <div className={styles.frameForm}>
       {frameSizes.map(({ size, label }) => (
+        <>
         <button 
           key={size}
           onClick={() => handleAddFrame(size)}
           className={styles.addFrameButton}
         >
           {label}
+          <div className={styles.addIcon}>
+            <img 
+              src={`/icons/add-icon.svg`} 
+              alt={"Add button"} 
+              className={styles.framePreviewImage} 
+            />
+          </div>
         </button>
+        <hr className={styles.frameDivider} />
+        </>
       ))}
     </div>
   );

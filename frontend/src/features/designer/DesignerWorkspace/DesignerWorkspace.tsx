@@ -173,85 +173,92 @@ export default function DesignerWorkspace({
         />
         {error && <p>{error}</p>}
       </div>
-      <div className={styles.sideBarForm}>
-        <button onClick={() => setShowSideBar("frames")}>Frames</button>
-        <button onClick={() => setShowSideBar("sofa")}>Sofa</button>
-        {showSideBar == "frames" && (
-          <FrameForm
-            frames={customDesign.frames}
-            wallWidth={customDesign.wallWidth}
-            ceilingHeight={customDesign.ceilingHeight}
-            gridCellSize={0.01}
-            occupiedPositions={occupiedPositions}
-            onAddFrame={addFrame}
-            onAddOccupiedPosition={addOccupiedPosition}
-          />
-        )}
-        {showSideBar == "sofa" && (
-          <FurnitureForm
-            furnitureColor={customDesign.furnitureColor}
-            setFurnitureColor={setFurnitureColor}
-            furnitureDepth={customDesign.furnitureDepth}
-            furnitureWidth={customDesign.furnitureWidth}
-            setFurnitureDepth={setFurnitureDepth}
-            setFurnitureWidth={setFurnitureWidth}
-            furnitureHeight={customDesign.furnitureHeight}
-            setFurnitureHeight={setFurnitureHeight}
-            wallWidth={customDesign.wallWidth}
-          />
-        )}
-
-        {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
-        {selectedFrame &&
-          selectedFrameIndex !== -1 &&
-          showSideBar == "single-frame" && (
-            <div>
-              <h3>Edit Selected Frame</h3>
-              <SingleFrameForm
-                frames={customDesign.frames}
-                id={selectedFrame.id}
-                frameColor={selectedFrame.frameColor || "#ac924f"}
-                setFrameColor={(color) =>
-                  setFrameColor(selectedFrameIndex, color)
-                }
-                imageUrl={selectedFrame.imageUrl}
-                setFrameImage={(url) => setFrameImage(selectedFrameIndex, url!)}
-                frameSize={selectedFrame.frameSize || "70x50"}
-                setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
-                frameOrientation={selectedFrame.frameOrientation || "portrait"}
-                setFrameOrientation={(orientation) =>
-                  setFrameOrientation(
-                    selectedFrameIndex,
-                    orientation as "portrait" | "landscape"
-                  )
-                }
-                onDelete={() => {
-                  deleteFrame(selectedFrameIndex);
-                  setSelectedFrameId(null);
-                }}
-              />
+      <section className={styles.workspaceSection}>
+        <section className={styles.sideBarForm}>
+          {!selectedFrame && (
+            <div className={styles.sideBarToggleBoxes}>
+            <button onClick={() => setShowSideBar("frames")}>Frames</button>
+            <button onClick={() => setShowSideBar("sofa")}>Sofa</button>
             </div>
           )}
-      </div>
-      {isLoading ? (
-        <div>Loading design...</div>
-      ) : (
-        <Canvas3D
-          wallWidth={customDesign.wallWidth}
-          ceilingHeight={customDesign.ceilingHeight}
-          wallColor={customDesign.wallColor}
-          flooring={customDesign.flooring}
-          furnitureColor={customDesign.furnitureColor}
-          furnitureDepth={customDesign.furnitureDepth}
-          furnitureWidth={customDesign.furnitureWidth}
-          furnitureHeight={customDesign.furnitureHeight}
-          frames={customDesign.frames}
-          selectedFrameId={selectedFrameId}
-          onFrameSelect={setSelectedFrameId}
-          onFramePositionUpdate={setFramePosition}
-          canvasRef={canvasRef}
-        />
-      )}
+            {showSideBar == "frames" && (
+              <FrameForm
+                frames={customDesign.frames}
+                wallWidth={customDesign.wallWidth}
+                ceilingHeight={customDesign.ceilingHeight}
+                gridCellSize={0.01}
+                occupiedPositions={occupiedPositions}
+                onAddFrame={addFrame}
+                onAddOccupiedPosition={addOccupiedPosition}
+              />
+            )}
+            {showSideBar == "sofa" && (
+              <FurnitureForm
+                furnitureColor={customDesign.furnitureColor}
+                setFurnitureColor={setFurnitureColor}
+                furnitureDepth={customDesign.furnitureDepth}
+                furnitureWidth={customDesign.furnitureWidth}
+                setFurnitureDepth={setFurnitureDepth}
+                setFurnitureWidth={setFurnitureWidth}
+                furnitureHeight={customDesign.furnitureHeight}
+                setFurnitureHeight={setFurnitureHeight}
+                wallWidth={customDesign.wallWidth}
+              />
+            )}
+
+            {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
+            {selectedFrame &&
+              selectedFrameIndex !== -1 &&
+              showSideBar == "single-frame" && (
+              <>
+                <SingleFrameForm
+                  frames={customDesign.frames}
+                  id={selectedFrame.id}
+                  frameColor={selectedFrame.frameColor || "#ac924f"}
+                  setFrameColor={(color) =>
+                    setFrameColor(selectedFrameIndex, color)
+                  }
+                  imageUrl={selectedFrame.imageUrl}
+                  setFrameImage={(url) => setFrameImage(selectedFrameIndex, url!)}
+                  frameSize={selectedFrame.frameSize || "70x50"}
+                  setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
+                  frameOrientation={selectedFrame.frameOrientation || "portrait"}
+                  setFrameOrientation={(orientation) =>
+                    setFrameOrientation(
+                      selectedFrameIndex,
+                      orientation as "portrait" | "landscape"
+                    )
+                  }
+                  onDelete={() => {
+                    deleteFrame(selectedFrameIndex);
+                    setSelectedFrameId(null);
+                  }}
+                />
+              </>
+            )}
+        </section>
+        {isLoading ? (
+          <div>Loading design...</div>
+        ) : (
+          <div className={styles.canvasContainer}>
+            <Canvas3D
+              wallWidth={customDesign.wallWidth}
+              ceilingHeight={customDesign.ceilingHeight}
+              wallColor={customDesign.wallColor}
+              flooring={customDesign.flooring}
+              furnitureColor={customDesign.furnitureColor}
+              furnitureDepth={customDesign.furnitureDepth}
+              furnitureWidth={customDesign.furnitureWidth}
+              furnitureHeight={customDesign.furnitureHeight}
+              frames={customDesign.frames}
+              selectedFrameId={selectedFrameId}
+              onFrameSelect={setSelectedFrameId}
+              onFramePositionUpdate={setFramePosition}
+              canvasRef={canvasRef}
+            />
+          </div>
+        )}
+      </section>
     </>
   );
 }

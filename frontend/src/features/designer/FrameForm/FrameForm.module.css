@@ -1,0 +1,34 @@
+.frameForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.addFrameButton {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: var(--charcoal);
+    border: none;
+    cursor: pointer;
+}
+
+.addIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background-color: var(--snowdrop);
+}
+
+.frameDivider {
+    height: 3px;
+    background-color: var(--dark-vanilla);
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 9999px;
+    box-shadow: none;
+  }

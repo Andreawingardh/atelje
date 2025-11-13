@@ -1,6 +1,7 @@
 import styles from "./FurnitureForm.module.css";
 import React, { useEffect } from "react";
 import { useDebouncedNumericInput } from "../../designs/useDebouncedNumericInput";
+import UnitInput from "@/elements/UnitInput/UnitInput";
 
 interface FurnitureColor {
   sofa: string;
@@ -69,57 +70,70 @@ export default function FurnitureForm({
     });
   };
 
+
   return (
     <form className={styles.furnitureForm}>
       <div className={styles.colorGroup}>
-        <label>Sofa Color:</label>
+        <label className={styles.colorLabel}>Color</label>
         <div className={styles.colorPickerContainer}>
+          <div 
+            className={styles.colorInputWrapper}
+            onClick={() => document.getElementById('sofaColor')?.click()}
+          >
+            <div 
+              className={styles.colorInputDisplay}
+              style={{ backgroundColor: furnitureColor.sofa }}
+            />
+          </div>
           <input
+            id="sofaColor"
             type="color"
             value={furnitureColor.sofa}
             onChange={handleSofaColorChange}
             className={styles.colorInput}
           />
         </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="furnitureWidth">Sofa Width (cm):</label>
-          <input
-            id="furnitureWidth"
-            type="number"
-            min={MIN_FURNITURE_WIDTH}
-            max={MAX_FURNITURE_WIDTH}
-            value={furnitureWidthContrl.inputValue}
-            onChange={furnitureWidthContrl.handleChange}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="furnitureDepth">Sofa Depth (cm):</label>
-          <input
-            id="furnitureDepth"
-            type="number"
-            min={MIN_FURNITURE_DEPTH}
-            max={MAX_FURNITURE_DEPTH}
-            value={furnitureDepthControl.inputValue}
-            onChange={furnitureDepthControl.handleChange}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="furnitureHeight">Sofa Height (cm):</label>
-          <input
-            id="furnitureHeight"
-            type="number"
-            min={MIN_FURNITURE_HEIGHT}
-            max={MAX_FURNITURE_HEIGHT}
-            value={furnitureHeightControl.inputValue}
-            onChange={furnitureHeightControl.handleChange}
-            className={styles.input}
-          />
-        </div>
       </div>
-
-      {/* Future furniture color pickers can be added here following the same pattern */}
+        <hr className={styles.formDivider} />
+        <div className={styles.measurmentsGroup}>
+          <h3>Measurments</h3>
+          <label htmlFor="furnitureWidth">Width
+            <UnitInput
+              id="furnitureWidth"
+              type="number"
+              units="cm"
+              min={MIN_FURNITURE_WIDTH}
+              max={MAX_FURNITURE_WIDTH}
+              value={furnitureWidthContrl.inputValue}
+              onChange={furnitureWidthContrl.handleChange}
+              className={styles.input}
+            />
+          </label>
+          <label htmlFor="furnitureDepth">Depth
+            <UnitInput
+              id="furnitureDepth"
+              type="number"
+              units="cm"
+              min={MIN_FURNITURE_DEPTH}
+              max={MAX_FURNITURE_DEPTH}
+              value={furnitureDepthControl.inputValue}
+              onChange={furnitureDepthControl.handleChange}
+              className={styles.input}
+            />
+          </label>
+          <label htmlFor="furnitureHeight">Height
+            <UnitInput
+              id="furnitureHeight"
+              type="number"
+              units="cm"
+              min={MIN_FURNITURE_HEIGHT}
+              max={MAX_FURNITURE_HEIGHT}
+              value={furnitureHeightControl.inputValue}
+              onChange={furnitureHeightControl.handleChange}
+              className={styles.input}
+            />
+          </label>
+        </div>
     </form>
   );
 }
