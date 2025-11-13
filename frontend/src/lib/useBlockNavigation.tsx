@@ -84,7 +84,7 @@ const useBlockNavigation = (
     setIsAttemptingNavigation(false);
     setNextRoute(null);
 
-  };
+  },[]);
 
   const allowNextNavigation = () => {
     bypassNextNavigationRef.current = true;
