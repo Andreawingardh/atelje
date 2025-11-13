@@ -23,11 +23,6 @@ export default function UserInfo() {
             <Image src={"/241113-doge.jpg"} width={100} height={100} alt="hej" />
             <h3>Mail</h3>
             <p>{user?.email}</p>
-            <h3>Password</h3>
-            <p>Current password</p>
-            <p>New password</p>
-            <p>New Password</p>
-            <Link href="/">I cannot remember my password</Link>
         </div>
     )
 }

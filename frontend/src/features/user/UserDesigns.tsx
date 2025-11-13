@@ -9,6 +9,7 @@ import { DesignDto } from "@/api/generated";
 export default function UserDesigns() {
   const { user } = useAuth();
   const [designs, setDesigns] = useState<DesignDto[]>();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const { openModal } = useModal();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { getMyDesigns, deleteDesign, updateDesignName, error, isLoading } =
@@ -32,22 +33,28 @@ export default function UserDesigns() {
 
   async function handleDeleteClick(id: number) {
     await deleteDesign(id);
+    setSuccessMessage("Design deleted");
     setRefreshTrigger((prev) => prev + 1);
+
+    setTimeout(() => setSuccessMessage(null), 3000);
   }
 
   async function handleSaveDesignName(designId: number, newName: string) {
     await updateDesignName(designId, newName);
+    setSuccessMessage("Design name updated");
 
     // 2. Update the designs array in state
     setDesigns((prev) =>
       prev?.map((d) => (d.id === designId ? { ...d, name: newName } : d))
     );
+    setTimeout(() => setSuccessMessage(null), 3000);
   }
 
   return (
     <div>
-      {error && <p>{error}</p>}
       <h1>My Designs</h1>
+      {error && <p>{error}</p>}
+      {successMessage && <p>{successMessage}</p>}
 
       {isLoading && <p>Loading designs...</p>}
 
