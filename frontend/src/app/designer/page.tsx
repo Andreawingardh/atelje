@@ -15,7 +15,7 @@ export default function NewDesignPage() {
   const router = useRouter();
   const [designName, setDesignName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { openModal, setModalCallbacks } = useModal();
+  const { openModal } = useModal();
 
   const {
     getSceneData,
@@ -51,11 +51,10 @@ export default function NewDesignPage() {
       return;
     }
 
-    setModalCallbacks({
-      onConfirm: proceedNavigation,
-      onCancel: cancelNavigation, saveDesignName: null
+    openModal("confirmation-close", {
+      callbacks: { onConfirm: proceedNavigation, onCancel: cancelNavigation },
     });
-    openModal("confirmation-close");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAttemptingNavigation]);
 
   async function handleSave(screenshots?: {

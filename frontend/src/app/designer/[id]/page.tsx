@@ -18,7 +18,7 @@ export default function DesignerPage() {
   const router = useRouter();
 
   const { user } = useAuth();
-  const { openModal, setModalCallbacks } = useModal();
+  const { openModal } = useModal();
 
   const { saveDesign, loadDesign, currentDesign, isLoading, error } =
     useDesign();
@@ -85,9 +85,10 @@ export default function DesignerPage() {
     if (!isAttemptingNavigation) {
       return;
     }
-
-    setModalCallbacks({onConfirm: proceedNavigation, onCancel: cancelNavigation, saveDesignName: null});
-    openModal("confirmation-close");
+    openModal("confirmation-close", {
+      callbacks: { onConfirm: proceedNavigation, onCancel: cancelNavigation },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAttemptingNavigation]);
 
   //this saves the design

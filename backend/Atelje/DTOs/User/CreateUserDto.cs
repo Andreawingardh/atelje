@@ -13,6 +13,7 @@ public class CreateUserDto
     
     [Required]
     [MinLength(3)]
+    [MaxLength(25)]
     public required string UserName { get; set; }
     
     [Required]

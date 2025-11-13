@@ -5,21 +5,25 @@ import { useState } from "react";
 
 export default function SaveDesignModal() {
   const [designName, setDesignName] = useState<string>("");
-  const { modalCallbacks, closeModal } = useModal();
+  const { modalState, closeModal } = useModal();
+
+  if (modalState.type != "save-design") return null;
+
+  const { saveDesignName } = modalState.callbacks;
 
   return (
     <form>
       <input
         value={designName}
         onChange={(e) => setDesignName(e.target.value)}
-        placeholder={designName || "Give your design a name"}
+        placeholder={designName }
       />
       <button
         type="submit"
         onClick={(e) => {
           e.preventDefault();
-          if (modalCallbacks.saveDesignName && designName)
-              modalCallbacks.saveDesignName(designName);
+          if (saveDesignName && designName)
+              saveDesignName(designName);
             closeModal()
         }}
       >

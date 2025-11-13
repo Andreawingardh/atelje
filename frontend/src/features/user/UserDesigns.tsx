@@ -1,44 +1,48 @@
 import { useAuth } from "@/contexts/AuthContext";
 import styles from "./UserDesigns.module.css";
-import { notFound } from "next/navigation";
-import { DesignService, ApiError, DesignDto } from "@/api/generated";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useModal } from "@/contexts/ModalContext";
+import { useDesign } from "../designs/useDesign";
+import { DesignDto } from "@/api/generated";
 
 export default function UserDesigns() {
-  const [error, setError] = useState();
-  const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const [designs, setDesigns] = useState<DesignDto[]>();
+  const { openModal } = useModal();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { getMyDesigns, deleteDesign, updateDesignName, error, isLoading } =
+    useDesign();
 
   useEffect(() => {
     (async () => {
-      const getAllDesigns = async () => {
+      const getDesigns = async () => {
         if (!user) {
           return null;
         }
-        try {
-          const designs = await DesignService.getMyDesigns();
-          console.log(designs);
-          return designs;
-        } catch (error) {
-          setError(
-            error instanceof ApiError
-              ? error.body?.errors?.[0] || "An error occurred"
-              : "An unexpected error occurred"
-          );
-          return undefined;
-        } finally {
-          setIsLoading(false);
-        }
+        const result = await getMyDesigns();
+        return result;
       };
-      const designs = await getAllDesigns();
-      if (designs != undefined) {
+      const designs = await getDesigns();
+      if (designs != undefined && designs != null) {
         setDesigns(designs);
       }
     })();
-  }, [user]);
+  }, [user, refreshTrigger]);
+
+  async function handleDeleteClick(id: number) {
+    await deleteDesign(id);
+    setRefreshTrigger((prev) => prev + 1);
+  }
+
+  async function handleSaveDesignName(designId: number, newName: string) {
+    await updateDesignName(designId, newName);
+
+    // 2. Update the designs array in state
+    setDesigns((prev) =>
+      prev?.map((d) => (d.id === designId ? { ...d, name: newName } : d))
+    );
+  }
 
   return (
     <div>
@@ -46,14 +50,25 @@ export default function UserDesigns() {
       <h1>My Designs</h1>
 
       {isLoading && <p>Loading designs...</p>}
-    
+
       <div>
         {designs?.map((design) => (
-          <Link href={`/designer/${design.id}`} key={design.id}>
+          <button
+            onClick={() =>
+              openModal("single-design-view", {
+                data: { design: design },
+                callbacks: {
+                  onDelete: handleDeleteClick,
+                  saveDesignName: handleSaveDesignName,
+                },
+              })
+            }
+            key={design.id}
+          >
             {design.thumbnailUrl ? (
               <Image
                 src={design.thumbnailUrl}
-                alt={design.name || 'Design preview'}
+                alt={design.name || "Design preview"}
                 // Temporary fixed size, remove after styling
                 width={200}
                 height={200}
@@ -63,9 +78,9 @@ export default function UserDesigns() {
                 <span>No Preview</span>
               </div>
             )}
-          
+
             <div>{design.name}</div>
-          </Link>
+          </button>
         ))}
       </div>
     </div>

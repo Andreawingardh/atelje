@@ -58,7 +58,7 @@ public class DesignController(IDesignService designService, IR2Service r2Service
     }
 
     [HttpDelete("{id}", Name = "DeleteDesign")]
-    public async Task<ActionResult<DesignDto>> DeleteDesign(int id)
+    public async Task<IActionResult> DeleteDesign(int id)
     {
         var deleted = await designService.DeleteDesignAsync(id);
 
