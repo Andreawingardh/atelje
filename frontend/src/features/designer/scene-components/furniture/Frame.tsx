@@ -275,26 +275,32 @@ export const Frame: React.FC<FrameProps> = ({
 
             if (hasCollision) {
                 // Find nearest free position
-                const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries);
+                const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries, wallWidth, ceilingHeight);
             
-                // Move frame to the free position
-                if (groupRef.current) {
-                    if (groupRef.current.parent) {
-                        const localPosition = groupRef.current.parent.worldToLocal(freePos.clone());
-                        groupRef.current.position.copy(localPosition);
-                    } else {
-                        groupRef.current.position.copy(freePos);
+                if (freePos) {
+                    // Move frame to the free position
+                    if (groupRef.current) {
+                        if (groupRef.current.parent) {
+                            const localPosition = groupRef.current.parent.worldToLocal(freePos.clone());
+                            groupRef.current.position.copy(localPosition);
+                        } else {
+                            groupRef.current.position.copy(freePos);
+                        }
+                
+                        // Update position display
+                        const displayPos = worldToLowerLeft(freePos);
+                        setPosition({
+                            x: Math.round(displayPos.x / gridCellSize),
+                            y: Math.round(displayPos.y / gridCellSize)
+                        });
+                
+                        // Notify parent of new position
+                        onPositionChange?.(freePos);
                     }
-                
-                    // Update position display
-                    const displayPos = worldToLowerLeft(freePos);
-                    setPosition({
-                        x: Math.round(displayPos.x / gridCellSize),
-                        y: Math.round(displayPos.y / gridCellSize)
-                    });
-                
-                    // Notify parent of new position
-                    onPositionChange?.(freePos);
+                } else {
+                    // No free position found anywhere on wall
+                    alert('Wall is completely full! Remove some frames.');
+                    console.error('Cannot place frame - wall is full');
                 }
             }
 
