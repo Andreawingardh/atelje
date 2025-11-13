@@ -14,7 +14,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         base.OnModelCreating(modelBuilder);  // Keeps Identity configuration
         
         modelBuilder.Entity<Design>()
-            .Property(d => d.DesignData)
-            .HasColumnType("jsonb");
+            .HasOne(d => d.User)
+            .WithMany(u => u.Designs)
+            .HasForeignKey(d => d.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
