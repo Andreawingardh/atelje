@@ -52,6 +52,7 @@ export default function NewDesignPage() {
     openModal("confirmation-close", {
       callbacks: { onConfirm: proceedNavigation, onCancel: cancelNavigation },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAttemptingNavigation]);
 
   async function handleSave(screenshots?: {

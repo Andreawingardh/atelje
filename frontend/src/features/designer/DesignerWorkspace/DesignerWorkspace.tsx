@@ -1,6 +1,5 @@
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useState, useRef, useEffect } from "react";
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 import FurnitureForm, { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import StructuralForm from "../StructuralForm/StructuralForm";
 import SingleFrameForm from "../SingleFrameForm/SingleFrameForm";
