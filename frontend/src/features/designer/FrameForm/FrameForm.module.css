@@ -2,11 +2,15 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    overflow-y: scroll;
+    max-height: 34.5rem;
 }
 
 .addFrameButton {
     display: flex;
     justify-content: space-between;
+    height: 150px; /* Temporary height to fix scroll */
+    width: 100%;
     padding: 8px 16px;
     background-color: #4CAF50;
     color: var(--charcoal);
@@ -27,7 +31,7 @@
 .frameDivider {
     height: 3px;
     background-color: var(--dark-vanilla);
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 1rem 0;
     border: none;
     border-radius: 9999px;
     box-shadow: none;
