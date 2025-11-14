@@ -15,6 +15,24 @@ interface FrameDimensions {
 }
 
 /**
+ * Calculate frame dimensions based on size and orientation
+ */
+const getFrameDimensions = (frameDimensions: FrameDimensions): { width: number; height: number } => {
+  const { frameSize, frameOrientation, gridCellSize } = frameDimensions;
+  const [width, height] = frameSize.split('x').map(Number);
+  
+  const isPortrait = frameOrientation === 'portrait';
+  const frameWidth = isPortrait 
+    ? Math.min(width || 50, height || 70) * gridCellSize
+    : Math.max(width || 50, height || 70) * gridCellSize;
+  const frameHeight = isPortrait
+    ? Math.max(width || 50, height || 70) * gridCellSize
+    : Math.min(width || 50, height || 70) * gridCellSize;
+  
+  return { width: frameWidth, height: frameHeight };
+};
+
+/**
  * Check if two frames overlap
  */
 export const checkOverlap = (
@@ -38,16 +56,7 @@ export const checkCollision = (
   frameDimensions: FrameDimensions,
   occupiedPositions: OccupiedPosition[]
 ): boolean => {
-  const { frameSize, frameOrientation, gridCellSize } = frameDimensions;
-  const [width, height] = frameSize.split('x').map(Number);
-  
-  const isPortrait = frameOrientation === 'portrait';
-  const currentFrameWidth = isPortrait 
-    ? Math.min(width || 50, height || 70) * gridCellSize
-    : Math.max(width || 50, height || 70) * gridCellSize;
-  const currentFrameHeight = isPortrait
-    ? Math.max(width || 50, height || 70) * gridCellSize
-    : Math.min(width || 50, height || 70) * gridCellSize;
+  const { width: currentFrameWidth, height: currentFrameHeight } = getFrameDimensions(frameDimensions);
   
   const newFrame = { 
     x: pos.x, 
@@ -121,16 +130,7 @@ export const clampToAvoidCollision = (
   occupiedPositions: OccupiedPosition[],
   clampToWallBoundaries: (pos: THREE.Vector3) => THREE.Vector3
 ): THREE.Vector3 => {
-  const { frameSize, frameOrientation, gridCellSize } = frameDimensions;
-  const [width, height] = frameSize.split('x').map(Number);
-  
-  const isPortrait = frameOrientation === 'portrait';
-  const currentFrameWidth = isPortrait 
-    ? Math.min(width || 50, height || 70) * gridCellSize
-    : Math.max(width || 50, height || 70) * gridCellSize;
-  const currentFrameHeight = isPortrait
-    ? Math.max(width || 50, height || 70) * gridCellSize
-    : Math.min(width || 50, height || 70) * gridCellSize;
+  const { width: currentFrameWidth, height: currentFrameHeight } = getFrameDimensions(frameDimensions);
   
   const halfWidth = currentFrameWidth / 2;
   const halfHeight = currentFrameHeight / 2;
