@@ -30,7 +30,7 @@ export default function CircleButton({
       disabled={disabled}
       {...props}
     >
-      <img src={buttonIcon} alt="icon" className={styles.buttonIcon} />
+      <img src={buttonIcon} alt="icon" className={`${styles.buttonIcon} ${disabled ? styles.disabledIcon : ""}`} />
     </button>
   );
 }
