@@ -28,6 +28,14 @@
     color: var(--snowdrop);
 }
 
+.errorMessage {
+    font-size: 0.875rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    background: var(--rosie-danger);
+    color: var(--snowdrop);
+}
+
 .workspaceSection {
     display: flex;
     flex-direction: row;

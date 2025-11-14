@@ -91,7 +91,8 @@ export default function DesignerWorkspace({
   const [showSideBar, setShowSideBar] = useState<
     "frames" | "sofa" | "single-frame"
   >("frames");
-  const { openModal} = useModal();
+  const { openModal } = useModal();
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -102,28 +103,40 @@ export default function DesignerWorkspace({
       return;
     }
     if (!designName) {
-      openModal("save-design", {callbacks: {saveDesignName: onDesignNameChange}});
+      openModal("save-design", {
+        callbacks: { saveDesignName: onDesignNameChange },
+      });
     } else {
       handleSave();
     }
   };
 
   useEffect(() => {
-    console.log("Auth check:", { pendingAction, user: !!user });
     if (pendingAction === "save" && user) {
-      console.log("Opening save-design modal");
       setPendingAction(null);
-      openModal("save-design", {callbacks: {saveDesignName: onDesignNameChange}});
+      openModal("save-design", {
+        callbacks: { saveDesignName: onDesignNameChange },
+      });
     }
   }, [pendingAction, user]);
 
   useEffect(() => {
-    console.log("Design name changed:", { designName, hasUnsavedChanges });
     if (designName && hasUnsavedChanges) {
-      console.log("Calling handleSave");
       handleSave();
     }
   }, [designName]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timeoutId = setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+    return;
+  }, [errorMessage]);
 
   const handleSave = async () => {
     if (!canvasRef.current) {
@@ -136,6 +149,8 @@ export default function DesignerWorkspace({
       const screenshots = await captureScreenshot(canvasRef.current);
       await onSave(screenshots);
     } catch (error) {
+      console.error("Screenshot capture error:", error);
+      setErrorMessage("Screenshot capture failed, but your design was saved");
       await onSave();
     }
   };
@@ -152,13 +167,17 @@ export default function DesignerWorkspace({
     if (selectedFrame) setShowSideBar("single-frame");
   }, [selectedFrame]);
 
-  console.log(designName);
-
   return (
     <>
       <section className={styles.topBar}>
         <div className={styles.topBarDividerLeft}>
-          <CircleButton variant="vanilla" buttonIcon={"/icons/arrow-icon.svg"} onClick={() => {router.back()}}/>
+          <CircleButton
+            variant="vanilla"
+            buttonIcon={"/icons/arrow-icon.svg"}
+            onClick={() => {
+              router.back();
+            }}
+          />
           <StructuralForm
             wallWidth={customDesign.wallWidth}
             setWallWidth={setWallWidth}
@@ -171,11 +190,22 @@ export default function DesignerWorkspace({
           />
         </div>
         <div className={styles.topBarDividerRight}>
-          {hasUnsavedChanges && <p className={styles.unsavedChanges}>You have unsaved changes!</p>}
-          <CircleButton variant="vanilla" buttonIcon="/icons/save-icon.svg" onClick={handleSaveClick} disabled={!hasUnsavedChanges} />
-          <DownloadScreenshotButton 
+          {error && <p className={styles.errorMessage}>{error}</p>}
+          {!error && errorMessage && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
+          {!error && hasUnsavedChanges && (
+            <p className={styles.unsavedChanges}>You have unsaved changes!</p>
+          )}
+          <CircleButton
+            variant="vanilla"
+            buttonIcon="/icons/save-icon.svg"
+            onClick={handleSaveClick}
+            disabled={!hasUnsavedChanges}
+          />
+          <DownloadScreenshotButton
             screenshotUrl={screenshotUrl}
-            designName={designName || 'design'}
+            designName={designName || "design"}
           />
           {error && <p>{error}</p>}
         </div>
@@ -184,62 +214,80 @@ export default function DesignerWorkspace({
         <section className={styles.sideBarForm}>
           {!selectedFrame && (
             <div className={styles.sideBarToggleBoxes}>
-            <button className={`${showSideBar === "frames" ? styles.framesButtonActive : styles.framesButtonBase}`} onClick={() => setShowSideBar("frames")}>Frames</button>
-            <button className={`${showSideBar === "sofa" ? styles.sofaButtonActive : styles.sofaButtonBase}`} onClick={() => setShowSideBar("sofa")}>Sofa</button>
+              <button
+                className={`${
+                  showSideBar === "frames"
+                    ? styles.framesButtonActive
+                    : styles.framesButtonBase
+                }`}
+                onClick={() => setShowSideBar("frames")}
+              >
+                Frames
+              </button>
+              <button
+                className={`${
+                  showSideBar === "sofa"
+                    ? styles.sofaButtonActive
+                    : styles.sofaButtonBase
+                }`}
+                onClick={() => setShowSideBar("sofa")}
+              >
+                Sofa
+              </button>
             </div>
           )}
-            {showSideBar == "frames" && (
-              <FrameForm
-                frames={customDesign.frames}
-                wallWidth={customDesign.wallWidth}
-                ceilingHeight={customDesign.ceilingHeight}
-                gridCellSize={0.01}
-                occupiedPositions={occupiedPositions}
-                onAddFrame={addFrame}
-                onAddOccupiedPosition={addOccupiedPosition}
-              />
-            )}
-            {showSideBar == "sofa" && (
-              <FurnitureForm
-                furnitureColor={customDesign.furnitureColor}
-                setFurnitureColor={setFurnitureColor}
-                furnitureDepth={customDesign.furnitureDepth}
-                furnitureWidth={customDesign.furnitureWidth}
-                setFurnitureDepth={setFurnitureDepth}
-                setFurnitureWidth={setFurnitureWidth}
-                furnitureHeight={customDesign.furnitureHeight}
-                setFurnitureHeight={setFurnitureHeight}
-                wallWidth={customDesign.wallWidth}
-              />
-            )}
+          {showSideBar == "frames" && (
+            <FrameForm
+              frames={customDesign.frames}
+              wallWidth={customDesign.wallWidth}
+              ceilingHeight={customDesign.ceilingHeight}
+              gridCellSize={0.01}
+              occupiedPositions={occupiedPositions}
+              onAddFrame={addFrame}
+              onAddOccupiedPosition={addOccupiedPosition}
+            />
+          )}
+          {showSideBar == "sofa" && (
+            <FurnitureForm
+              furnitureColor={customDesign.furnitureColor}
+              setFurnitureColor={setFurnitureColor}
+              furnitureDepth={customDesign.furnitureDepth}
+              furnitureWidth={customDesign.furnitureWidth}
+              setFurnitureDepth={setFurnitureDepth}
+              setFurnitureWidth={setFurnitureWidth}
+              furnitureHeight={customDesign.furnitureHeight}
+              setFurnitureHeight={setFurnitureHeight}
+              wallWidth={customDesign.wallWidth}
+            />
+          )}
 
-            {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
-            {selectedFrame &&
-              selectedFrameIndex !== -1 &&
-              showSideBar == "single-frame" && (
-                <SingleFrameForm
-                  frames={customDesign.frames}
-                  id={selectedFrame.id}
-                  frameColor={selectedFrame.frameColor || "#ac924f"}
-                  setFrameColor={(color) =>
-                    setFrameColor(selectedFrameIndex, color)
-                  }
-                  imageUrl={selectedFrame.imageUrl}
-                  setFrameImage={(url) => setFrameImage(selectedFrameIndex, url!)}
-                  frameSize={selectedFrame.frameSize || "70x50"}
-                  setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
-                  frameOrientation={selectedFrame.frameOrientation || "portrait"}
-                  setFrameOrientation={(orientation) =>
-                    setFrameOrientation(
-                      selectedFrameIndex,
-                      orientation as "portrait" | "landscape"
-                    )
-                  }
-                  onDelete={() => {
-                    deleteFrame(selectedFrameIndex);
-                    setSelectedFrameId(null);
-                  }}
-                />
+          {/* Only show SingleFrameForm when a frame is selected in Canvas3D */}
+          {selectedFrame &&
+            selectedFrameIndex !== -1 &&
+            showSideBar == "single-frame" && (
+              <SingleFrameForm
+                frames={customDesign.frames}
+                id={selectedFrame.id}
+                frameColor={selectedFrame.frameColor || "#ac924f"}
+                setFrameColor={(color) =>
+                  setFrameColor(selectedFrameIndex, color)
+                }
+                imageUrl={selectedFrame.imageUrl}
+                setFrameImage={(url) => setFrameImage(selectedFrameIndex, url!)}
+                frameSize={selectedFrame.frameSize || "70x50"}
+                setFrameSize={(size) => setFrameSize(selectedFrameIndex, size)}
+                frameOrientation={selectedFrame.frameOrientation || "portrait"}
+                setFrameOrientation={(orientation) =>
+                  setFrameOrientation(
+                    selectedFrameIndex,
+                    orientation as "portrait" | "landscape"
+                  )
+                }
+                onDelete={() => {
+                  deleteFrame(selectedFrameIndex);
+                  setSelectedFrameId(null);
+                }}
+              />
             )}
         </section>
         {isLoading ? (
