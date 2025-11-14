@@ -177,8 +177,8 @@ export default function DesignerWorkspace({
         <section className={styles.sideBarForm}>
           {!selectedFrame && (
             <div className={styles.sideBarToggleBoxes}>
-            <button onClick={() => setShowSideBar("frames")}>Frames</button>
-            <button onClick={() => setShowSideBar("sofa")}>Sofa</button>
+            <button className={`${showSideBar === "frames" ? styles.framesButtonActive : styles.framesButtonBase}`} onClick={() => setShowSideBar("frames")}>Frames</button>
+            <button className={`${showSideBar === "sofa" ? styles.sofaButtonActive : styles.sofaButtonBase}`} onClick={() => setShowSideBar("sofa")}>Sofa</button>
             </div>
           )}
             {showSideBar == "frames" && (
@@ -240,7 +240,7 @@ export default function DesignerWorkspace({
         {isLoading ? (
           <div>Loading design...</div>
         ) : (
-          <div className={styles.canvasContainer}>
+          <>
             <Canvas3D
               wallWidth={customDesign.wallWidth}
               ceilingHeight={customDesign.ceilingHeight}
@@ -256,7 +256,7 @@ export default function DesignerWorkspace({
               onFramePositionUpdate={setFramePosition}
               canvasRef={canvasRef}
             />
-          </div>
+          </>
         )}
       </section>
     </>

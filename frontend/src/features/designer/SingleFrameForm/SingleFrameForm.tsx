@@ -98,15 +98,14 @@ export default function SingleFrameForm({
           <label htmlFor="imageUrl" className={styles.singleFrameLabel}>Picture</label>
           <div className={styles.categoryButtons}>
             {categories.map(category => (
-              <Button
+              <button
                 key={category}
                 type="button"
-                variant={selectedCategory === category ? "cornflower" : "darkVanilla"}
-                buttonText={category.charAt(0).toUpperCase() + category.slice(1)}
                 onClick={() => setSelectedCategory(category)}
+                className={`${styles.categoryButton} ${selectedCategory === category ? styles.activeCategory : ''}`}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
-              </Button>
+              </button>
             ))}
         </div>
           <div className={styles.photoGrid}>
