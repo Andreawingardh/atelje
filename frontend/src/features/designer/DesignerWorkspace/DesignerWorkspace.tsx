@@ -1,5 +1,6 @@
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import FurnitureForm, { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import StructuralForm from "../StructuralForm/StructuralForm";
 import SingleFrameForm from "../SingleFrameForm/SingleFrameForm";
@@ -11,6 +12,7 @@ import { DownloadScreenshotButton } from "@/elements/DownloadScreenshotButton/Do
 import styles from "./DesignerWorkspace.module.css";
 import { useModal } from "@/contexts/ModalContext";
 import { useAuth } from "@/contexts/AuthContext";
+import CircleButton from "@/elements/CircleButton/CircleButton";
 
 interface OccupiedPosition {
   x: number;
@@ -83,6 +85,7 @@ export default function DesignerWorkspace({
   addOccupiedPosition,
 }: DesignerWorkspaceProps) {
   const { user } = useAuth();
+  const router = useRouter();
   const [pendingAction, setPendingAction] = useState<"save" | null>(null);
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
   const [showSideBar, setShowSideBar] = useState<
@@ -153,26 +156,30 @@ export default function DesignerWorkspace({
 
   return (
     <>
-      <StructuralForm
-        wallWidth={customDesign.wallWidth}
-        setWallWidth={setWallWidth}
-        ceilingHeight={customDesign.ceilingHeight}
-        setCeilingHeight={setCeilingHeight}
-        wallColor={customDesign.wallColor}
-        setWallColor={setWallColor}
-        flooring={customDesign.flooring}
-        setFlooring={setFlooring}
-      />
-      <div>
-        <button onClick={handleSaveClick} disabled={!hasUnsavedChanges}>
-          {isLoading ? "Saving" : "Save"}
-        </button>
-        <DownloadScreenshotButton 
-          screenshotUrl={screenshotUrl}
-          designName={designName || 'design'}
-        />
-        {error && <p>{error}</p>}
-      </div>
+      <section className={styles.topBar}>
+        <div className={styles.topBarDividerLeft}>
+          <CircleButton variant="vanilla" buttonIcon={"/icons/arrow-icon.svg"} onClick={() => {router.back()}}/>
+          <StructuralForm
+            wallWidth={customDesign.wallWidth}
+            setWallWidth={setWallWidth}
+            ceilingHeight={customDesign.ceilingHeight}
+            setCeilingHeight={setCeilingHeight}
+            wallColor={customDesign.wallColor}
+            setWallColor={setWallColor}
+            flooring={customDesign.flooring}
+            setFlooring={setFlooring}
+          />
+        </div>
+        <div className={styles.topBarDividerRight}>
+          {hasUnsavedChanges && <p className={styles.unsavedChanges}>You have unsaved changes!</p>}
+          <CircleButton variant="vanilla" buttonIcon="/icons/save-icon.svg" onClick={handleSaveClick} disabled={!hasUnsavedChanges} />
+          <DownloadScreenshotButton 
+            screenshotUrl={screenshotUrl}
+            designName={designName || 'design'}
+          />
+          {error && <p>{error}</p>}
+        </div>
+      </section>
       <section className={styles.workspaceSection}>
         <section className={styles.sideBarForm}>
           {!selectedFrame && (
