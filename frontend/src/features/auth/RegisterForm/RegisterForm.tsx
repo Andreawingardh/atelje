@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { RegisterDto } from "@/api/generated";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
+import Button from "@/elements/Button/Button";
+import TextInput from "@/elements/TextInput/TextInput";
 
 type FieldData = {
   value: string;
@@ -46,15 +48,9 @@ function PasswordRequirements({
   return (
     <div className={styles.passwordRequirements}>
       {requirementsList.map((req) => (
-        <div key={req.key}>
-          <span
-            className={
-              requirements[req.key] ? styles.pwReqSuccess : styles.pwReqFailure
-            }
-          >
-            {requirements[req.key] ? "✓" : "✗"}
-          </span>
-          <span>{req.label}</span>
+        <div key={req.key} className={styles.passwordRequirement}>
+          <img src={requirements[req.key] ? "/icons/success-icon.svg" : "/icons/error-red-icon.svg"}/>
+          <p>{req.label}</p>
         </div>
       ))}
     </div>
@@ -284,104 +280,113 @@ export default function RegisterForm() {
       <form className={styles.registerForm} onSubmit={handleSubmit}>
         <label className={styles.registerLabel} htmlFor="username">
           Username
+          <TextInput
+            variant="vanilla"
+            type="text"
+            id="userName"
+            name="userName"
+            key="userName"
+            autoComplete="userName"
+            value={fieldState.userName.value}
+            onChange={handleFieldChange("userName")}
+            onBlur={handleFieldBlur("userName", validateUserName)}
+            required
+          />
+          <p className={`${fieldState.userName.touched && fieldState.userName.error ? styles.error : styles.noError}`}>
+            {fieldState.userName.touched && fieldState.userName.error && (
+            <>
+              {fieldState.userName.error}
+            </>
+            )}
+          </p>
         </label>
-        <input
-          className={styles.registerInput}
-          type="text"
-          id="userName"
-          name="userName"
-          key="userName"
-          autoComplete="userName"
-          value={fieldState.userName.value}
-          onChange={handleFieldChange("userName")}
-          onBlur={handleFieldBlur("userName", validateUserName)}
-          required
-        />
-        {fieldState.userName.touched && fieldState.userName.error && (
-          <p className={styles.errorMessage}>{fieldState.userName.error}</p>
-        )}
 
         <label className={styles.registerLabel} htmlFor="username">
           Display name
+          <TextInput
+            variant="vanilla"
+            type="text"
+            id="displayName"
+            name="displayName"
+            key="displayName"
+            value={fieldState.displayName.value}
+            onChange={handleFieldChange("displayName")}
+            onBlur={handleFieldBlur("displayName", validateDisplayName)}
+          />
+          <p className={`${fieldState.displayName.touched && fieldState.displayName.error ? styles.error : styles.noError}`}>
+            {fieldState.displayName.touched && fieldState.displayName.error && (
+              <>
+                {fieldState.displayName.error}
+              </>
+            )}
+          </p>
         </label>
-        <input
-          className={styles.registerInput}
-          type="text"
-          id="displayName"
-          name="displayName"
-          key="displayName"
-          value={fieldState.displayName.value}
-          onChange={handleFieldChange("displayName")}
-          onBlur={handleFieldBlur("displayName", validateDisplayName)}
-        />
-        {fieldState.displayName.touched && fieldState.displayName.error && (
-          <p className={styles.errorMessage}>{fieldState.displayName.error}</p>
-        )}
 
         <label className={styles.registerLabel} htmlFor="username">
           Email
+          <TextInput
+            variant="vanilla"
+            type="email"
+            id="email"
+            name="email"
+            key="email"
+            autoComplete="email"
+            value={fieldState.email.value}
+            onChange={handleFieldChange("email")}
+            onBlur={handleFieldBlur("email", validateEmail)}
+            required
+          />
+            <p className={`${fieldState.email.touched && fieldState.email.error ? styles.error : styles.noError}`}>
+              {fieldState.email.touched && fieldState.email.error && (
+                <>
+                  {fieldState.email.error}
+                </>
+              )}
+            </p>
         </label>
-        <input
-          className={styles.registerInput}
-          type="email"
-          id="email"
-          name="email"
-          key="email"
-          autoComplete="email"
-          value={fieldState.email.value}
-          onChange={handleFieldChange("email")}
-          onBlur={handleFieldBlur("email", validateEmail)}
-          required
-        />
-        {fieldState.email.touched && fieldState.email.error && (
-          <p className={styles.errorMessage}>{fieldState.email.error}</p>
-        )}
 
         <label className={styles.registerLabel} htmlFor="password">
           Password
+          <TextInput
+            variant="vanilla"
+            type="password"
+            id="password"
+            name="password"
+            key="password"
+            autoComplete="new-password"
+            value={fieldState.password.value}
+            onChange={handlePasswordChange}
+            required
+          />
         </label>
-        <input
-          className={styles.registerInput}
-          type="password"
-          id="password"
-          name="password"
-          key="password"
-          autoComplete="new-password"
-          value={fieldState.password.value}
-          onChange={handlePasswordChange}
-          required
-        />
-        <PasswordRequirements requirements={passwordRequirements} />
-
         <label className={styles.registerLabel} htmlFor="password">
           Repeat password
-        </label>
-        <input
-          className={styles.registerInput}
-          type="password"
-          id="confirm-password"
-          name="confirm-password"
-          key="confirm-password"
-          autoComplete="new-password"
-          value={fieldState.confirmPassword.value}
-          onChange={handleConfirmPasswordChange}
-          onBlur={handleConfirmPasswordBlur}
-          required
-        />
-        {fieldState.confirmPassword.touched &&
-          fieldState.confirmPassword.error && (
-            <p className={styles.errorMessage}>
-              {fieldState.confirmPassword.error}
+          <TextInput
+            variant="vanilla"
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            key="confirm-password"
+            autoComplete="new-password"
+            value={fieldState.confirmPassword.value}
+            onChange={handleConfirmPasswordChange}
+            onBlur={handleConfirmPasswordBlur}
+            required
+          />
+            <p className={`${fieldState.confirmPassword.touched && fieldState.confirmPassword.error ? styles.error : styles.noError}`}>
+              {fieldState.confirmPassword.touched &&
+              fieldState.confirmPassword.error && (
+              <>
+                {fieldState.confirmPassword.error}
+              </>
+            )}
             </p>
-          )}
+        </label>
+        <PasswordRequirements requirements={passwordRequirements} />
 
-        <button disabled={!isFormValid()} type="submit">
-          {isLoading ? "Signing up..." : "Sign up"}
-        </button>
+        <Button variant="cornflower" disabled={!isFormValid()} type="submit" buttonText={isLoading ? "Signing up..." : "Sign up"}/>
       </form>
-      <button onClick={() => openModal("login")}>
-        Already have an account? Sign in!
-      </button>
+      <button className={styles.signInButton} onClick={() => openModal("login")}> Already have an account? Sign in! </button>
     </>
   );
 }

@@ -1,5 +1,5 @@
 .textInput {
-    border: none;
+    border: 2px solid transparent;
     outline: none;
     display: flex;
     width: 100%;
@@ -10,20 +10,16 @@
     border-radius: 30px;
 }
 
-/* Prevent invalid styling on initial render */
-.textInput:invalid {
-    box-shadow: none;
-    border: none;
-    outline: none;
-}
-
-.textInput:not(:placeholder-shown):invalid {
-    border: 2px solid var(--rosie-danger);
-}
-
 .textInput::placeholder {
     color: var(--charcoal);
 }
+
+
+/* Prevent invalid styling until user has interaced but then left the field empty */
+.textInput:user-invalid {
+    border: 2px solid var(--rosie-danger);
+}
+
 
 /* variant styles */
 
