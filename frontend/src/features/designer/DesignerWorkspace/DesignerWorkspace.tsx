@@ -210,7 +210,6 @@ export default function DesignerWorkspace({
             {selectedFrame &&
               selectedFrameIndex !== -1 &&
               showSideBar == "single-frame" && (
-              <>
                 <SingleFrameForm
                   frames={customDesign.frames}
                   id={selectedFrame.id}
@@ -234,7 +233,6 @@ export default function DesignerWorkspace({
                     setSelectedFrameId(null);
                   }}
                 />
-              </>
             )}
         </section>
         {isLoading ? (
