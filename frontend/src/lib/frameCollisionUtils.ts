@@ -15,6 +15,24 @@ interface FrameDimensions {
 }
 
 /**
+ * Calculate frame dimensions based on size and orientation
+ */
+const getFrameDimensions = (frameDimensions: FrameDimensions): { width: number; height: number } => {
+  const { frameSize, frameOrientation, gridCellSize } = frameDimensions;
+  const [width, height] = frameSize.split('x').map(Number);
+  
+  const isPortrait = frameOrientation === 'portrait';
+  const frameWidth = isPortrait 
+    ? Math.min(width || 50, height || 70) * gridCellSize
+    : Math.max(width || 50, height || 70) * gridCellSize;
+  const frameHeight = isPortrait
+    ? Math.max(width || 50, height || 70) * gridCellSize
+    : Math.min(width || 50, height || 70) * gridCellSize;
+  
+  return { width: frameWidth, height: frameHeight };
+};
+
+/**
  * Check if two frames overlap
  */
 export const checkOverlap = (
@@ -38,16 +56,7 @@ export const checkCollision = (
   frameDimensions: FrameDimensions,
   occupiedPositions: OccupiedPosition[]
 ): boolean => {
-  const { frameSize, frameOrientation, gridCellSize } = frameDimensions;
-  const [width, height] = frameSize.split('x').map(Number);
-  
-  const isPortrait = frameOrientation === 'portrait';
-  const currentFrameWidth = isPortrait 
-    ? Math.min(width || 50, height || 70) * gridCellSize
-    : Math.max(width || 50, height || 70) * gridCellSize;
-  const currentFrameHeight = isPortrait
-    ? Math.max(width || 50, height || 70) * gridCellSize
-    : Math.min(width || 50, height || 70) * gridCellSize;
+  const { width: currentFrameWidth, height: currentFrameHeight } = getFrameDimensions(frameDimensions);
   
   const newFrame = { 
     x: pos.x, 
@@ -109,4 +118,156 @@ export const findNearestFreePosition = (
   
   console.warn('No free position found on entire wall');
   return null;
+};
+
+/**
+ * Clamp position to avoid overlap with occupied frames during drag
+ */
+export const clampToAvoidCollision = (
+  targetPos: THREE.Vector3,
+  lastValidPos: THREE.Vector3 | null,
+  frameDimensions: FrameDimensions,
+  occupiedPositions: OccupiedPosition[],
+  clampToWallBoundaries: (pos: THREE.Vector3) => THREE.Vector3
+): THREE.Vector3 => {
+  const { width: currentFrameWidth, height: currentFrameHeight } = getFrameDimensions(frameDimensions);
+  
+  const halfWidth = currentFrameWidth / 2;
+  const halfHeight = currentFrameHeight / 2;
+  const padding = 0.01;
+  
+  // Check if position would cause collision
+  const wouldCollide = (pos: THREE.Vector3): boolean => {
+    for (const occupied of occupiedPositions) {
+      const occupiedHalfWidth = occupied.width / 2;
+      const occupiedHalfHeight = occupied.height / 2;
+      
+      const xOverlap = 
+        (pos.x + halfWidth + padding > occupied.x - occupiedHalfWidth) &&
+        (pos.x - halfWidth - padding < occupied.x + occupiedHalfWidth);
+      const yOverlap = 
+        (pos.y + halfHeight + padding > occupied.y - occupiedHalfHeight) &&
+        (pos.y - halfHeight - padding < occupied.y + occupiedHalfHeight);
+      
+      if (xOverlap && yOverlap) {
+        return true;
+      }
+    }
+    return false;
+  };
+  
+  const clampedTarget = clampToWallBoundaries(targetPos);
+  
+  // If no last valid position, just check target
+  if (!lastValidPos) {
+    return wouldCollide(clampedTarget) ? clampedTarget : clampedTarget;
+  }
+  
+  // Move in small steps to handle fast mouse movement
+  const maxStepSize = 0.02; // 2cm max step
+  const deltaX = clampedTarget.x - lastValidPos.x;
+  const deltaY = clampedTarget.y - lastValidPos.y;
+  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  
+  // If movement is small, check new position
+  if (distance <= maxStepSize) {
+    if (!wouldCollide(clampedTarget)) {
+      return clampedTarget;
+    }
+    
+    // Try individual axes
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+    
+    if (absDeltaX >= absDeltaY) {
+      const tryX = new THREE.Vector3(clampedTarget.x, lastValidPos.y, clampedTarget.z);
+      const tryXClamped = clampToWallBoundaries(tryX);
+      if (!wouldCollide(tryXClamped)) return tryXClamped;
+      
+      const tryY = new THREE.Vector3(lastValidPos.x, clampedTarget.y, clampedTarget.z);
+      const tryYClamped = clampToWallBoundaries(tryY);
+      if (!wouldCollide(tryYClamped)) return tryYClamped;
+    } else {
+      const tryY = new THREE.Vector3(lastValidPos.x, clampedTarget.y, clampedTarget.z);
+      const tryYClamped = clampToWallBoundaries(tryY);
+      if (!wouldCollide(tryYClamped)) return tryYClamped;
+      
+      const tryX = new THREE.Vector3(clampedTarget.x, lastValidPos.y, clampedTarget.z);
+      const tryXClamped = clampToWallBoundaries(tryX);
+      if (!wouldCollide(tryXClamped)) return tryXClamped;
+    }
+    
+    return lastValidPos;
+  }
+  
+  // Check movement in steps
+  const steps = Math.ceil(distance / maxStepSize);
+  const stepX = deltaX / steps;
+  const stepY = deltaY / steps;
+  
+  let currentPos = lastValidPos.clone();
+  
+  for (let i = 1; i <= steps; i++) {
+    const nextPos = new THREE.Vector3(
+      lastValidPos.x + stepX * i,
+      lastValidPos.y + stepY * i,
+      clampedTarget.z
+    );
+    
+    const nextPosClamped = clampToWallBoundaries(nextPos);
+    
+    // Try full movement
+    if (!wouldCollide(nextPosClamped)) {
+      currentPos = nextPosClamped;
+      continue;
+    }
+    
+    // Full movement blocked - try individual axes
+    const stepDeltaX = nextPosClamped.x - currentPos.x;
+    const stepDeltaY = nextPosClamped.y - currentPos.y;
+    const absStepDeltaX = Math.abs(stepDeltaX);
+    const absStepDeltaY = Math.abs(stepDeltaY);
+    
+    let moved = false;
+    
+    if (absStepDeltaX >= absStepDeltaY) {
+      // Try x-axis first
+      const tryX = new THREE.Vector3(nextPosClamped.x, currentPos.y, currentPos.z);
+      const tryXClamped = clampToWallBoundaries(tryX);
+      if (!wouldCollide(tryXClamped)) {
+        currentPos = tryXClamped;
+        moved = true;
+      } else {
+        // Try y-axis
+        const tryY = new THREE.Vector3(currentPos.x, nextPosClamped.y, currentPos.z);
+        const tryYClamped = clampToWallBoundaries(tryY);
+        if (!wouldCollide(tryYClamped)) {
+          currentPos = tryYClamped;
+          moved = true;
+        }
+      }
+    } else {
+      // Try y-axis first
+      const tryY = new THREE.Vector3(currentPos.x, nextPosClamped.y, currentPos.z);
+      const tryYClamped = clampToWallBoundaries(tryY);
+      if (!wouldCollide(tryYClamped)) {
+        currentPos = tryYClamped;
+        moved = true;
+      } else {
+        // Try x-axis
+        const tryX = new THREE.Vector3(nextPosClamped.x, currentPos.y, currentPos.z);
+        const tryXClamped = clampToWallBoundaries(tryX);
+        if (!wouldCollide(tryXClamped)) {
+          currentPos = tryXClamped;
+          moved = true;
+        }
+      }
+    }
+    
+    if (!moved) {
+      break;
+    }
+  }
+  
+  return currentPos;
 };
