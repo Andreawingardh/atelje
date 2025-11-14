@@ -135,6 +135,7 @@ export default function DesignerWorkspace({
         clearTimeout(timeoutId);
       };
     }
+    return;
   }, [errorMessage]);
 
   const handleSave = async () => {
@@ -165,7 +166,6 @@ export default function DesignerWorkspace({
     if (!selectedFrame) setShowSideBar("frames");
     if (selectedFrame) setShowSideBar("single-frame");
   }, [selectedFrame]);
-
 
   return (
     <>
