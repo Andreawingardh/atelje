@@ -46,8 +46,6 @@ export default function DesignerPage() {
     addOccupiedPosition,
   } = useCustomDesign();
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   useUnsavedChangesWarning(hasUnsavedChanges);
 
   //This loads the design
