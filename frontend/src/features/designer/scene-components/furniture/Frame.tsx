@@ -50,7 +50,7 @@ export const Frame: React.FC<FrameProps> = ({
     const frameThickness = 4 * gridCellSize; // 4 cm thickness
     const groupRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [position, setPosition] = useState({ x: 100, y: 150 });
+    const [position, setPosition] = useState({ x: 0, y: 0 });
     const dragOffset = useRef(new THREE.Vector3());
     const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     const isInitialized = useRef(false); // To prevent initial clamping effect before first position set
@@ -174,8 +174,15 @@ export const Frame: React.FC<FrameProps> = ({
         if (groupRef.current && framePosition) {
             groupRef.current.position.set(framePosition[0], framePosition[1], frameZPlacement);
             isInitialized.current = true;
+            
+            const worldPos = new THREE.Vector3(framePosition[0], framePosition[1], framePosition[2]);
+            const displayPos = worldToLowerLeft(worldPos);
+            setPosition({
+                x: Math.round(displayPos.x / gridCellSize),
+                y: Math.round(displayPos.y / gridCellSize)
+            });
         }
-    }, [framePosition, frameZPlacement]);
+    }, [framePosition, frameZPlacement, gridCellSize, frameWidth, frameHeight, wallWidth]);
 
     
     // Helper function to snap to our 1x1cm grid
