@@ -1,3 +1,33 @@
+.topBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem 0.25rem 1rem;
+}
+
+.topBarDividerLeft {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14rem;
+}
+
+.topBarDividerRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.unsavedChanges {
+    font-size: 0.875rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    background: var(--buttercup-warning);
+    color: var(--snowdrop);
+}
+
 .workspaceSection {
     display: flex;
     flex-direction: row;
@@ -35,6 +65,7 @@
 
 /* Frames selected scenario */
 .sofaButtonBase {
+    font-size: 1.25rem;
     z-index: 10;
     width: 80%;
     height: 2.5rem;
@@ -51,6 +82,7 @@
 }
 
 .framesButtonActive {
+    font-size: 1.25rem;
     z-index: 15;
     width: 80%;
     height: 2.5rem;
@@ -67,6 +99,7 @@
 
 /* Sofa selected scenario */
 .framesButtonBase {
+    font-size: 1.25rem;
     z-index: 10;
     width: 80%;
     height: 2.5rem;
@@ -83,6 +116,7 @@
 }
 
 .sofaButtonActive {
+    font-size: 1.25rem;
     z-index: 15;
     width: 80%;
     height: 2.5rem;

@@ -156,26 +156,30 @@ export default function DesignerWorkspace({
 
   return (
     <>
-      <CircleButton variant="vanilla" buttonIcon={"/icons/arrow-icon.svg"} onClick={() => {router.back()}}/>
-      <StructuralForm
-        wallWidth={customDesign.wallWidth}
-        setWallWidth={setWallWidth}
-        ceilingHeight={customDesign.ceilingHeight}
-        setCeilingHeight={setCeilingHeight}
-        wallColor={customDesign.wallColor}
-        setWallColor={setWallColor}
-        flooring={customDesign.flooring}
-        setFlooring={setFlooring}
-      />
-      {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
-      <div>
-        <CircleButton variant="vanilla" buttonIcon="/icons/save-icon.svg" onClick={handleSaveClick} disabled={!hasUnsavedChanges} />
-        <DownloadScreenshotButton 
-          screenshotUrl={screenshotUrl}
-          designName={designName || 'design'}
-        />
-        {error && <p>{error}</p>}
-      </div>
+      <section className={styles.topBar}>
+        <div className={styles.topBarDividerLeft}>
+          <CircleButton variant="vanilla" buttonIcon={"/icons/arrow-icon.svg"} onClick={() => {router.back()}}/>
+          <StructuralForm
+            wallWidth={customDesign.wallWidth}
+            setWallWidth={setWallWidth}
+            ceilingHeight={customDesign.ceilingHeight}
+            setCeilingHeight={setCeilingHeight}
+            wallColor={customDesign.wallColor}
+            setWallColor={setWallColor}
+            flooring={customDesign.flooring}
+            setFlooring={setFlooring}
+          />
+        </div>
+        <div className={styles.topBarDividerRight}>
+          {hasUnsavedChanges && <p className={styles.unsavedChanges}>You have unsaved changes!</p>}
+          <CircleButton variant="vanilla" buttonIcon="/icons/save-icon.svg" onClick={handleSaveClick} disabled={!hasUnsavedChanges} />
+          <DownloadScreenshotButton 
+            screenshotUrl={screenshotUrl}
+            designName={designName || 'design'}
+          />
+          {error && <p>{error}</p>}
+        </div>
+      </section>
       <section className={styles.workspaceSection}>
         <section className={styles.sideBarForm}>
           {!selectedFrame && (

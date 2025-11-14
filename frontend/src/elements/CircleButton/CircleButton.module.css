@@ -67,5 +67,6 @@
   .disabled {
     background: var(--dark-vanilla);
     color: var(--vanilla);
+    stroke: var(--vanilla);
     cursor: not-allowed;
   }
