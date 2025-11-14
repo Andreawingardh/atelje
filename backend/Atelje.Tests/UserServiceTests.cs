@@ -292,6 +292,39 @@ public class UserServiceTests
         Assert.False(result);
     }
     
+    [Fact]
+    public async Task DeleteUser_WithDesigns_AlsoDeletesDesigns()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase(databaseName: "TestDb_CascadeDelete")
+            .Options;
+
+        await using var context = new AppDbContext(options);
+    
+        // Create a user
+        var user = new User { Id = "user1", Email = "test@test.com", UserName = "test" };
+        context.Users.Add(user);
+    
+        // Create a design for that user
+        var design = new Design 
+        { 
+            UserId = "user1", 
+            Name = "Test Design",
+            DesignData = "{}"
+        };
+        context.Designs.Add(design);
+        await context.SaveChangesAsync();
+    
+        // Act - delete the user
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
+    
+        // Assert - check designs are gone
+        var remainingDesigns = await context.Designs.Where(d => d.UserId == "user1").ToListAsync();
+        Assert.Empty(remainingDesigns);
+    }
+    
     // Helper method to mock UserManager
     private static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
     {

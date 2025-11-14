@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree, ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { checkCollision, findNearestFreePosition, clampToAvoidCollision } from '@/lib/frameCollisionUtils';
 
 type FrameProps = {
     frameColor: string;
@@ -19,6 +20,13 @@ type FrameProps = {
     onDragEnd?: () => void;
     framePosition?: [number, number, number];
     onPositionChange?: (position: THREE.Vector3) => void;
+    occupiedPositions?: Array<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        frameId: string;
+    }>;
 }
 
 export const Frame: React.FC<FrameProps> = ({
@@ -36,15 +44,18 @@ export const Frame: React.FC<FrameProps> = ({
     onDragStart,
     onDragEnd,
     framePosition = [0, 1.5, 0],
-    onPositionChange
+    onPositionChange,
+    occupiedPositions = []
 }) => {
     const frameThickness = 4 * gridCellSize; // 4 cm thickness
     const groupRef = useRef<THREE.Group>(null);
     const [isDragging, setIsDragging] = useState(false);
-    const [position, setPosition] = useState({ x: 100, y: 150 });
+    const [position, setPosition] = useState({ x: 0, y: 0 });
     const dragOffset = useRef(new THREE.Vector3());
     const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     const isInitialized = useRef(false); // To prevent initial clamping effect before first position set
+    const [hasCollision, setHasCollision] = useState(false);
+    const lastValidPosition = useRef<THREE.Vector3 | null>(null);
     
     const { camera, gl, raycaster } = useThree();
 
@@ -161,13 +172,18 @@ export const Frame: React.FC<FrameProps> = ({
 
     // Initialize position from props
     useEffect(() => {
-        console.log('Frame position effect running:', framePosition, 'Z:', frameZPlacement);
         if (groupRef.current && framePosition) {
             groupRef.current.position.set(framePosition[0], framePosition[1], frameZPlacement);
-            console.log('Set position to:', framePosition[0], framePosition[1], frameZPlacement);
             isInitialized.current = true;
+            
+            const worldPos = new THREE.Vector3(framePosition[0], framePosition[1], framePosition[2]);
+            const displayPos = worldToLowerLeft(worldPos);
+            setPosition({
+                x: Math.round(displayPos.x / gridCellSize),
+                y: Math.round(displayPos.y / gridCellSize)
+            });
         }
-    }, [framePosition, frameZPlacement]);
+    }, [framePosition, frameZPlacement, gridCellSize, frameWidth, frameHeight, wallWidth]);
 
     
     // Helper function to snap to our 1x1cm grid
@@ -189,6 +205,9 @@ export const Frame: React.FC<FrameProps> = ({
         // Get the frame's current world position
         const framePosition = new THREE.Vector3();
         groupRef.current.getWorldPosition(framePosition);
+
+        // Store starting position as last valid position
+        lastValidPosition.current = framePosition.clone();
     
         // Cast a ray to the wall at the current mouse position
         const pointer = new THREE.Vector2(
@@ -233,7 +252,13 @@ export const Frame: React.FC<FrameProps> = ({
         newPosition.y = snapToGrid(newPosition.y, gridCellSize);
         
         // Clamp to wall boundaries
-        newPosition = clampToWallBoundaries(newPosition);
+        newPosition = clampToAvoidCollision(newPosition, lastValidPosition.current, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries);
+
+        // Update last valid position
+        lastValidPosition.current = newPosition.clone();
+
+        // Check for collision while dragging and update state
+        setHasCollision(checkCollision(newPosition, { frameSize, frameOrientation, gridCellSize }, occupiedPositions));
     
         // Apply the new position
         if (groupRef.current.parent) {
@@ -257,6 +282,51 @@ export const Frame: React.FC<FrameProps> = ({
 
     const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
         if (isDragging) {
+            // Get current position
+            const currentPos = new THREE.Vector3();
+            if (groupRef.current) {
+                groupRef.current.getWorldPosition(currentPos);
+            }
+        
+            // Test collision detection
+            const collisionDetected = checkCollision(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions);
+
+            setHasCollision(collisionDetected);
+
+            if (collisionDetected) {
+                // Find nearest free position
+                const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries, wallWidth, ceilingHeight);
+            
+                if (freePos) {
+                    // Move frame to the free position
+                    if (groupRef.current) {
+                        if (groupRef.current.parent) {
+                            const localPosition = groupRef.current.parent.worldToLocal(freePos.clone());
+                            groupRef.current.position.copy(localPosition);
+                        } else {
+                            groupRef.current.position.copy(freePos);
+                        }
+                
+                        // Update position display
+                        const displayPos = worldToLowerLeft(freePos);
+                        setPosition({
+                            x: Math.round(displayPos.x / gridCellSize),
+                            y: Math.round(displayPos.y / gridCellSize)
+                        });
+                
+                        // Notify parent of new position
+                        onPositionChange?.(freePos);
+                    }
+                } else {
+                    // No free position found anywhere on wall
+                    alert('Wall is completely full! Remove some frames.');
+                    console.error('Cannot place frame - wall is full');
+                }
+            } else {
+                // Clear collision state when released without collision
+                setHasCollision(false);
+            }
+
             setIsDragging(false);
             onDragEnd?.();
             (e.target as HTMLElement).releasePointerCapture(e.pointerId);
@@ -267,14 +337,12 @@ export const Frame: React.FC<FrameProps> = ({
     useEffect(() => {
         if (imageUrl) {
             const loader = new THREE.TextureLoader();
-            console.log('Loading texture from URL:', imageUrl);
             loader.load(
                 imageUrl,
                 (loadedTexture) => {
                     loadedTexture.colorSpace = THREE.SRGBColorSpace;
                     loadedTexture.needsUpdate = true;
                     setImageTexture(loadedTexture);
-                    console.log('Texture loaded successfully');
                 },
                 undefined,
                 (error) => {
@@ -329,22 +397,22 @@ export const Frame: React.FC<FrameProps> = ({
                     {/* Top border */}
                     <mesh position={[0, frameHeight / 2, 0]}>
                         <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                     {/* Bottom border */}
                     <mesh position={[0, -frameHeight / 2, 0]}>
                         <boxGeometry args={[frameWidth + 0.01, 0.015, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                     {/* Left border */}
                     <mesh position={[-frameWidth / 2, 0, 0]}>
                         <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                     {/* Right border */}
                     <mesh position={[frameWidth / 2, 0, 0]}>
                         <boxGeometry args={[0.015, frameHeight + 0.01, frameDepth + 0.01]} />
-                        <meshBasicMaterial color="#5877c9" />
+                        <meshBasicMaterial color={hasCollision ? '#8C3535' : '#5877c9'} />
                     </mesh>
                 </>
             )}

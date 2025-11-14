@@ -9,3 +9,16 @@
 .title {
     text-align: center;
 }
+
+.pwReqSuccess {
+  color: green;
+}
+
+.pwReqFailure {
+  color: red;
+}
+
+.passwordRequirements {
+  margin-top: 8px;
+  font-size: 14px;
+}

@@ -39,14 +39,16 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Require unique email
-    options.User.RequireUniqueEmail = false; //@TODO: Change back to true when done testing
+    options.User.RequireUniqueEmail = true; 
+    options.User.AllowedUserNameCharacters = 
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
 
     // Password settings (optional, but good to be explicit)
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 6;
+    options.Password.RequiredLength = 8;
 });
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDesignService, DesignService>();

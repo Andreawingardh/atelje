@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './FrameForm.module.css';
 import { stockPhotos } from "@/lib/stockPhotos";
+import { checkOverlap } from "@/lib/frameCollisionUtils";
 
 export interface FrameData {
   id: string;
@@ -48,19 +49,6 @@ export default function FrameForm({
     { size: '20x30', label: '20x30 cm' },
     { size: '13x18', label: '13x18 cm' }
   ];
-
-  const checkOverlap = (
-    rect1: { x: number; y: number; width: number; height: number },
-    rect2: { x: number; y: number; width: number; height: number },
-    padding: number = 0.03 // 3cm padding
-  ): boolean => {
-    return !(
-      rect1.x + rect1.width / 2 + padding < rect2.x - rect2.width / 2 ||
-      rect1.x - rect1.width / 2 - padding > rect2.x + rect2.width / 2 ||
-      rect1.y + rect1.height / 2 + padding < rect2.y - rect2.height / 2 ||
-      rect1.y - rect1.height / 2 - padding > rect2.y + rect2.height / 2
-    );
-  };
 
   const getRandomPosition = (frameSize: string, frameId: string): [number, number, number] | null => {
     const [width, height] = frameSize.split('x').map(Number);
