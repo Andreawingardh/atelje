@@ -112,9 +112,7 @@ export default function DesignerWorkspace({
   };
 
   useEffect(() => {
-    console.log("Auth check:", { pendingAction, user: !!user });
     if (pendingAction === "save" && user) {
-      console.log("Opening save-design modal");
       setPendingAction(null);
       openModal("save-design", {
         callbacks: { saveDesignName: onDesignNameChange },
@@ -123,9 +121,7 @@ export default function DesignerWorkspace({
   }, [pendingAction, user]);
 
   useEffect(() => {
-    console.log("Design name changed:", { designName, hasUnsavedChanges });
     if (designName && hasUnsavedChanges) {
-      console.log("Calling handleSave");
       handleSave();
     }
   }, [designName]);
@@ -170,7 +166,6 @@ export default function DesignerWorkspace({
     if (selectedFrame) setShowSideBar("single-frame");
   }, [selectedFrame]);
 
-  console.log(designName);
 
   return (
     <>

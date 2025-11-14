@@ -80,32 +80,28 @@ export default function DesignerPage() {
     thumbnailBlob: Blob;
   }) {
     const sceneData = getSceneData();
-    try {
-      if (!id) {
-        setErrorMessage("couldn't find ID");
-        return;
-      }
-      const result = await saveDesign(id, designName, sceneData, screenshots);
-      if (result) {
-        markAsSaved();
-      }
-    } catch (error) {
-      setErrorMessage(
-        error instanceof ApiError
-          ? error.body?.errors[0] || "Save failed"
-          : "An unexpected error occurred"
-      );
+    if (!id) {
+      console.error("Design ID is missing - this should never happen");
+      return;
+    }
+    const result = await saveDesign(id, designName, sceneData, screenshots);
+    if (result) {
+      markAsSaved();
     }
   }
-
-  console.log("Has unsaved changes:", hasUnsavedChanges);
-  console.log("🎨 DesignerPage render - hasUnsavedChanges:", hasUnsavedChanges);
 
   return (
     <ProtectedRoute>
       <h1>this is the ID page</h1>
+
       {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
-        <button onClick={() => {router.back()}}>Back</button>
+      <button
+        onClick={() => {
+          router.back();
+        }}
+      >
+        Back
+      </button>
       <DesignerWorkspace
         designName={designName}
         onDesignNameChange={setDesignName}

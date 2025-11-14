@@ -44,20 +44,10 @@ export default function NewDesignPage() {
     thumbnailBlob: Blob;
   }) {
     const sceneData = getSceneData();
-    try {
-      const newDesign = await createDesign(designName, sceneData, screenshots);
-      console.log("About to create design with sceneData:", sceneData);
-      console.log("Parsed:", JSON.parse(sceneData));
-      if (newDesign) {
-        router.push(`/designer/${newDesign.id}`);
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage(
-        error instanceof ApiError
-          ? error.body?.errors[0] || "Save failed"
-          : "An unexpected error occurred"
-      );
+    const newDesign = await createDesign(designName, sceneData, screenshots);
+
+    if (newDesign) {
+      router.push(`/designer/${newDesign.id}`);
     }
   }
 
