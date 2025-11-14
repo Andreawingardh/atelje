@@ -10,7 +10,6 @@ export interface TextInputProps
 
 export default function TextInput({
   value,
-  defaultValue = "",
   className = "",
   variant = "vanilla",
   ...props
@@ -24,7 +23,6 @@ export default function TextInput({
     <input
       className={`${styles.textInput} ${variantClass} ${className}`}
       value={value}
-      defaultValue={defaultValue}
       {...props}
     />
   );

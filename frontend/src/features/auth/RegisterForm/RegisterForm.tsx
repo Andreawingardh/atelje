@@ -49,7 +49,9 @@ function PasswordRequirements({
     <div className={styles.passwordRequirements}>
       {requirementsList.map((req) => (
         <div key={req.key} className={styles.passwordRequirement}>
-          <img src={requirements[req.key] ? "/icons/success-icon.svg" : "/icons/error-red-icon.svg"}/>
+          <img 
+            src={requirements[req.key] ? "/icons/success-icon.svg" : "/icons/error-red-icon.svg"} 
+            alt={requirements[req.key] ? "fulfilled" : "not fulfilled"}/>
           <p>{req.label}</p>
         </div>
       ))}
