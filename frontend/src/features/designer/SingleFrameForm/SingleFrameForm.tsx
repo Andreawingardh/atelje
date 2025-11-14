@@ -69,10 +69,9 @@ export default function SingleFrameForm({
   }, [imageUrl]);
 
   return (
-    <form className={styles.frameForm}>
+    <form className={styles.singleFrameForm}>
       <h3 className={styles.formTitle}>Modify frame</h3>
       <hr className={styles.formDividerDark} />
-      <div className={styles.singleFrameForm}>
         <label className={styles.singleFrameLabel}>Color
           <div className={styles.colorPickerContainer}>
             <div 
@@ -245,7 +244,6 @@ export default function SingleFrameForm({
             buttonText="Delete Frame"
             className={styles.deleteButton}
           />
-      </div>
     </form>
   );
 };
