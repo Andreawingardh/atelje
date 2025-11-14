@@ -9,20 +9,22 @@ export interface TextInputProps
 }
 
 export default function TextInput({
-  value = "",
+  value,
+  defaultValue = "",
   className = "",
   variant = "vanilla",
   ...props
 }: TextInputProps) {
     const variantClass = {
-        snowdrop: styles.snowdrop,
-        vanilla: styles.vanilla,
+        snowdrop: styles.snowdropTextInput,
+        vanilla: styles.vanillaTextInput,
       }[variant];
       
   return (
     <input
       className={`${styles.textInput} ${variantClass} ${className}`}
       value={value}
+      defaultValue={defaultValue}
       {...props}
     />
   );

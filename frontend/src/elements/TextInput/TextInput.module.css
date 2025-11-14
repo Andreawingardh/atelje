@@ -5,10 +5,36 @@
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-bottom: 16px;
     font-size: 1.25rem;
     padding: 0.3rem 1rem;
     border-radius: 30px;
+}
+
+/* Prevent invalid styling on initial render */
+.textInput:invalid {
+    box-shadow: none;
+    border: none;
+    outline: none;
+}
+
+.textInput:not(:placeholder-shown):invalid {
+    border: 2px solid var(--rosie-danger);
+}
+
+.textInput::placeholder {
+    color: var(--charcoal);
+}
+
+/* variant styles */
+
+.vanillaTextInput {
+    background: var(--vanilla);
+    color: var(--charcoal);
+}
+
+.snowdropTextInput {
+    background: var(--snowdrop);
+    color: var(--charcoal);
 }
 
 .textInput::placeholder {
