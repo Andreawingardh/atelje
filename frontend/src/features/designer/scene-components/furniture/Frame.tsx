@@ -191,7 +191,7 @@ export const Frame: React.FC<FrameProps> = ({
         return Math.round(value / gridSize) * gridSize;
     };
 
-    // Helper function to get pointer coordinates relative to canvas
+    // Helper function to get normalized pointer coordinates relative to canvas
     const getPointerCoordinates = (e: ThreeEvent<PointerEvent>): THREE.Vector2 => {
         const rect = gl.domElement.getBoundingClientRect();
         return new THREE.Vector2(
@@ -294,8 +294,6 @@ export const Frame: React.FC<FrameProps> = ({
             // Test collision detection
             const collisionDetected = checkCollision(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions);
 
-            setHasCollision(collisionDetected);
-
             if (collisionDetected) {
                 // Find nearest free position
                 const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries, wallWidth, ceilingHeight);
@@ -320,6 +318,7 @@ export const Frame: React.FC<FrameProps> = ({
                         // Notify parent of new position
                         onPositionChange?.(freePos);
                     }
+                    setHasCollision(false);
                 } else {
                     // No free position found anywhere on wall
                     alert('Wall is completely full! Remove some frames.');
