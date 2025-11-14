@@ -209,10 +209,13 @@ export const Frame: React.FC<FrameProps> = ({
         // Store starting position as last valid position
         lastValidPosition.current = framePosition.clone();
     
+        // Get the correct canvas bounds
+        const rect = gl.domElement.getBoundingClientRect();
+        
         // Cast a ray to the wall at the current mouse position
         const pointer = new THREE.Vector2(
-            (e.clientX / gl.domElement.clientWidth) * 2 - 1,
-            -(e.clientY / gl.domElement.clientHeight) * 2 + 1
+            ((e.clientX - rect.left) / rect.width) * 2 - 1,
+            -((e.clientY - rect.top) / rect.height) * 2 + 1
         );
 
         raycaster.setFromCamera(pointer, camera);
@@ -232,10 +235,12 @@ export const Frame: React.FC<FrameProps> = ({
     const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
         if (!isDragging || !groupRef.current || !wallMesh || !selected) return;
         e.stopPropagation();
-    
+        
+        const rect = gl.domElement.getBoundingClientRect();
+        
         const pointer = new THREE.Vector2(
-            (e.clientX / gl.domElement.clientWidth) * 2 - 1,
-            -(e.clientY / gl.domElement.clientHeight) * 2 + 1
+            ((e.clientX - rect.left) / rect.width) * 2 - 1,
+            -((e.clientY - rect.top) / rect.height) * 2 + 1
         );
     
         raycaster.setFromCamera(pointer, camera);
