@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
-import { ApiError } from "@/api/generated";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
 
 export default function NewDesignPage() {

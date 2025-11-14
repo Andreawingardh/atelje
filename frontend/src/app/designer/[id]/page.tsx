@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useAuth } from "@/contexts/AuthContext";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
-import { ApiError } from "@/api/generated";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
 import { ProtectedRoute } from "@/features/auth/ProtectedRoute/ProtectedRoute";
 
