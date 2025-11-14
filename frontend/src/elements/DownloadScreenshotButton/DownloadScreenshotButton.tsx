@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { downloadScreenshotFromR2 } from "@/lib/downloadScreenshot";
+import CircleButton from "../CircleButton/CircleButton";
 
 interface DownloadScreenshotButtonProps {
   screenshotUrl?: string | null;
@@ -43,7 +44,9 @@ export function DownloadScreenshotButton({
 
   return (
     <div>
-      <button
+      <CircleButton
+        variant="vanilla"
+        buttonIcon="/icons/upload-icon.svg"
         onClick={handleDownload}
         disabled={isDisabled}
         title={
@@ -54,23 +57,7 @@ export function DownloadScreenshotButton({
             : "Download screenshot"
         }
         className={className}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: isDisabled ? "not-allowed" : "pointer",
-          opacity: isDisabled ? 0.4 : 1,
-        }}
-      >
-        <Image
-          src="/icons/upload-icon.svg"
-          alt="Download screenshot icon"
-          width={size}
-          height={size}
-          style={{
-            filter: isDisabled ? "grayscale(100%)" : "none",
-          }}
-        />
-      </button>
+      />
       {error && <span style={{ color: "red", fontSize: "12px" }}>{error}</span>}
     </div>
   );

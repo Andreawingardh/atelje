@@ -7,8 +7,6 @@ import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import DesignerWorkspace from "@/features/designer/DesignerWorkspace/DesignerWorkspace";
 import { ApiError } from "@/api/generated";
 import { useUnsavedChangesWarning } from "@/lib/useUnsavedChangesWarning";
-import Button from "@/elements/Button/Button";
-import CircleButton from "@/elements/CircleButton/CircleButton";
 
 export default function NewDesignPage() {
   const { createDesign, isLoading, error } = useDesign();
@@ -66,14 +64,6 @@ export default function NewDesignPage() {
   return (
     <>
       {errorMessage && <p>{errorMessage}</p>}
-      {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
-      <CircleButton
-        variant="vanilla"
-        buttonIcon={"/icons/arrow-icon.svg"}
-        onClick={() => {
-          router.back();
-        }}
-      />
       <DesignerWorkspace
         designName={designName}
         onDesignNameChange={setDesignName}

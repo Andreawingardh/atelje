@@ -1,5 +1,6 @@
 import { useCustomDesign } from "@/features/designs/useCustomDesign";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import FurnitureForm, { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import StructuralForm from "../StructuralForm/StructuralForm";
 import SingleFrameForm from "../SingleFrameForm/SingleFrameForm";
@@ -11,6 +12,7 @@ import { DownloadScreenshotButton } from "@/elements/DownloadScreenshotButton/Do
 import styles from "./DesignerWorkspace.module.css";
 import { useModal } from "@/contexts/ModalContext";
 import { useAuth } from "@/contexts/AuthContext";
+import CircleButton from "@/elements/CircleButton/CircleButton";
 
 interface OccupiedPosition {
   x: number;
@@ -83,6 +85,7 @@ export default function DesignerWorkspace({
   addOccupiedPosition,
 }: DesignerWorkspaceProps) {
   const { user } = useAuth();
+  const router = useRouter();
   const [pendingAction, setPendingAction] = useState<"save" | null>(null);
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
   const [showSideBar, setShowSideBar] = useState<
@@ -153,6 +156,7 @@ export default function DesignerWorkspace({
 
   return (
     <>
+      <CircleButton variant="vanilla" buttonIcon={"/icons/arrow-icon.svg"} onClick={() => {router.back()}}/>
       <StructuralForm
         wallWidth={customDesign.wallWidth}
         setWallWidth={setWallWidth}
@@ -163,10 +167,9 @@ export default function DesignerWorkspace({
         flooring={customDesign.flooring}
         setFlooring={setFlooring}
       />
+      {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
       <div>
-        <button onClick={handleSaveClick} disabled={!hasUnsavedChanges}>
-          {isLoading ? "Saving" : "Save"}
-        </button>
+        <CircleButton variant="vanilla" buttonIcon="/icons/save-icon.svg" onClick={handleSaveClick} disabled={!hasUnsavedChanges} />
         <DownloadScreenshotButton 
           screenshotUrl={screenshotUrl}
           designName={designName || 'design'}
