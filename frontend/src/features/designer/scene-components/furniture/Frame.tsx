@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree, ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
-import { checkCollision, findNearestFreePosition } from '@/lib/frameCollisionUtils';
+import { checkCollision, findNearestFreePosition, clampToAvoidCollision } from '@/lib/frameCollisionUtils';
 
 type FrameProps = {
     frameColor: string;
@@ -55,6 +55,7 @@ export const Frame: React.FC<FrameProps> = ({
     const [ImageTexture, setImageTexture] = useState<THREE.Texture | null>(null);
     const isInitialized = useRef(false); // To prevent initial clamping effect before first position set
     const [hasCollision, setHasCollision] = useState(false);
+    const lastValidPosition = useRef<THREE.Vector3 | null>(null);
     
     const { camera, gl, raycaster } = useThree();
 
@@ -197,6 +198,9 @@ export const Frame: React.FC<FrameProps> = ({
         // Get the frame's current world position
         const framePosition = new THREE.Vector3();
         groupRef.current.getWorldPosition(framePosition);
+
+        // Store starting position as last valid position
+        lastValidPosition.current = framePosition.clone();
     
         // Cast a ray to the wall at the current mouse position
         const pointer = new THREE.Vector2(
@@ -241,7 +245,10 @@ export const Frame: React.FC<FrameProps> = ({
         newPosition.y = snapToGrid(newPosition.y, gridCellSize);
         
         // Clamp to wall boundaries
-        newPosition = clampToWallBoundaries(newPosition);
+        newPosition = clampToAvoidCollision(newPosition, lastValidPosition.current, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries);
+
+        // Update last valid position
+        lastValidPosition.current = newPosition.clone();
 
         // Check for collision while dragging and update state
         setHasCollision(checkCollision(newPosition, { frameSize, frameOrientation, gridCellSize }, occupiedPositions));
