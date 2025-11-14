@@ -191,6 +191,15 @@ export const Frame: React.FC<FrameProps> = ({
         return Math.round(value / gridSize) * gridSize;
     };
 
+    // Helper function to get pointer coordinates relative to canvas
+    const getPointerCoordinates = (e: ThreeEvent<PointerEvent>): THREE.Vector2 => {
+        const rect = gl.domElement.getBoundingClientRect();
+        return new THREE.Vector2(
+            ((e.clientX - rect.left) / rect.width) * 2 - 1,
+            -((e.clientY - rect.top) / rect.height) * 2 + 1
+        );
+    };
+
     const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
 
@@ -209,14 +218,8 @@ export const Frame: React.FC<FrameProps> = ({
         // Store starting position as last valid position
         lastValidPosition.current = framePosition.clone();
     
-        // Get the correct canvas bounds
-        const rect = gl.domElement.getBoundingClientRect();
-        
         // Cast a ray to the wall at the current mouse position
-        const pointer = new THREE.Vector2(
-            ((e.clientX - rect.left) / rect.width) * 2 - 1,
-            -((e.clientY - rect.top) / rect.height) * 2 + 1
-        );
+        const pointer = getPointerCoordinates(e);
 
         raycaster.setFromCamera(pointer, camera);
         const intersects = raycaster.intersectObject(wallMesh);
@@ -235,13 +238,8 @@ export const Frame: React.FC<FrameProps> = ({
     const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
         if (!isDragging || !groupRef.current || !wallMesh || !selected) return;
         e.stopPropagation();
-        
-        const rect = gl.domElement.getBoundingClientRect();
-        
-        const pointer = new THREE.Vector2(
-            ((e.clientX - rect.left) / rect.width) * 2 - 1,
-            -((e.clientY - rect.top) / rect.height) * 2 + 1
-        );
+    
+        const pointer = getPointerCoordinates(e);
     
         raycaster.setFromCamera(pointer, camera);
         const intersects = raycaster.intersectObject(wallMesh);
