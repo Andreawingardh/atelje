@@ -1,0 +1,71 @@
+.base {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .buttonIcon {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .snowdrop {
+    background: var(--snowdrop);
+    color: var(--charcoal);
+  }
+
+  .snowdrop:hover {
+    background: var(--vanilla);
+    color: var(--charcoal);
+  }
+  
+  .terracotta {
+    background: var(--terracotta);
+    color: var(--snowdrop);
+  }
+
+  .terracotta:hover {
+    background: var(--terracotta-dark);
+    color: var(--snowdrop);
+  }
+
+  .cornflower {
+    background: var(--cornflower-active);
+    color: var(--snowdrop);
+  }
+
+  .cornflower:hover {
+    background: var(--cornflower-dark);
+    color: var(--snowdrop);
+  }
+
+  .rosie {
+    background: var(--rosie-danger);
+    color: var(--snowdrop);
+  }
+
+  .rosie:hover {
+    background: var(--rosie-danger-dark);
+    color: var(--snowdrop);
+  }
+
+  .vanilla {
+    background: var(--vanilla);
+    color: var(--charcoal);
+  }
+
+  .vanilla:hover {
+    background: var(--dark-vanilla);
+    color: var(--charcoal);
+  }
+  
+  .disabled {
+    background: var(--dark-vanilla);
+    color: var(--vanilla);
+    cursor: not-allowed;
+  }
