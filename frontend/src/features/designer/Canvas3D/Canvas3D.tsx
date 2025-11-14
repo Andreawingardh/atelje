@@ -1,5 +1,5 @@
 import styles from "./Canvas3D.module.css";
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -11,6 +11,7 @@ import { Sofa } from "../scene-components/furniture/Sofa";
 import { FurnitureColor } from "../FurnitureForm/FurnitureForm";
 import { Frame } from "../scene-components/furniture/Frame";
 import { FrameData } from "../FrameForm/FrameForm";
+import { preloadTextures } from "@/lib/preloadTextures";
 
 interface Canvas3DProps {
   wallWidth: number;
@@ -37,6 +38,10 @@ interface Canvas3DProps {
 }
 
 export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef, occupiedPositions } : Canvas3DProps) {
+
+useEffect(() => {
+    preloadTextures();
+  }, []);
 
 const cellSize = 0.01; // 1 cm
 const floorSize = Math.max(wallWidth, 300);
