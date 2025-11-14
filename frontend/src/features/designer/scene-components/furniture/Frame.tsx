@@ -191,6 +191,15 @@ export const Frame: React.FC<FrameProps> = ({
         return Math.round(value / gridSize) * gridSize;
     };
 
+    // Helper function to get normalized pointer coordinates relative to canvas
+    const getPointerCoordinates = (e: ThreeEvent<PointerEvent>): THREE.Vector2 => {
+        const rect = gl.domElement.getBoundingClientRect();
+        return new THREE.Vector2(
+            ((e.clientX - rect.left) / rect.width) * 2 - 1,
+            -((e.clientY - rect.top) / rect.height) * 2 + 1
+        );
+    };
+
     const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
 
@@ -210,10 +219,7 @@ export const Frame: React.FC<FrameProps> = ({
         lastValidPosition.current = framePosition.clone();
     
         // Cast a ray to the wall at the current mouse position
-        const pointer = new THREE.Vector2(
-            (e.clientX / gl.domElement.clientWidth) * 2 - 1,
-            -(e.clientY / gl.domElement.clientHeight) * 2 + 1
-        );
+        const pointer = getPointerCoordinates(e);
 
         raycaster.setFromCamera(pointer, camera);
         const intersects = raycaster.intersectObject(wallMesh);
@@ -233,10 +239,7 @@ export const Frame: React.FC<FrameProps> = ({
         if (!isDragging || !groupRef.current || !wallMesh || !selected) return;
         e.stopPropagation();
     
-        const pointer = new THREE.Vector2(
-            (e.clientX / gl.domElement.clientWidth) * 2 - 1,
-            -(e.clientY / gl.domElement.clientHeight) * 2 + 1
-        );
+        const pointer = getPointerCoordinates(e);
     
         raycaster.setFromCamera(pointer, camera);
         const intersects = raycaster.intersectObject(wallMesh);
@@ -291,8 +294,6 @@ export const Frame: React.FC<FrameProps> = ({
             // Test collision detection
             const collisionDetected = checkCollision(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions);
 
-            setHasCollision(collisionDetected);
-
             if (collisionDetected) {
                 // Find nearest free position
                 const freePos = findNearestFreePosition(currentPos, { frameSize, frameOrientation, gridCellSize }, occupiedPositions, clampToWallBoundaries, wallWidth, ceilingHeight);
@@ -317,6 +318,7 @@ export const Frame: React.FC<FrameProps> = ({
                         // Notify parent of new position
                         onPositionChange?.(freePos);
                     }
+                    setHasCollision(false);
                 } else {
                     // No free position found anywhere on wall
                     alert('Wall is completely full! Remove some frames.');
