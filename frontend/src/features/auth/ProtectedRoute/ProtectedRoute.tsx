@@ -1,7 +1,8 @@
 "use client";
-
+import styles from "./ProtectedRoute.module.css";
 import { ApiError, AuthService } from "@/api/generated";
 import { useAuth } from "@/contexts/AuthContext";
+import WarningBanner from "@/elements/WarningBanner/WarningBanner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -53,14 +54,14 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (!user.emailConfirmed)
     return (
       <>
-        <p>Registration successful! Please confirm your email.</p>
-        <p>If the email did not send properly, please click the below button to resend confirmation email:</p>
-        <button onClick={handleClick}>
-          {status == "loading" ? "Sending" : "Resend confirmation email"}
+      <WarningBanner message="Registration successful! Please confirm your email. If the email did not send properly, please click">
+        <button onClick={handleClick} className={styles.resendButton}>
+          {status == "loading" ? "Sending..." : "here"}
         </button>
-        {(status == "error") && error || errorMessage}
-        {children}
-      </>
+      </WarningBanner>
+      {(status == "error") && (error || errorMessage)}
+      {children}
+    </>
     );
 
   return <>{children}</>;
