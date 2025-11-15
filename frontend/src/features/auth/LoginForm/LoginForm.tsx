@@ -5,6 +5,8 @@ import styles from "./LoginForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
+import Button from "@/elements/Button/Button";
+import TextInput from "@/elements/TextInput/TextInput";
 
 export default function LoginForm() {
   const { user, login, isLoading, error } = useAuth();
@@ -28,38 +30,43 @@ useEffect(() => {
 
   return (
     <>
-      <h1 className={styles.title}>Log in</h1>
-      {error && <p>{error}</p>}
+      <h1 className={styles.title}>Sign in</h1>
       <form className={styles.loginForm} onSubmit={handleSubmit}>
         <label className={styles.loginLabel} htmlFor="email">
-          Email
+            Email
+          <TextInput
+            variant="vanilla"
+            type="email"
+            id="email"
+            name="email"
+            required
+            key="email"
+            autoComplete="email"
+          />
         </label>
-        <input
-          className={styles.loginInput}
-          type="email"
-          id="email"
-          name="email"
-          required
-          key="email"
-          autoComplete="email"
-        />
 
         <label className={styles.loginLabel} htmlFor="password">
-          Password
+            Password
+          <TextInput
+            variant="vanilla"
+            type="password"
+            id="password"
+            key="password"
+            name="password"
+            autoComplete="current-password"
+            required
+          />
+          <p className={`${ error ? styles.error : styles.noError}`}>
+          {error && (
+            <>
+            {error}
+            </>
+          )}
+        </p>
         </label>
-        <input
-          className={styles.loginInput}
-          type="password"
-          id="password"
-          key="password"
-          name="password"
-          autoComplete="current-password"
-          required
-        />
-
-        <button type="submit">{isLoading ? "Logging in..." : "Log In"}</button>
+        <Button type="submit" variant="cornflower" buttonText={isLoading ? "Signing in..." : "Sign in"}/>
+        <button className={styles.signUpButton} onClick={() => openModal("register")}>Do not have an account? Sign up!</button>
       </form>
-      <button onClick={() => openModal("register")}>Do not have an account? Sign up!</button>
     </>
   );
 }

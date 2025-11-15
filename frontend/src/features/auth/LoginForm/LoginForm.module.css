@@ -8,4 +8,40 @@
 
 .title {
     text-align: center;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.loginLabel {
+    display: flex;
+    flex-direction: column;
+}
+
+.signUpButton {
+    color: var(--charcoal);
+    background: transparent;
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.noError {
+    padding: 0.2rem 0.55rem;
+    background: transparent;
+    height: 1.712rem;
+    margin-top: 0.5rem;
+}
+
+.error {
+    font-size: 0.875rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    background: var(--rosie-danger);
+    color: var(--snowdrop);
+    text-align: center;
+    width: fit-content;
+    height: 1.712rem;
+    margin-top: 0.5rem;
 }
