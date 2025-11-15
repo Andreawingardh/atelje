@@ -1,0 +1,28 @@
+.base {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.message {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--snowdrop);
+    text-align: center;
+}
+
+/* variants */
+.success {
+    background-color: var(--stem-success);
+}
+
+.warning {
+    background-color: var(--buttercup-warning);
+}
+
+.error {
+    background-color: var(--rosie-danger);
+}
