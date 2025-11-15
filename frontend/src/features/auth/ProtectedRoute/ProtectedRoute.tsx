@@ -2,7 +2,7 @@
 import styles from "./ProtectedRoute.module.css";
 import { ApiError, AuthService } from "@/api/generated";
 import { useAuth } from "@/contexts/AuthContext";
-import WarningBanner from "@/elements/WarningBanner/WarningBanner";
+import AlertBanner from "@/elements/AlertBanner/AlertBanner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -54,11 +54,14 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (!user.emailConfirmed)
     return (
       <>
-      <WarningBanner message="Registration successful! Please confirm your email. If the email did not send properly, please click">
+      <AlertBanner 
+      message="Registration successful! Please confirm your email. If the email did not send properly, please click"
+      variant="warning"
+      >
         <button onClick={handleClick} className={styles.resendButton}>
           {status == "loading" ? "Sending..." : "here"}
         </button>
-      </WarningBanner>
+      </AlertBanner>
       {(status == "error") && (error || errorMessage)}
       {children}
     </>
