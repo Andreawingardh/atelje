@@ -46,7 +46,7 @@ export function DownloadScreenshotButton({
     <div>
       <CircleButton
         variant="vanilla"
-        buttonIcon="/icons/upload-icon.svg"
+        buttonIcon="/icons/download-icon.svg"
         onClick={handleDownload}
         disabled={isDisabled}
         title={
