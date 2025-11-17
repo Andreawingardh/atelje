@@ -1,0 +1,56 @@
+.userDesignsSection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    max-width: 64.75rem;
+}
+
+.userDesignsSection h2 {
+    width: fit-content;
+}
+
+.titleDivider {
+    width: 18rem;
+    background-color: var(--charcoal);
+    padding: 0 0 3px 0; /* padding instead of height to avoid BFC issues */
+    border: none;
+    border-radius: 9999px;
+    box-shadow: none;
+}
+
+.designsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: fit-content;
+    height: 33rem;
+    overflow-y: scroll;
+}
+
+.designCard {
+    width: 320px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--vanilla);
+}
+
+.designThumbnail {
+    width: 100%;
+    aspect-ratio: 21.375 / 12.125;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.designName {
+    align-self: flex-start;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--charcoal);
+}

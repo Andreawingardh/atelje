@@ -6,6 +6,7 @@ import { useModal } from "@/contexts/ModalContext";
 import { useDesign } from "../designs/useDesign";
 import { DesignDto } from "@/api/generated";
 import LoadingSpinner from "@/elements/LoadingSpinner/LoadingSpinner";
+import AlertBadge from "@/elements/AlertBadge/AlertBadge";
 
 export default function UserDesigns() {
   const { user } = useAuth();
@@ -52,16 +53,19 @@ export default function UserDesigns() {
   }
 
   return (
-    <div>
-      <h1>My Designs</h1>
-      {error && <p>{error}</p>}
-      {successMessage && <p>{successMessage}</p>}
-
-      {isLoading && <LoadingSpinner />}
-
+    <section className={styles.userDesignsSection}>
       <div>
+        <h2>My Designs</h2>
+        <hr className={styles.titleDivider}/>
+      </div>
+      {error && <AlertBadge message={error} variant="warning" />}
+      {successMessage && <AlertBadge message={successMessage} variant="success" />}
+
+      <div className={styles.designsGrid}>
+        {isLoading && <LoadingSpinner />}
         {designs?.map((design) => (
           <button
+            className={styles.designCard}
             onClick={() =>
               openModal("single-design-view", {
                 data: { design: design },
@@ -75,6 +79,7 @@ export default function UserDesigns() {
           >
             {design.thumbnailUrl ? (
               <Image
+                className={styles.designThumbnail}
                 src={design.thumbnailUrl}
                 alt={design.name || "Design preview"}
                 // Temporary fixed size, remove after styling
@@ -87,10 +92,10 @@ export default function UserDesigns() {
               </div>
             )}
 
-            <div>{design.name}</div>
+            <p className={styles.designName}>{design.name}</p>
           </button>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
