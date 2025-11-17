@@ -10,15 +10,14 @@ export default function ConfirmEmailComponent() {
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading"
   );
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
   const token = searchParams.get("token");
 
   useEffect(() => {
-
     if (!userId || !token) {
       setStatus("error");
       return notFound();
@@ -30,8 +29,8 @@ export default function ConfirmEmailComponent() {
           token
         );
         if (response.emailConfirmed) {
-            setStatus("success");
-            setSuccessMessage(response.message)
+          setStatus("success");
+          setSuccessMessage(response.message);
         }
       } catch (error) {
         setStatus("error");
@@ -48,25 +47,25 @@ export default function ConfirmEmailComponent() {
 
   if (status === "loading") {
     return (
-      <div>
-        <p>Confirming your email...</p>
+      <div className={styles.emailConfirmationContainer}>
+        <h2>Confirming your email...</h2>
       </div>
     );
   }
 
   if (status === "error") {
     return (
-      <div>
-        <p>Confirmation failed. Link may be expired.</p>
+      <div className={styles.emailConfirmationContainer}>
+        <h2>Confirmation failed. Link may be expired.</h2>
         <p>{errorMessage}</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <p>{successMessage}</p>
-      <Link href="/login">Go to Login</Link>
+    <div className={styles.emailConfirmationContainer}>
+      <h2>{successMessage}</h2>
+      <Link href="/designer">Go to the design tool</Link>
     </div>
   );
 }
