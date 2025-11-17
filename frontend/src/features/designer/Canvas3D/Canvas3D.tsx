@@ -35,10 +35,10 @@ interface Canvas3DProps {
     height: number;
     frameId: string;
   }>;
-  screenshotMode?: boolean;
+  onCameraReady?: (resetCamera: () => void) => void;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef, occupiedPositions, screenshotMode = false } : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef, occupiedPositions, onCameraReady } : Canvas3DProps) {
 
 useEffect(() => {
     preloadTextures();
@@ -79,6 +79,47 @@ const maxPanY = THREE.MathUtils.lerp(0.3, 1.0, t);
 
 const wallRef = useRef<THREE.Mesh>(null);
 const controlsRef = useRef<OrbitControlsImpl>(null);
+
+// Store initial camera state for camera reset
+const initialCameraState = useRef({
+  position: [0, cameraYPosition, cameraDistance] as [number, number, number],
+  target: [0, orbitTargetY, 0] as [number, number, number]
+});
+
+// Update initial state when wall/ceiling dimensions change
+useEffect(() => {
+  initialCameraState.current = {
+    position: [0, cameraYPosition, cameraDistance],
+    target: [0, orbitTargetY, 0]
+  };
+}, [cameraYPosition, cameraDistance, orbitTargetY]);
+
+// Send resetCamera function to parent
+useEffect(() => {
+  if (onCameraReady && controlsRef.current) {
+    const resetCamera = () => {
+      if (controlsRef.current) {
+        // Reset camera back to initial position
+        controlsRef.current.object.position.set(
+          initialCameraState.current.position[0],
+          initialCameraState.current.position[1],
+          initialCameraState.current.position[2]
+        );
+          
+        // Reset orbit target
+        controlsRef.current.target.set(
+          initialCameraState.current.target[0],
+          initialCameraState.current.target[1],
+          initialCameraState.current.target[2]
+        );
+          
+        controlsRef.current.update();
+      }
+    };
+      
+    onCameraReady(resetCamera);
+  }
+}, [onCameraReady, controlsRef.current]);
 
 // Use internal state if no external state is provided (backward compatibility)
 const [internalSelectedFrameId, setInternalSelectedFrameId] = useState<string | null>(null);
