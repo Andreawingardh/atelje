@@ -2,33 +2,57 @@
 
 import { useModal } from "@/contexts/ModalContext";
 import { useState } from "react";
+import Button from "@/elements/Button/Button";
+import TextInput from "@/elements/TextInput/TextInput";
+import styles from "./SaveDesignModule.module.css";
 
 export default function SaveDesignModal() {
   const [designName, setDesignName] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const { modalState, closeModal } = useModal();
 
   if (modalState.type != "save-design") return null;
 
   const { saveDesignName } = modalState.callbacks;
 
+  function validateDesignName(value: string): string {
+    if (value.length >= 25) {
+      return "Display name must be less than 25 characters";
+    }
+
+    return "";
+  }
+
+  function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const error = validateDesignName(e.target.value);
+    if (error) {
+      setErrorMessage(error);
+    }
+    if (!error) {
+      setErrorMessage("")
+    }
+    setDesignName(e.target.value);
+  }
+
   return (
-    <form>
-      <input
+    <form className={styles.saveDesignForm}>
+      <TextInput
         value={designName}
-        onChange={(e) => setDesignName(e.target.value)}
-        placeholder={designName }
+        onChange={handleOnChange}
+        placeholder={designName || "Give your design a name"}
       />
-      <button
+      {errorMessage && <p>{errorMessage}</p>}
+      <Button
         type="submit"
+        variant="cornflower"
         onClick={(e) => {
           e.preventDefault();
-          if (saveDesignName && designName)
-              saveDesignName(designName);
-            closeModal()
+          if (saveDesignName && designName) saveDesignName(designName);
+          closeModal();
         }}
-      >
-        Save design
-      </button>
+        buttonText="Save"
+        disabled={errorMessage.length > 0}
+      />
     </form>
   );
 }
