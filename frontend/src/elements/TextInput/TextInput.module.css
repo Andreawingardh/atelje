@@ -1,0 +1,48 @@
+.textInput {
+    border: 2px solid transparent;
+    outline: none;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: 1.25rem;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+}
+
+.textInput::placeholder {
+    color: var(--charcoal);
+}
+
+
+/* Prevent invalid styling until user has interaced but then left the field empty */
+.textInput:user-invalid {
+    border: 2px solid var(--rosie-danger);
+}
+
+
+/* variant styles */
+
+.vanillaTextInput {
+    background: var(--vanilla);
+    color: var(--charcoal);
+}
+
+.snowdropTextInput {
+    background: var(--snowdrop);
+    color: var(--charcoal);
+}
+
+.textInput::placeholder {
+    color: var(--charcoal);
+}
+
+.vanillaTextInput {
+    background: var(--vanilla);
+    color: var(--charcoal);
+}
+
+.snowdropTextInput {
+    background: var(--snowdrop);
+    color: var(--charcoal);
+}

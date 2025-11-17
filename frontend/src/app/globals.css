@@ -1,0 +1,54 @@
+/* Imports */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Variables */
+:root {
+  --terracotta: #9D4A31;
+  --terracotta-dark: #8f412a;
+  --cornflower-active: #6495ED;
+  --cornflower-dark: #557ACD;
+  --snowdrop: #FFFFFF;
+  --vanilla: #F9F6F3;
+  --dark-vanilla: #EEE9E3;
+  --dark-vanilla-dark: #E0D6CE;
+  --rosie-danger: #A72D2D;
+  --rosie-danger-dark: #922626;
+  --stem-success: #488A3D;
+  --buttercup-warning: #d58a37;
+  --sunflower-seed: #47403C;
+  --charcoal: #2C2C2C;
+  --font-family: 'Poppins', sans-serif;
+}
+
+/* Global Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--charcoal);
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+
+p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--charcoal);
+}

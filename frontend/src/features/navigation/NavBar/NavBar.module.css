@@ -1,0 +1,21 @@
+.navBarWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--terracotta);
+    color: var(--snowdrop)
+}
+
+.navLogo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--snowdrop);
+    cursor: pointer;
+}
+
+.navButtons {
+    display: flex;
+    gap: 1rem;
+}

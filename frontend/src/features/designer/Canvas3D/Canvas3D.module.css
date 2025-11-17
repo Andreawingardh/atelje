@@ -1,0 +1,8 @@
+.designerWindow {
+    width: 100%;
+    min-height: 400px;
+    height: 80vh;
+    max-height: 800px;
+    border-radius: 0 1rem 1rem 0;
+    overflow: hidden;
+}
