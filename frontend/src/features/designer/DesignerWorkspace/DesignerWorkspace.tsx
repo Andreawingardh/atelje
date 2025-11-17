@@ -13,6 +13,7 @@ import styles from "./DesignerWorkspace.module.css";
 import { useModal } from "@/contexts/ModalContext";
 import { useAuth } from "@/contexts/AuthContext";
 import CircleButton from "@/elements/CircleButton/CircleButton";
+import LoadingSpinner from "@/elements/LoadingSpinner/LoadingSpinner";
 
 interface OccupiedPosition {
   x: number;
@@ -291,7 +292,7 @@ export default function DesignerWorkspace({
             )}
         </section>
         {isLoading ? (
-          <div>Loading design...</div>
+          <LoadingSpinner />
         ) : (
           <>
             <Canvas3D

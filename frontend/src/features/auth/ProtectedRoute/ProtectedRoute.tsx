@@ -3,6 +3,7 @@ import styles from "./ProtectedRoute.module.css";
 import { ApiError, AuthService } from "@/api/generated";
 import { useAuth } from "@/contexts/AuthContext";
 import AlertBanner from "@/elements/AlertBanner/AlertBanner";
+import LoadingSpinner from "@/elements/LoadingSpinner/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -30,7 +31,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   // Don't render children until we know auth status
   if (isLoading || !user) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   async function handleClick(e: React.FormEvent<HTMLButtonElement>) {

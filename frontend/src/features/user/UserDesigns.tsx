@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useModal } from "@/contexts/ModalContext";
 import { useDesign } from "../designs/useDesign";
 import { DesignDto } from "@/api/generated";
+import LoadingSpinner from "@/elements/LoadingSpinner/LoadingSpinner";
 
 export default function UserDesigns() {
   const { user } = useAuth();
@@ -56,7 +57,7 @@ export default function UserDesigns() {
       {error && <p>{error}</p>}
       {successMessage && <p>{successMessage}</p>}
 
-      {isLoading && <p>Loading designs...</p>}
+      {isLoading && <LoadingSpinner />}
 
       <div>
         {designs?.map((design) => (
