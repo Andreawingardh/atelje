@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import ConfirmationCloseModal from "./ConfirmationCloseModal";
 import SaveDesignModal from "./SaveDesignModal";
 import SingleDesignView from "../designs/SingleDesignView/SingleDesignView";
+import AboutUsModal from "./AboutUsModal";
 
 export default function ModalManager() {
   const { modalState, closeModal } = useModal();
@@ -28,6 +29,7 @@ export default function ModalManager() {
     "confirmation-close": <ConfirmationCloseModal />,
     "save-design": <SaveDesignModal />,
     "single-design-view": <SingleDesignView />,
+    "about-us": <AboutUsModal />
   };
 
   return (
