@@ -191,6 +191,12 @@ export const Frame: React.FC<FrameProps> = ({
         return Math.round(value / gridSize) * gridSize;
     };
 
+    // Helper function to get which sizes should have white border
+    const shouldHaveWhiteBorder = (frameSize: string): boolean => {
+        const smallSizes = ['20x30', '30x20', '13x18', '18x13'];
+        return !smallSizes.includes(frameSize);
+    };
+
     // Helper function to get normalized pointer coordinates relative to canvas
     const getPointerCoordinates = (e: ThreeEvent<PointerEvent>): THREE.Vector2 => {
         const rect = gl.domElement.getBoundingClientRect();
@@ -420,14 +426,23 @@ export const Frame: React.FC<FrameProps> = ({
             )}
 
             {/* Inner frame (cutout) */}
-            <mesh position={[0, 0, frameDepth * 0.15]}>
-                <boxGeometry args={[frameWidth - frameThickness * 2, frameHeight - frameThickness * 2, frameDepth * 0.8]} />
-                <meshStandardMaterial color="#ffffff" />
-            </mesh>
+            {shouldHaveWhiteBorder(frameSize) && (
+                <mesh position={[0, 0, frameDepth * 0.15]}>
+                    <boxGeometry args={[frameWidth - frameThickness * 2, frameHeight - frameThickness * 2, frameDepth * 0.8]} />
+                    <meshStandardMaterial color="#ffffff" />
+                </mesh>
+            )}
             
             {/* Image plane */}
             <mesh position={[0, 0, frameDepth * 0.6]}>
-                <planeGeometry args={[frameWidth - (frameThickness * 4) * 0.95, frameHeight - (frameThickness * 4) * 0.95]} />
+                <planeGeometry args={[
+                    shouldHaveWhiteBorder(frameSize) 
+                        ? frameWidth - (frameThickness * 4) * 0.95
+                        : frameWidth - frameThickness * 2,
+                    shouldHaveWhiteBorder(frameSize)
+                        ? frameHeight - (frameThickness * 4) * 0.95
+                        : frameHeight - frameThickness * 2
+                ]} />
                 {ImageTexture && (
                     <meshStandardMaterial 
                         key={imageUrl}
