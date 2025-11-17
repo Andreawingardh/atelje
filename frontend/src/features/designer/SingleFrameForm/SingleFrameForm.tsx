@@ -5,6 +5,7 @@ import { FrameData } from "../FrameForm/FrameForm";
 import { stockPhotos, PhotoCategory, getPhotosByCategory } from "@/lib/stockPhotos";
 import Image from 'next/image';
 import Button from "@/elements/Button/Button";
+import UnitInput from "@/elements/UnitInput/UnitInput";
 
 interface singleFrameFormProps {
   frames: FrameData[];
@@ -33,11 +34,41 @@ export default function SingleFrameForm({
     onDelete,
 }: singleFrameFormProps) {
   const [selectedCategory, setSelectedCategory] = useState<PhotoCategory>('nature');
+  const [hexInputValue, setHexInputValue] = useState(frameColor.replace('#', ''));
   const categories: PhotoCategory[] = ['nature', 'city', 'graphic', 'vintage', 'animals', 'people'];
   const filteredPhotos = getPhotosByCategory(selectedCategory);
 
+  useEffect(() => {
+    setHexInputValue(frameColor.replace('#', ''));
+  }, [frameColor]);
+
+  // Debounce the hex input to update frameColor
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let value = hexInputValue.replace(/[^0-9A-Fa-f]/g, '');
+      
+      if (value.length === 3) {
+        // Convert 3-char hex to 6-char
+        value = value.split('').map(char => char + char).join('');
+      }
+      
+      if (value.length === 6) {
+        setFrameColor(`#${value}`);
+      }
+    }, 800); // 800ms delay
+
+    return () => clearTimeout(timer);
+  }, [hexInputValue, setFrameColor]);
+
   const handleFrameColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFrameColor(e.target.value);
+  };
+
+  const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9A-Fa-f]/g, '');
+    if (value.length <= 6) {
+      setHexInputValue(value);
+    }
   };
 
   const handleFrameImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,19 +107,25 @@ export default function SingleFrameForm({
           <div className={styles.colorPickerContainer}>
             <div 
               className={styles.colorInputWrapper}
-              onClick={() => document.getElementById('frameColor')?.click()}
+              onClick={() => document.getElementById(`frameColor-${id}`)?.click()}
             >
               <div 
                 className={styles.colorInputDisplay}
                 style={{ backgroundColor: frameColor }}
               />
+              <input
+                id={`frameColor-${id}`}
+                type="color"
+                value={frameColor}
+                onChange={handleFrameColorChange}
+                className={styles.colorInput}
+              />
             </div>
-            <input
-              id="frameColor"
-              type="color"
-              value={frameColor}
-              onChange={handleFrameColorChange}
-              className={styles.colorInput}
+            <UnitInput
+              value={hexInputValue}
+              units="HEX"
+              onChange={handleHexInputChange}
+              placeholder="000000"
             />
           </div>
         </label>
