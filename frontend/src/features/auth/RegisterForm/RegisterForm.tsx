@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./RegisterForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { RegisterDto } from "@/api/generated";
-import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
 import Button from "@/elements/Button/Button";
 import TextInput from "@/elements/TextInput/TextInput";
@@ -286,7 +285,7 @@ export default function RegisterForm() {
             id="userName"
             name="userName"
             key="userName"
-            autoComplete="userName"
+            autoComplete="off"
             value={fieldState.userName.value}
             onChange={handleFieldChange("userName")}
             onBlur={handleFieldBlur("userName", validateUserName)}
@@ -338,7 +337,7 @@ export default function RegisterForm() {
             id="email"
             name="email"
             key="email"
-            autoComplete="email"
+            autoComplete="username"
             value={fieldState.email.value}
             onChange={handleFieldChange("email")}
             onBlur={handleFieldBlur("email", validateEmail)}
