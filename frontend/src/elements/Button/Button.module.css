@@ -1,4 +1,8 @@
 .base {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1rem;
     font-weight: 400;
     padding: 0.3rem 1rem;
@@ -6,6 +10,11 @@
     border: none;
     height: fit-content;
     cursor: pointer;
+  }
+
+  .icon {
+    width: auto;
+    height: 1rem;
   }
   
   .snowdrop {

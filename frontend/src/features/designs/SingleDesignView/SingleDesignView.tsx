@@ -66,7 +66,12 @@ export default function SingleDesignView() {
           ) : (
             <>
               <h1>{design.name}</h1>
-              <Button variant="cornflower" buttonText="Update name" onClick={() => setIsEditNameMode(true)}/>
+              <Button 
+                variant="cornflower" 
+                buttonText="Update name" 
+                buttonIcon="./icons/edit-icon.svg"
+                onClick={() => setIsEditNameMode(true)}
+              />
             </>
           )}
         </div>
