@@ -27,7 +27,7 @@ export default function UserInfo() {
         <h2>Profile</h2>
         {!isEditMode ? (
           <button className={styles.editButton} onClick={() => setIsEditMode(true)}>
-            <img src="/icons/edit-icon.svg" alt="Edit Profile" />
+            <img className={styles.editIcon} src="/icons/edit-icon.svg" alt="Edit Profile" />
           </button>
         ) : (
           <Button variant="cornflower" buttonText="Done" onClick={() => setIsEditMode(false)}/>
