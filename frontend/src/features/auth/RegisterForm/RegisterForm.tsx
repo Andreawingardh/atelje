@@ -49,9 +49,14 @@ function PasswordRequirements({
     <div className={styles.passwordRequirements}>
       {requirementsList.map((req) => (
         <div key={req.key} className={styles.passwordRequirement}>
-          <img 
-            src={requirements[req.key] ? "/icons/success-icon.svg" : "/icons/error-red-icon.svg"} 
-            alt={requirements[req.key] ? "fulfilled" : "not fulfilled"}/>
+          <img
+            src={
+              requirements[req.key]
+                ? "/icons/success-icon.svg"
+                : "/icons/error-red-icon.svg"
+            }
+            alt={requirements[req.key] ? "fulfilled" : "not fulfilled"}
+          />
           <p>{req.label}</p>
         </div>
       ))}
@@ -60,15 +65,14 @@ function PasswordRequirements({
 }
 
 export default function RegisterForm() {
-  const { user, register, isLoading, error } = useAuth();
+  const { register, isLoading, error } = useAuth();
   const { openModal } = useModal();
-  const router = useRouter();
 
   const [fieldState, setFieldState] = useState<FieldState>({
     email: { value: "", touched: false, error: "" },
     userName: { value: "", touched: false, error: "" },
     displayName: { value: "", touched: false, error: "" },
-    password: { value: "", touched: false }, // No error field - we'll use checklist
+    password: { value: "", touched: false },
     confirmPassword: { value: "", touched: false, error: "" },
   });
 
@@ -80,12 +84,6 @@ export default function RegisterForm() {
       hasDigit: false,
       hasSpecialChar: false,
     });
-
-  useEffect(() => {
-    if (user) {
-      router.push("/designer");
-    }
-  });
 
   function validateUserName(value: string): string {
     if (value.length < 3) {
@@ -294,11 +292,15 @@ export default function RegisterForm() {
             onBlur={handleFieldBlur("userName", validateUserName)}
             required
           />
-          <p className={`${fieldState.userName.touched && fieldState.userName.error ? styles.error : styles.noError}`}>
+          <p
+            className={`${
+              fieldState.userName.touched && fieldState.userName.error
+                ? styles.error
+                : styles.noError
+            }`}
+          >
             {fieldState.userName.touched && fieldState.userName.error && (
-            <>
-              {fieldState.userName.error}
-            </>
+              <>{fieldState.userName.error}</>
             )}
           </p>
         </label>
@@ -315,11 +317,15 @@ export default function RegisterForm() {
             onChange={handleFieldChange("displayName")}
             onBlur={handleFieldBlur("displayName", validateDisplayName)}
           />
-          <p className={`${fieldState.displayName.touched && fieldState.displayName.error ? styles.error : styles.noError}`}>
+          <p
+            className={`${
+              fieldState.displayName.touched && fieldState.displayName.error
+                ? styles.error
+                : styles.noError
+            }`}
+          >
             {fieldState.displayName.touched && fieldState.displayName.error && (
-              <>
-                {fieldState.displayName.error}
-              </>
+              <>{fieldState.displayName.error}</>
             )}
           </p>
         </label>
@@ -338,13 +344,17 @@ export default function RegisterForm() {
             onBlur={handleFieldBlur("email", validateEmail)}
             required
           />
-            <p className={`${fieldState.email.touched && fieldState.email.error ? styles.error : styles.noError}`}>
-              {fieldState.email.touched && fieldState.email.error && (
-                <>
-                  {fieldState.email.error}
-                </>
-              )}
-            </p>
+          <p
+            className={`${
+              fieldState.email.touched && fieldState.email.error
+                ? styles.error
+                : styles.noError
+            }`}
+          >
+            {fieldState.email.touched && fieldState.email.error && (
+              <>{fieldState.email.error}</>
+            )}
+          </p>
         </label>
 
         <label className={styles.registerLabel} htmlFor="password">
@@ -375,20 +385,35 @@ export default function RegisterForm() {
             onBlur={handleConfirmPasswordBlur}
             required
           />
-            <p className={`${fieldState.confirmPassword.touched && fieldState.confirmPassword.error ? styles.error : styles.noError}`}>
-              {fieldState.confirmPassword.touched &&
+          <p
+            className={`${
+              fieldState.confirmPassword.touched &&
+              fieldState.confirmPassword.error
+                ? styles.error
+                : styles.noError
+            }`}
+          >
+            {fieldState.confirmPassword.touched &&
               fieldState.confirmPassword.error && (
-              <>
-                {fieldState.confirmPassword.error}
-              </>
-            )}
-            </p>
+                <>{fieldState.confirmPassword.error}</>
+              )}
+          </p>
         </label>
         <PasswordRequirements requirements={passwordRequirements} />
 
-        <Button variant="cornflower" disabled={!isFormValid()} type="submit" buttonText={isLoading ? "Signing up..." : "Sign up"}/>
+        <Button
+          variant="cornflower"
+          disabled={!isFormValid()}
+          type="submit"
+          buttonText={isLoading ? "Signing up..." : "Sign up"}
+        />
       </form>
-      <button className={styles.signInButton} onClick={() => openModal("login")}> Already have an account? Sign in! </button>
+      <button
+        className={styles.signInButton}
+        onClick={() => openModal("login")}
+      >
+        Already have an account? Sign in!{" "}
+      </button>
     </>
   );
 }

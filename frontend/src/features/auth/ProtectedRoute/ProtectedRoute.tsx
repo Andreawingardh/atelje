@@ -56,7 +56,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return (
       <>
       <AlertBanner 
-      message="Registration successful! Please confirm your email. If the email did not send properly, please click"
+      message="Please confirm your email. If the email did not send properly, please click"
       variant="warning"
       >
         <button onClick={handleClick} className={styles.resendButton}>
