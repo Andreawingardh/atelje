@@ -82,7 +82,6 @@ export default function UserDesigns() {
                 className={styles.designThumbnail}
                 src={design.thumbnailUrl}
                 alt={design.name || "Design preview"}
-                // Temporary fixed size, remove after styling
                 width={200}
                 height={200}
               />
