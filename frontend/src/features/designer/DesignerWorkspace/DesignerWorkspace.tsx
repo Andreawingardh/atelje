@@ -96,6 +96,11 @@ export default function DesignerWorkspace({
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const resetCameraRef = useRef<(() => void) | null>(null);
+
+  const handleCameraReady = (resetCamera: () => void) => {
+    resetCameraRef.current = resetCamera;
+  };
 
   const handleSaveClick = () => {
     if (!user) {
@@ -147,7 +152,24 @@ export default function DesignerWorkspace({
     }
 
     try {
+      // Temporarily deselect frame for screenshot
+      const wasSelected = selectedFrameId;
+      setSelectedFrameId(null);
+
+      // Reset camera to default position before screenshot
+      if (resetCameraRef.current) {
+        resetCameraRef.current();
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Capture screenshots
       const screenshots = await captureScreenshot(canvasRef.current);
+
+      // Restore selected frame
+      if (wasSelected) {
+        setSelectedFrameId(wasSelected);
+      }
       await onSave(screenshots);
     } catch (error) {
       console.error("Screenshot capture error:", error);
@@ -310,6 +332,7 @@ export default function DesignerWorkspace({
               onFramePositionUpdate={setFramePosition}
               canvasRef={canvasRef}
               occupiedPositions={occupiedPositions}
+              onCameraReady={handleCameraReady}
             />
           </>
         )}
