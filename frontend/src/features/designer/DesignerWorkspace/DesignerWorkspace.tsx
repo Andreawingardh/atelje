@@ -147,7 +147,18 @@ export default function DesignerWorkspace({
     }
 
     try {
+      // Temporarily deselect frame for screenshot
+      const wasSelected = selectedFrameId;
+      setSelectedFrameId(null);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Capture screenshot
       const screenshots = await captureScreenshot(canvasRef.current);
+      
+      // Restore selected frame
+      if (wasSelected) {
+        setSelectedFrameId(wasSelected);
+      }
       await onSave(screenshots);
     } catch (error) {
       console.error("Screenshot capture error:", error);

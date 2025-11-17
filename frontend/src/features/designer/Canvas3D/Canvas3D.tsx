@@ -35,9 +35,10 @@ interface Canvas3DProps {
     height: number;
     frameId: string;
   }>;
+  screenshotMode?: boolean;
 }
 
-export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef, occupiedPositions } : Canvas3DProps) {
+export default function Canvas3D({ wallWidth, ceilingHeight, wallColor, flooring, furnitureColor, furnitureWidth, furnitureDepth, furnitureHeight, frames, selectedFrameId, onFrameSelect, onFramePositionUpdate, canvasRef, occupiedPositions, screenshotMode = false } : Canvas3DProps) {
 
 useEffect(() => {
     preloadTextures();
