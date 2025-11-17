@@ -434,10 +434,8 @@ Returns database connection status and overall application health.
 
 ## 📖 Additional Documentation
 
-- [Frontend Testing Guide](TESTING_GUIDE.md) - Jest and React Testing Library setup
-- [Backend Testing Guide](BACKEND_TESTING_GUIDE.md) - xUnit and integration testing
-- [Email Setup Plan](Real_email_set_up_time_plan.txt) - Email service configuration guide
-
+- [Frontend Testing Guide](frontend/TESTING_GUIDE.md) - Jest and React Testing Library setup
+- [Backend Testing Guide](backend/BACKEND_TESTING_GUIDE.md) - xUnit and integration testing
 ## 🤝 Contributing
 
 This is a student capstone project. For questions or issues, please contact the development team.
