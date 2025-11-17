@@ -286,7 +286,7 @@ export default function RegisterForm() {
             id="userName"
             name="userName"
             key="userName"
-            autoComplete="userName"
+            autoComplete="off"
             value={fieldState.userName.value}
             onChange={handleFieldChange("userName")}
             onBlur={handleFieldBlur("userName", validateUserName)}
@@ -338,7 +338,7 @@ export default function RegisterForm() {
             id="email"
             name="email"
             key="email"
-            autoComplete="email"
+            autoComplete="username"
             value={fieldState.email.value}
             onChange={handleFieldChange("email")}
             onBlur={handleFieldBlur("email", validateEmail)}
