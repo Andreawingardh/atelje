@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./RegisterForm.module.css";
 import { useAuth } from "@/contexts/AuthContext";
 import { RegisterDto } from "@/api/generated";
-import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
 import Button from "@/elements/Button/Button";
 import TextInput from "@/elements/TextInput/TextInput";
