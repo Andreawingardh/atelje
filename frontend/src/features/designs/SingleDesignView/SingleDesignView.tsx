@@ -69,7 +69,7 @@ export default function SingleDesignView() {
               <Button 
                 variant="cornflower" 
                 buttonText="Update name" 
-                buttonIcon="./icons/edit-icon.svg"
+                buttonIcon="./icons/edit-white-icon.svg"
                 onClick={() => setIsEditNameMode(true)}
               />
             </>
