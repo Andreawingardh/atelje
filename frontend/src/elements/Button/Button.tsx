@@ -5,7 +5,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "snowdrop" | "terracotta" | "cornflower" | "rosie" | "darkVanilla";
   buttonText?: string;
-  buttonIcon?: React.ReactNode;
+  buttonIcon?: string;
 }
 
 export default function Button({
@@ -30,8 +30,8 @@ export default function Button({
       disabled={disabled}
       {...props}
     >
-      {buttonIcon && <span className={styles.icon}>{buttonIcon}</span>}
       {buttonText}
+      {buttonIcon && <img className={styles.icon} src={buttonIcon}/>}
     </button>
   );
 }
