@@ -101,9 +101,10 @@ export default function SingleFrameForm({
   }, [imageUrl]);
 
   return (
-    <ScrollBar maxHeight="34.5rem" contentClassName={styles.singleFrameForm}>
+    <>
       <h3 className={styles.formTitle}>Modify frame</h3>
       <hr className={styles.formDividerDark} />
+      <ScrollBar maxHeight="32rem" contentClassName={styles.singleFrameForm}>
         <label className={styles.singleFrameLabel}>Color
           <div className={styles.colorPickerContainer}>
             <div 
@@ -282,6 +283,7 @@ export default function SingleFrameForm({
             buttonText="Delete Frame"
             className={styles.deleteButton}
           />
-    </ScrollBar>
+      </ScrollBar>
+    </>
   );
 };
