@@ -5,8 +5,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'pub-20ea7aa8a86f43f4be960730b132a87f.r2.dev',
+        hostname: 'pub-20ea7aa8a86f43f4be960730b132a87f.r2.dev'
       },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos'
+      }
     ],
   },
 };

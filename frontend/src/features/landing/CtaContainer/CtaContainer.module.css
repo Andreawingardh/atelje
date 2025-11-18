@@ -1,0 +1,16 @@
+.ctaContainer {
+    position: absolute;
+    z-index: 1;
+    background: var(--dark-vanilla);
+    color: var(--charcoal);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 4rem;
+    border-radius: 0.5rem;
+    max-width: 40rem;
+    flex-direction: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
