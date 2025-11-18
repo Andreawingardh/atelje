@@ -49,10 +49,11 @@ export default function MasonryBackground() {
           {[...column1, ...column1].map((item, index) => (
             <div key={index} className={styles.masonryItem}>
               <Image
-                src={`https://picsum.photos/seed/${item.id}/400/600`}
+                src={`/landing-page/${item.id}.jpg`}
                 alt={`Design ${item.id}`}
                 fill
                 style={{ objectFit: "cover" }}
+                sizes="(max-width: 37.5rem) 100vw, 25vw"
               />
             </div>
           ))}
@@ -65,10 +66,11 @@ export default function MasonryBackground() {
           {[...column2, ...column2].map((item, index) => (
             <div key={index} className={styles.masonryItem}>
               <Image
-                src={`https://picsum.photos/seed/${item.id}/400/600`}
+                src={`/landing-page/${item.id}.jpg`}
                 alt={`Design ${item.id}`}
                 fill
                 style={{ objectFit: "cover" }}
+                sizes="(max-width: 37.5rem) 100vw, 25vw"
               />
             </div>
           ))}
@@ -81,10 +83,11 @@ export default function MasonryBackground() {
           {[...column3, ...column3].map((item, index) => (
             <div key={index} className={styles.masonryItem}>
               <Image
-                src={`https://picsum.photos/seed/${item.id}/400/600`}
+                src={`/landing-page/${item.id}.jpg`}
                 alt={`Design ${item.id}`}
                 fill
                 style={{ objectFit: "cover" }}
+                sizes="(max-width: 37.5rem) 100vw, 25vw"
               />
             </div>
           ))}
@@ -97,10 +100,11 @@ export default function MasonryBackground() {
           {[...column4, ...column4].map((item, index) => (
             <div key={index} className={styles.masonryItem}>
               <Image
-                src={`https://picsum.photos/seed/${item.id}/400/600`}
+                src={`/landing-page/${item.id}.jpg`}
                 alt={`Design ${item.id}`}
                 fill
                 style={{ objectFit: "cover" }}
+                sizes="(max-width: 37.5rem) 100vw, 25vw"
               />
             </div>
           ))}

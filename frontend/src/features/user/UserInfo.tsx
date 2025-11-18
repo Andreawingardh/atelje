@@ -15,7 +15,6 @@ export default function UserInfo() {
   const { deleteAccount, updateDisplayName, error, isLoading } = useUser();
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedName, setEditedName] = useState(user?.displayName || "");
-  console.log("UserInfo rendering, user:", user);
 
   if (!user) {
     return null;

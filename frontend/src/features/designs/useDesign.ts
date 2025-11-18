@@ -131,7 +131,6 @@ export function useDesign() {
         }
         try {
             const designs = await DesignService.getMyDesigns();
-            console.log(designs);
             return designs;
         } catch (error) {
             setError(
@@ -149,7 +148,6 @@ export function useDesign() {
     const deleteDesign = async (id: number) => {
         try {
             await DesignService.deleteDesign(id);
-            console.log("About to call onDelete callback");
 
         } catch (error) {
             setError(

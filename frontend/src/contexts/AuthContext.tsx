@@ -49,7 +49,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     OpenAPI.TOKEN = token;
-    console.log("OpenAPI.TOKEN set to:", OpenAPI.TOKEN);
 
     async function getUser() {
       try {

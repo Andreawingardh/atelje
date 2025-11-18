@@ -20,7 +20,6 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
       router.push("/login");
     }
 
-    console.log("isLoading: " + isLoading);
   }, [user, isLoading, router]);
 
   useEffect(() => {
@@ -38,7 +37,6 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     e.preventDefault();
     setStatus("loading");
     try {
-      console.log(user?.emailSent);
       const response = await AuthService.postApiAuthResendConfirmationEmail();
       setUser(response);
     } catch (error) {
