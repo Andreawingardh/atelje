@@ -52,13 +52,15 @@
     display: flex;
     flex-direction: column;
     width: 18.75rem;
+    min-width: 18.75rem;
     height: 80vh;
+    overflow: hidden;
     border-radius: 0.75rem;
     gap: 1rem;
     padding: 1rem;
     background-color: var(--vanilla);
-    margin-right: -1.25rem; /* Overlaps to the left */
-    z-index: 10; /* Ensures it appears on top of canvas */
+    margin-right: -1.25rem;
+    z-index: 10;
 }
 
 .sideBarToggleBoxes{
