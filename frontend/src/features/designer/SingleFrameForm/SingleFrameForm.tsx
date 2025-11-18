@@ -6,6 +6,7 @@ import { stockPhotos, PhotoCategory, getPhotosByCategory } from "@/lib/stockPhot
 import Image from 'next/image';
 import Button from "@/elements/Button/Button";
 import UnitInput from "@/elements/UnitInput/UnitInput";
+import { ScrollBar } from "@/elements/ScrollBar/ScrollBar";
 
 interface singleFrameFormProps {
   frames: FrameData[];
@@ -100,7 +101,7 @@ export default function SingleFrameForm({
   }, [imageUrl]);
 
   return (
-    <form className={styles.singleFrameForm}>
+    <ScrollBar maxHeight="34.5rem" contentClassName={styles.singleFrameForm}>
       <h3 className={styles.formTitle}>Modify frame</h3>
       <hr className={styles.formDividerDark} />
         <label className={styles.singleFrameLabel}>Color
@@ -281,6 +282,6 @@ export default function SingleFrameForm({
             buttonText="Delete Frame"
             className={styles.deleteButton}
           />
-    </form>
+    </ScrollBar>
   );
 };

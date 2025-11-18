@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './FrameForm.module.css';
 import { stockPhotos } from "@/lib/stockPhotos";
 import { checkOverlap } from "@/lib/frameCollisionUtils";
+import { ScrollBar } from '@/elements/ScrollBar/ScrollBar';
 
 export interface FrameData {
   id: string;
@@ -105,7 +106,7 @@ export default function FrameForm({
   };
 
   return (
-    <div className={styles.frameForm}>
+    <ScrollBar maxHeight="34.5rem" contentClassName={styles.frameForm}>
       {frameSizes.map(({ size, label }) => (
         <div key={size}>
           <button 
@@ -124,6 +125,6 @@ export default function FrameForm({
           <hr className={styles.frameDivider} />
         </div>
       ))}
-    </div>
+    </ScrollBar>
   );
 }
