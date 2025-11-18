@@ -1,5 +1,5 @@
 import styles from "./FurnitureForm.module.css";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDebouncedNumericInput } from "../../designs/useDebouncedNumericInput";
 import UnitInput from "@/elements/UnitInput/UnitInput";
 
@@ -38,6 +38,8 @@ export default function FurnitureForm({
   const MIN_FURNITURE_HEIGHT = 70;
   const MAX_FURNITURE_HEIGHT = 100;
 
+  const [hexInputValue, setHexInputValue] = useState(furnitureColor.sofa.replace('#', ''));
+
   const furnitureDepthControl = useDebouncedNumericInput(
     furnitureDepth,
     setFurnitureDepth,
@@ -57,6 +59,32 @@ export default function FurnitureForm({
     MIN_FURNITURE_HEIGHT,
     MAX_FURNITURE_HEIGHT
   );
+
+  useEffect(() => {
+    setHexInputValue(furnitureColor.sofa.replace('#', ''));
+  }, [furnitureColor.sofa]);
+
+  // Debounce the hex input to update sofaColor
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let value = hexInputValue.replace(/[^0-9A-Fa-f]/g, '');
+      
+      if (value.length === 3) {
+        // Convert 3-char hex to 6-char
+        value = value.split('').map(char => char + char).join('');
+      }
+      
+      if (value.length === 6) {
+        setFurnitureColor({
+          ...furnitureColor,
+          sofa: `#${value}`,
+        });
+      }
+    }, 800); // 800ms delay
+
+    return () => clearTimeout(timer);
+  }, [hexInputValue]);
+
   useEffect(() => {
     if (furnitureWidth > wallWidth) {
       setFurnitureWidth(wallWidth);
@@ -68,6 +96,13 @@ export default function FurnitureForm({
       ...furnitureColor,
       sofa: e.target.value,
     });
+  };
+
+  const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9A-Fa-f]/g, '');
+    if (value.length <= 6) {
+      setHexInputValue(value);
+    }
   };
 
 
@@ -93,6 +128,12 @@ export default function FurnitureForm({
             className={styles.colorInput}
           />
         </div>
+        <UnitInput
+          value={hexInputValue}
+          units="HEX"
+          onChange={handleHexInputChange}
+          placeholder="000000"
+        />
       </div>
         <hr className={styles.formDivider} />
         <div className={styles.measurmentsGroup}>

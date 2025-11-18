@@ -1,0 +1,47 @@
+.masonryGrid {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  overflow: hidden;
+  width: 100vw;
+  height: calc(100vh - 4.03rem);
+}
+
+.column {
+  flex: 1;
+  overflow: hidden;
+}
+
+.masonryItem {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  height: 14rem;
+  margin-bottom: 1rem;
+}
+
+.columnUpScroll {
+  animation: scrollUp 30s linear infinite;
+}
+
+.columnDownScroll {
+  animation: scrollDown 30s linear infinite;
+}
+
+@keyframes scrollUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scrollDown {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

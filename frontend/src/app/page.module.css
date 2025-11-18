@@ -1,0 +1,24 @@
+.landingPageWrapper {
+  position: relative;
+  overflow: hidden;
+  height: calc(100vh - 4.03rem);
+}
+
+.aboutUsButton {
+  position: absolute;
+  z-index: 1000;
+  bottom: 0;
+  right: 0;
+  margin: 1rem;
+}
+
+.creatingButton {
+  align-self: center;
+  margin-top: 2rem;
+}
+
+.landingPageCtaContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

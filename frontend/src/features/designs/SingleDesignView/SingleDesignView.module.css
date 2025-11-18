@@ -1,4 +1,25 @@
+.imageWrapper {
+    width: 986px;
+    max-width: 100%;
+}
+
+.screenshotImage {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
 .informationWrapper {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.actionDivider {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
 }

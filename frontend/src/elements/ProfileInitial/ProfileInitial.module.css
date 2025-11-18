@@ -1,0 +1,34 @@
+.base {
+    width: 6.125rem;
+    height: 6.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    border-radius: 50%;
+    text-transform: uppercase; /* extra fallback for initials */
+    font-size: 3.5rem;
+    font-weight: 600;
+}
+
+/* variants */
+
+.snowdrop {
+    background: var(--snowdrop);
+    color: var(--terracotta);
+  }
+  
+  .terracotta {
+    background: var(--terracotta);
+    color: var(--vanilla);
+  }
+
+  .cornflower {
+    background: var(--cornflower-active);
+    color: var(--vanilla);
+  }
+
+  .darkVanilla {
+    background: var(--dark-vanilla);
+    color: var(--terracotta);
+  }

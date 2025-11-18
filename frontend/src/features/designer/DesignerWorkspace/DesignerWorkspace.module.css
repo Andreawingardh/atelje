@@ -51,7 +51,7 @@
 .sideBarForm {
     display: flex;
     flex-direction: column;
-    width: 17.25rem;
+    width: 18.75rem;
     height: 80vh;
     border-radius: 0.75rem;
     gap: 1rem;
@@ -63,7 +63,7 @@
 
 .sideBarToggleBoxes{
     position: relative;
-    width: 17.25rem;
+    width: 18.75rem;
     height: 3.5rem;
     margin: -1rem -1rem 0 -1rem;
     display: flex;
@@ -109,7 +109,7 @@
 .framesButtonBase {
     font-size: 1.25rem;
     z-index: 10;
-    width: 80%;
+    width: calc(80% + 0.75rem);
     height: 2.5rem;
     border-radius: 0.75rem 0.75rem 0 0;
     margin: 0 -0.25rem 0 0;
@@ -126,7 +126,7 @@
 .sofaButtonActive {
     font-size: 1.25rem;
     z-index: 15;
-    width: 80%;
+    width: calc(80% + 0.75rem);
     height: 2.5rem;
     border-radius: 0.75rem 0.75rem 0 0;
     margin: 0 0 0 -0.25rem;

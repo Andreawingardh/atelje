@@ -5,6 +5,9 @@ import Image from "next/image";
 import { DesignDto } from "@/api/generated";
 import { DownloadScreenshotButton } from "@/elements/DownloadScreenshotButton/DownloadScreenshotButton";
 import { useRouter } from "next/navigation";
+import TextInput from "@/elements/TextInput/TextInput";
+import Button from "@/elements/Button/Button";
+import CircleButton from "@/elements/CircleButton/CircleButton";
 
 export default function SingleDesignView() {
   const { modalState, closeModal } = useModal();
@@ -22,22 +25,28 @@ export default function SingleDesignView() {
 
     return (
       <>
+      <div className={styles.imageWrapper}>
         <Image
           src={design.screenshotUrl!}
           alt={design.name || "Design preview"}
-          // Temporary fixed size, remove after styling
           width={600}
           height={600}
+          className={styles.screenshotImage}
         />
+      </div>
         <div className={styles.informationWrapper}>
+        <div className={styles.actionDivider}>
           {isEditNameMode ? (
             <>
-              <input
+              <TextInput
+                variant="vanilla"
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
                 placeholder={design.name!}
               />
-              <button
+              <Button
+                variant="cornflower"
+                buttonText="Save"
                 onClick={() => {
                   if (
                     modalState.type == "single-design-view" &&
@@ -51,32 +60,36 @@ export default function SingleDesignView() {
                     setIsEditNameMode(false);
                   }
                 }}
-              >
-                Save
-              </button>
-              <button onClick={() => setIsEditNameMode(false)}>Cancel</button>
+              />
+              <Button variant="rosie" buttonText="Cancel" onClick={() => setIsEditNameMode(false)}/>
             </>
           ) : (
             <>
-              <p>{design.name}</p>
-              <button onClick={() => setIsEditNameMode(true)}>
-                Update name
-              </button>
+              <h1>{design.name}</h1>
+              <Button 
+                variant="cornflower" 
+                buttonText="Update name" 
+                buttonIcon="./icons/edit-white-icon.svg"
+                onClick={() => setIsEditNameMode(true)}
+              />
             </>
           )}
-          <button
+        </div>
+        <div className={styles.actionDivider}>
+          <CircleButton
+            buttonIcon="./icons/edit-icon.svg"
             onClick={() => {
               router.push(`/designer/${design.id}`);
               closeModal();
             }}
-          >
-            Edit
-          </button>
+          />
           <DownloadScreenshotButton
             screenshotUrl={design.screenshotUrl}
             designName={design.name || "design"}
           />
-          <button
+          <Button
+            variant="rosie"
+            buttonText="Delete"
             onClick={() => {
               if (
                 modalState.type == "single-design-view" &&
@@ -86,10 +99,9 @@ export default function SingleDesignView() {
                 closeModal();
               }
             }}
-          >
-            Delete
-          </button>
+          />
         </div>
+      </div>
       </>
     );
   }

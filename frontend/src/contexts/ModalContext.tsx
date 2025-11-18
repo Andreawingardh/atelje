@@ -36,6 +36,10 @@ type ModalConfig = {
       onCancel: () => void;
     };
   };
+  "about-us": {
+    data: never;
+    callbacks: never;
+  };
 };
 
 export interface ModalContextType {
@@ -43,22 +47,21 @@ export interface ModalContextType {
   openModal: <T extends keyof ModalConfig>(
     type: T,
     config?: {
-      data?: ModalConfig[T]['data'];
-      callbacks?: ModalConfig[T]['callbacks'];
+      data?: ModalConfig[T]["data"];
+      callbacks?: ModalConfig[T]["callbacks"];
     }
   ) => void;
   closeModal: () => void;
 }
 
-
 type ModalState =
-  {
-    [K in keyof ModalConfig]: {
-      type: K;
-      data: ModalConfig[K]["data"];
-      callbacks: ModalConfig[K]["callbacks"];
-    };
-  }[keyof ModalConfig]
+  | {
+      [K in keyof ModalConfig]: {
+        type: K;
+        data: ModalConfig[K]["data"];
+        callbacks: ModalConfig[K]["callbacks"];
+      };
+    }[keyof ModalConfig]
   | { type: null };
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -72,24 +75,24 @@ export default function ModalProvider({
     type: null,
   });
 
-const openModal: ModalContextType["openModal"] = (type, config) => {
-  setModalState({
-    type,
-    data: config?.data,
-    callbacks: config?.callbacks,
-  } as ModalState);
-};
+  const openModal: ModalContextType["openModal"] = (type, config) => {
+    setModalState({
+      type,
+      data: config?.data,
+      callbacks: config?.callbacks,
+    } as ModalState);
+  };
 
-function closeModal() {
-  setModalState({ type: null });
-}
+  function closeModal() {
+    setModalState({ type: null });
+  }
 
   return (
     <ModalContext.Provider
       value={{
         modalState,
         openModal,
-        closeModal
+        closeModal,
       }}
     >
       {children}

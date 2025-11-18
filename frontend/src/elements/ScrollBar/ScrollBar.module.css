@@ -1,0 +1,48 @@
+.scrollBarWrapper {
+  position: relative;
+  display: flex;
+}
+
+.scrollTrack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0.313rem;
+  background-color: var(--dark-vanilla-dark);
+  border-radius: 0.156rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.scrollThumb {
+  position: absolute;
+  left: 0;
+  width: 0.313rem;
+  background-color: var(--light-sunflower-seed);
+  border-radius: 0.156rem;
+  cursor: grab;
+  transition: background-color 0.2s ease;
+}
+
+.scrollThumb:hover {
+  background-color: var(--sunflower-seed);
+}
+
+.scrollThumb:active {
+  cursor: grabbing;
+}
+
+.scrollContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Hide default scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollContent::-webkit-scrollbar {
+  display: none;
+}
