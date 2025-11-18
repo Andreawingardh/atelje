@@ -24,8 +24,7 @@
     flex-wrap: wrap;
     gap: 1rem;
     width: fit-content;
-    height: 33rem;
-    overflow-y: scroll;
+    padding-left: 1.5rem;
 }
 
 .designCard {
