@@ -113,6 +113,13 @@ export default function FrameForm({
             onClick={() => handleAddFrame(size)}
             className={styles.addFrameButton}
           >
+          <img 
+            src={`/icons/frame-select-icon.svg`} 
+            alt={`Frame size ${size} preview`} 
+            className={styles.framePreviewImage} 
+            width={100}
+            height={100}
+          />
             {label}
             <div className={styles.addIcon}>
               <img 
