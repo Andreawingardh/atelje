@@ -7,6 +7,7 @@ import { useDesign } from "../designs/useDesign";
 import { DesignDto } from "@/api/generated";
 import LoadingSpinner from "@/elements/LoadingSpinner/LoadingSpinner";
 import AlertBadge from "@/elements/AlertBadge/AlertBadge";
+import { ScrollBar } from "@/elements/ScrollBar/ScrollBar";
 
 export default function UserDesigns() {
   const { user } = useAuth();
@@ -61,7 +62,7 @@ export default function UserDesigns() {
       {error && <AlertBadge message={error} variant="warning" />}
       {successMessage && <AlertBadge message={successMessage} variant="success" />}
 
-      <div className={styles.designsGrid}>
+      <ScrollBar maxHeight="33rem" contentClassName={styles.designsGrid}>
         {isLoading && <LoadingSpinner />}
         {designs?.map((design) => (
           <button
@@ -94,7 +95,7 @@ export default function UserDesigns() {
             <p className={styles.designName}>{design.name}</p>
           </button>
         ))}
-      </div>
+      </ScrollBar>
     </section>
   );
 }
