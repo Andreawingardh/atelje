@@ -27,7 +27,7 @@ export default function AboutUsModal() {
           The Ateljé repository
           <Image
             className={styles.aboutUsLinkIcon}
-            src="icons/arrow-icon.svg"
+            src="icons/arrow-white-icon.svg"
             height={20}
             width={20}
             alt="Icon of an arrow"
@@ -42,7 +42,7 @@ export default function AboutUsModal() {
           Andrea
           <Image
             className={styles.aboutUsLinkIcon}
-            src="icons/arrow-icon.svg"
+            src="icons/arrow-white-icon.svg"
             height={20}
             width={20}
             alt="Icon of an arrow"
@@ -55,7 +55,7 @@ export default function AboutUsModal() {
           Jennie
           <Image
             className={styles.aboutUsLinkIcon}
-            src="icons/arrow-icon.svg"
+            src="icons/arrow-white-icon.svg"
             height={20}
             width={20}
             alt="Icon of an arrow"
@@ -65,7 +65,7 @@ export default function AboutUsModal() {
           Josefine
           <Image
             className={styles.aboutUsLinkIcon}
-            src="icons/arrow-icon.svg"
+            src="icons/arrow-white-icon.svg"
             height={20}
             width={20}
             alt="Icon of an arrow"

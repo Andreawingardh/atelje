@@ -42,7 +42,7 @@ export default function Home() {
         </div>
       </CTAContainer>
       <CircleButton
-        buttonIcon="241113-doge.jpg"
+        buttonIcon="./icons/waving-blue-icon.svg"
         className={styles.aboutUsButton}
         onClick={() => openModal("about-us")}
       />
