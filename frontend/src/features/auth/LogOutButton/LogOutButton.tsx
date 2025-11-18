@@ -10,5 +10,5 @@ export default function LogOutButton() {
     logout();
   }
 
-  return <Button onClick={handleOnClick} variant="snowdrop" buttonText="Log out"></Button>;
+  return <Button onClick={handleOnClick} variant="snowdrop" buttonText="Sign out"></Button>;
 }
