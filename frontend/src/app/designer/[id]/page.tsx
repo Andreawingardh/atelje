@@ -89,8 +89,6 @@ export default function DesignerPage() {
 
   return (
     <ProtectedRoute>
-
-      {hasUnsavedChanges && <div>⚠️ You have unsaved changes</div>}
       <DesignerWorkspace
         designName={designName}
         onDesignNameChange={setDesignName}
