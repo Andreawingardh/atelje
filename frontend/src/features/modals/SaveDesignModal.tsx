@@ -37,9 +37,10 @@ export default function SaveDesignModal() {
   return (
     <form className={styles.saveDesignForm}>
       <TextInput
+        variant="vanilla"
         value={designName}
         onChange={handleOnChange}
-        placeholder={designName || "Give your design a name"}
+        placeholder={designName || "Name your design..."}
       />
       {errorMessage && <p>{errorMessage}</p>}
       <Button
