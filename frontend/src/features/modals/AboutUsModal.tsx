@@ -35,42 +35,51 @@ export default function AboutUsModal() {
         </Link>
       </div>
       <div className={styles.aboutUsLinksWrapper}>
-        <Link
-          className={styles.aboutUsLink}
-          href="https://github.com/Andreawingardh"
-        >
-          Andrea
-          <Image
-            className={styles.aboutUsLinkIcon}
-            src="icons/arrow-white-icon.svg"
-            height={20}
-            width={20}
-            alt="Icon of an arrow"
-          />
-        </Link>
-        <Link
-          className={styles.aboutUsLink}
-          href="https://github.com/Jennie-Westerlund"
-        >
-          Jennie
-          <Image
-            className={styles.aboutUsLinkIcon}
-            src="icons/arrow-white-icon.svg"
-            height={20}
-            width={20}
-            alt="Icon of an arrow"
-          />
-        </Link>
-        <Link className={styles.aboutUsLink} href="https://github.com/JosAhl">
-          Josefine
-          <Image
-            className={styles.aboutUsLinkIcon}
-            src="icons/arrow-white-icon.svg"
-            height={20}
-            width={20}
-            alt="Icon of an arrow"
-          />
-        </Link>
+        <div className={styles.creatorContainer}>
+          <Image className={styles.aboutUsPicture} src="/andrea.jpeg" height={80} width={80} alt="Picture of Andrea" />
+          <Link
+            className={styles.aboutUsLink}
+            href="https://github.com/Andreawingardh"
+          >
+            Andrea
+            <Image
+              className={styles.aboutUsLinkIcon}
+              src="icons/arrow-white-icon.svg"
+              height={20}
+              width={20}
+              alt="Icon of an arrow"
+            />
+          </Link>
+        </div>
+        <div className={styles.creatorContainer}>
+          <Image className={styles.aboutUsPicture} src="/jennie.jpeg" height={80} width={80} alt="Picture of Jennie" />
+          <Link
+            className={styles.aboutUsLink}
+            href="https://github.com/Jennie-Westerlund"
+          >
+            Jennie
+            <Image
+              className={styles.aboutUsLinkIcon}
+              src="icons/arrow-white-icon.svg"
+              height={20}
+              width={20}
+              alt="Icon of an arrow"
+            />
+          </Link>
+        </div>
+        <div className={styles.creatorContainer}>
+          <Image className={styles.aboutUsPicture} src="/josefine.jpeg" height={80} width={80} alt="Picture of Josefine" />
+          <Link className={styles.aboutUsLink} href="https://github.com/JosAhl">
+            Josefine
+            <Image
+              className={styles.aboutUsLinkIcon}
+              src="icons/arrow-white-icon.svg"
+              height={20}
+              width={20}
+              alt="Icon of an arrow"
+            />
+          </Link>
+        </div>
       </div>
     </div>
   );
