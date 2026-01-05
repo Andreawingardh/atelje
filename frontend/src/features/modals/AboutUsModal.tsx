@@ -5,7 +5,7 @@ import styles from "./AboutUsModal.module.css";
 export default function AboutUsModal() {
   return (
     <div className={styles.aboutUsContainer}>
-      <h2>About us</h2>
+      <h1>About us</h1>
       <p>
         This is Ateljé, a project built by Jennie, Andrea and Josefine. With a
         keen eye for interior design, Jennie identified a need for a product
