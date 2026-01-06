@@ -4,6 +4,8 @@
   gap: 1rem;
   min-width: 16.75rem;
   padding-left: 1.5rem;
+  padding-bottom: 1rem; /* Add this - ensures bottom spacing */
+  flex-shrink: 0; /* Add this - prevents shrinking during re-renders */
 }
 
 .formContent {
@@ -116,6 +118,7 @@
   gap: 2px;
   flex-wrap: wrap;
   margin-bottom: 12px;
+  min-height: 244px;
 }
 
 .photoThumbnail {

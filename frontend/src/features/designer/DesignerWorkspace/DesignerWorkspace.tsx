@@ -265,7 +265,7 @@ export default function DesignerWorkspace({
             </>
           )
           }
-          <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <div className={styles.formContentWrapper}>
             {showSideBar == "frames" && (
               <FrameForm
                 frames={customDesign.frames}
@@ -296,6 +296,7 @@ export default function DesignerWorkspace({
               selectedFrameIndex !== -1 &&
               showSideBar == "single-frame" && (
                 <SingleFrameForm
+                  key={selectedFrame.id}
                   frames={customDesign.frames}
                   id={selectedFrame.id}
                   frameColor={selectedFrame.frameColor || "#ac924f"}

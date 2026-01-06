@@ -101,7 +101,7 @@ export default function SingleFrameForm({
   }, [imageUrl]);
 
   return (
-      <ScrollBar maxHeight="100%">
+      <ScrollBar>
         <div className={styles.singleFrameForm}>
           <label className={styles.singleFrameLabel}>Color
             <div className={styles.colorPickerContainer}>
