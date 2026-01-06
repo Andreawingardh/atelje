@@ -56,7 +56,7 @@
     min-width: 18.75rem;
     overflow: hidden;
     border-radius: 0.75rem;
-    gap: 1rem;
+    gap: 0.5rem;
     padding: 1rem;
     background-color: var(--vanilla);
     margin-right: -1.25rem;
@@ -105,6 +105,14 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.formDividerDark {
+    background-color: var(--sunflower-seed);
+    padding: 0 0 3px 0; /* padding instead of height to avoid BFC issues */
+    border: none;
+    border-radius: 9999px;
+    box-shadow: none;
 }
 
 /* Sofa selected scenario */
