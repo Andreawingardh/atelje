@@ -1,36 +1,54 @@
+.scrollBarWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.scrollTrack {
+  position: relative;
+  width: 0.313rem;
+  background-color: var(--dark-vanilla-dark);
+  border-radius: 0.156rem;
+  cursor: pointer;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.scrollThumb {
+  position: absolute;
+  left: 0;
+  width: 0.313rem;
+  background-color: var(--light-sunflower-seed);
+  border-radius: 0.156rem;
+  cursor: grab;
+  transition: background-color 0.2s ease;
+}
+
+.scrollThumb:hover {
+  background-color: var(--sunflower-seed);
+}
+
+.scrollThumbDragging {
+  cursor: grabbing;
+  background-color: var(--sunflower-seed);
+}
+
 .scrollContainer {
   width: 100%;
   height: 100%;
-  max-height: 100%; /* Add this */
+  max-height: 100%;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  display: block; /* Change from flex to block */
-  position: relative; /* Add this */
+  display: block;
+  position: relative;
+  /* Hide default scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-
-/* Custom scrollbar styling */
 .scrollContainer::-webkit-scrollbar {
-  width: 8px;
-}
-
-.scrollContainer::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 9999px;
-}
-
-.scrollContainer::-webkit-scrollbar-thumb {
-  background: var(--dark-vanilla);
-  border-radius: 9999px;
-}
-
-.scrollContainer::-webkit-scrollbar-thumb:hover {
-  background: var(--sunflower-seed);
-}
-
-/* Firefox scrollbar styling */
-.scrollContainer {
-  scrollbar-width: thin;
-  scrollbar-color: var(--dark-vanilla) transparent;
+  display: none;
 }
