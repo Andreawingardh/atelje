@@ -15,13 +15,15 @@ export default function DashboardPage() {
     <>
       <ProtectedRoute>
       <section className={styles.content}>
-          <UserDesigns />
+        <UserDesigns />
+        <div className={styles.dashboardDivider}>
           <UserInfo />
           <CircleButton
             buttonIcon="./icons/waving-blue-icon.svg"
             className={styles.aboutUsButton}
             onClick={() => openModal("about-us")}
           />
+        </div>
       </section>
       </ProtectedRoute>
     </>

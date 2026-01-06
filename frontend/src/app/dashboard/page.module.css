@@ -5,6 +5,12 @@
     padding: 2.75rem;
 }
 
+.dashboardDivider {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .aboutUsButton {
     align-self: flex-end;
     transform-origin: center;
