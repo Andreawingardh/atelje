@@ -2,8 +2,8 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    min-width: 16.75rem;
-    padding-left: 1.5rem;
+    min-width: 15.75rem;
+    padding-left: 1rem;
 }
 
 .addFrameButton {

@@ -5,6 +5,30 @@
     padding: 2.75rem;
 }
 
+.dashboardDivider {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 70vh;
+}
+
 .aboutUsButton {
     align-self: flex-end;
+    transform-origin: center;
+}
+
+.aboutUsButton:hover {
+    animation: wave 0.8s ease-in-out infinite;
+}
+
+@keyframes wave {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(30deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }

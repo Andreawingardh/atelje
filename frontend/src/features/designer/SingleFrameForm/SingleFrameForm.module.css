@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  min-width: 16.75rem;
-  padding-left: 1.5rem;
+  min-width: 15.75rem;
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .formContent {
@@ -23,14 +25,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-}
-
-.formDividerDark {
-  background-color: var(--sunflower-seed);
-  padding: 0 0 3px 0; /* padding instead of height to avoid BFC issues */
-  border: none;
-  border-radius: 9999px;
-  box-shadow: none;
 }
 
 .formDivider {

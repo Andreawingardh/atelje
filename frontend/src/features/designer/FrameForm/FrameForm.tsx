@@ -106,7 +106,7 @@ export default function FrameForm({
   };
 
   return (
-    <ScrollBar maxHeight="34.5rem" contentClassName={styles.frameForm}>
+    <ScrollBar contentClassName={styles.frameForm}>
       {frameSizes.map(({ size, label }) => (
         <div key={size}>
           <button 

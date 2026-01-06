@@ -1,124 +1,131 @@
-import React, { ReactNode, useRef, useEffect, useState } from "react";
-import styles from "./ScrollBar.module.css";
+import React, { ReactNode, CSSProperties, useRef, useEffect, useState } from 'react';
+import styles from './ScrollBar.module.css';
 
 interface ScrollBarProps {
   children: ReactNode;
-  maxHeight: string;
-  className?: string;
+  maxHeight?: string;
   contentClassName?: string;
+  style?: CSSProperties;
 }
 
-export const ScrollBar: React.FC<ScrollBarProps> = ({
-  children,
-  maxHeight,
-  className = "",
-  contentClassName = "",
+export const ScrollBar: React.FC<ScrollBarProps> = ({ 
+  children, 
+  maxHeight = 'auto',
+  contentClassName = '',
+  style = {}
 }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const scrollPosRef = useRef<number>(0);
+  const [isDragging, setIsDragging] = useState(false);
   const [thumbHeight, setThumbHeight] = useState(0);
   const [thumbTop, setThumbTop] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [showScrollbar, setShowScrollbar] = useState(false);
 
-  // Reference to the actual scrollable content div
-  const contentRef = useRef<HTMLDivElement>(null);
-
+  // Save scroll position before re-render
   useEffect(() => {
-    const updateScrollbar = () => {
-      if (!contentRef.current) return;
+    const element = scrollRef.current;
+    if (!element) return;
 
-      // Get scroll measurements from the content div
-      const { scrollHeight, clientHeight, scrollTop } = contentRef.current;
-      const hasScroll = scrollHeight > clientHeight;
-
-      setShowScrollbar(hasScroll);
-
-      if (hasScroll) {
-        const thumbHeightCalc =
-          (clientHeight / scrollHeight) * clientHeight * 0.5;
-        setThumbHeight(Math.max(thumbHeightCalc, 40));
-
-        // Calculate thumb position based on scroll percentage
-        const maxScroll = scrollHeight - clientHeight;
-        const scrollPercentage = scrollTop / maxScroll;
-        const maxThumbTop = clientHeight - thumbHeightCalc;
-        setThumbTop(scrollPercentage * maxThumbTop);
-      }
+    const handleScroll = () => {
+      scrollPosRef.current = element.scrollTop;
+      updateThumbPosition();
     };
 
-    const content = contentRef.current;
-    if (!content) return;
+    element.addEventListener('scroll', handleScroll);
+    return () => element.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    content.addEventListener("scroll", updateScrollbar);
-    updateScrollbar();
+  // Restore scroll position after re-render
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (element && scrollPosRef.current > 0) {
+      element.scrollTop = scrollPosRef.current;
+    }
+  });
 
-    // Update scrollbar when content size changes
-    const resizeObserver = new ResizeObserver(updateScrollbar);
-    resizeObserver.observe(content);
+  // Calculate thumb size and position
+  const updateThumbPosition = () => {
+    const element = scrollRef.current;
+    if (!element) return;
 
-    return () => {
-      content.removeEventListener("scroll", updateScrollbar);
-      resizeObserver.disconnect();
-    };
+    const scrollHeight = element.scrollHeight;
+    const clientHeight = element.clientHeight;
+    const scrollTop = element.scrollTop;
+
+    if (scrollHeight <= clientHeight) {
+      setThumbHeight(0);
+      return;
+    }
+
+    const thumbHeightCalc = (clientHeight / scrollHeight) * clientHeight;
+    const thumbTopCalc = (scrollTop / scrollHeight) * clientHeight;
+
+    setThumbHeight(thumbHeightCalc);
+    setThumbTop(thumbTopCalc);
+  };
+
+  // Update thumb on mount and when content changes
+  useEffect(() => {
+    updateThumbPosition();
+
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const resizeObserver = new ResizeObserver(updateThumbPosition);
+    resizeObserver.observe(element);
+
+    return () => resizeObserver.disconnect();
   }, [children]);
 
-  const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!contentRef.current) return;
-
-    const track = e.currentTarget;
-    const trackRect = track.getBoundingClientRect();
-    const clickPosition = e.clientY - trackRect.top;
-
-    const { scrollHeight, clientHeight } = contentRef.current;
-    const scrollPercentage = clickPosition / clientHeight;
-    const maxScroll = scrollHeight - clientHeight;
-
-    // Jump scroll to the clicked position
-    contentRef.current.scrollTop = scrollPercentage * maxScroll;
-  };
-
+  // Handle thumb dragging
   const handleThumbMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     setIsDragging(true);
-  };
 
-  useEffect(() => {
-    if (!isDragging) return;
+    const startY = e.clientY;
+    const startTop = thumbTop;
+    const element = scrollRef.current;
+    if (!element) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!contentRef.current) return;
-
-      const { scrollHeight, clientHeight } = contentRef.current;
-      const maxScroll = scrollHeight - clientHeight;
-      const maxThumbTop = clientHeight - thumbHeight;
-
-      // Calculate new thumb position based on mouse movement
-      const deltaY = e.movementY;
-      const newThumbTop = Math.max(0, Math.min(thumbTop + deltaY, maxThumbTop));
-
-      const scrollPercentage = newThumbTop / maxThumbTop;
-      contentRef.current.scrollTop = scrollPercentage * maxScroll;
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaY = moveEvent.clientY - startY;
+      const newTop = Math.max(0, Math.min(element.clientHeight - thumbHeight, startTop + deltaY));
+      
+      const scrollPercentage = newTop / (element.clientHeight - thumbHeight);
+      element.scrollTop = scrollPercentage * (element.scrollHeight - element.clientHeight);
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging, thumbTop, thumbHeight]);
+  // Handle track click
+  const handleTrackClick = (e: React.MouseEvent) => {
+    if (e.target !== e.currentTarget) return;
+    
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const trackRect = e.currentTarget.getBoundingClientRect();
+    const clickY = e.clientY - trackRect.top;
+    const scrollPercentage = clickY / trackRect.height;
+    
+    element.scrollTop = scrollPercentage * (element.scrollHeight - element.clientHeight);
+  };
 
   return (
-    <div className={`${styles.scrollBarWrapper} ${className}`}>
-      {showScrollbar && (
+    <div className={styles.scrollBarWrapper}>
+      {thumbHeight > 0 && (
         <div className={styles.scrollTrack} onClick={handleTrackClick}>
           <div
-            className={styles.scrollThumb}
+            ref={thumbRef}
+            className={`${styles.scrollThumb} ${isDragging ? styles.scrollThumbDragging : ''}`}
             style={{
               height: `${thumbHeight}px`,
               top: `${thumbTop}px`,
@@ -127,12 +134,17 @@ export const ScrollBar: React.FC<ScrollBarProps> = ({
           />
         </div>
       )}
-      <div
-        ref={contentRef}
-        className={`${styles.scrollContent} ${contentClassName}`}
-        style={{ maxHeight }}
+      <div 
+        ref={scrollRef}
+        className={styles.scrollContainer}
+        style={{ 
+          maxHeight,
+          ...style 
+        }}
       >
-        {children}
+        <div className={contentClassName}>
+          {children}
+        </div>
       </div>
     </div>
   );
