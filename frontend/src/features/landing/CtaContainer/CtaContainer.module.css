@@ -15,11 +15,20 @@
     gap: 1rem;
 }
 
+
+/* Tablet */
+@media (max-width: 900px) {
+
+    .ctaContainer {
+      padding: 2rem;
+    }
+}
+
 /* Mobile */
 @media (max-width: 480px) {
 
     .ctaContainer {
-        padding: 2rem;
-        top: 45%;
+      top: 45%;
     }
 }
+
