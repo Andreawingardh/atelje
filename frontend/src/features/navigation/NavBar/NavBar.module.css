@@ -20,3 +20,12 @@
     display: flex;
     gap: 1rem;
 }
+
+
+/* Mobile */
+@media (max-width: 480px) {
+
+    .navButtons {
+        display: none;
+    }
+}
