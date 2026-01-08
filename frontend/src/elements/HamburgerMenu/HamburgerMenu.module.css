@@ -1,0 +1,56 @@
+/* Hamburger hidden by default */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+  }
+  
+  /* Mobile menu hidden */
+  .mobileMenu {
+    display: none;
+  }
+  
+  /* Mobile */
+  @media (max-width: 480px) {
+    .hamburger {
+      display: block;
+      width: 30px;
+      height: 20px;
+      cursor: pointer;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+    }
+  
+    .mobileMenu {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      right: 0px;
+      background-color: var(--terracotta);
+      border-radius: 0 0 0 0.5rem;
+      padding: 1rem;
+      gap: 0.5rem;
+      z-index: 1000;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: max-height 0.2s ease-out, opacity 0.2s ease-out, transform 0.2s ease-out;
+    }
+
+    .mobileMenu.open {
+      max-height: 149px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hide {
+      display: none;
+    }
+
+    .show {
+      display: block;
+    }
+  }

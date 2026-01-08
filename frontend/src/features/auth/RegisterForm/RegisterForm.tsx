@@ -7,6 +7,7 @@ import { RegisterDto } from "@/api/generated";
 import { useModal } from "@/contexts/ModalContext";
 import Button from "@/elements/Button/Button";
 import TextInput from "@/elements/TextInput/TextInput";
+import { ScrollBar } from "@/elements/ScrollBar/ScrollBar";
 
 type FieldData = {
   value: string;
@@ -273,7 +274,8 @@ export default function RegisterForm() {
   }
 
   return (
-    <>
+    <ScrollBar variant="darkVanilla">
+    <div className={styles.registerFormContainer}>
       <h1 className={styles.title}>Sign up</h1>
       {error && <p>{error}</p>}
       <form className={styles.registerForm} onSubmit={handleSubmit}>
@@ -413,6 +415,7 @@ export default function RegisterForm() {
       >
         Already have an account? Sign in!{" "}
       </button>
-    </>
+    </div>
+    </ScrollBar>
   );
 }

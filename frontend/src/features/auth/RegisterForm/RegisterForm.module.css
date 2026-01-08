@@ -101,3 +101,45 @@
   gap: 0.25rem;
   align-items: center;
 }
+
+/* Mobile and tablet */
+@media (max-width: 830px) {
+  .registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 auto;
+  }
+
+  .registerFormContainer {
+    padding: 0 0 0 1rem;
+  }
+
+  .registerForm::before {
+    display: none;
+  }
+
+  .registerForm > label:nth-child(4) { /* Password */
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .registerForm > label:nth-child(5) { /* Repeat password */
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .passwordRequirements {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .registerForm > button[type="submit"] {
+    grid-column: auto;
+    margin-top: 1rem;
+  }
+
+  .signInButton {
+    margin-top: 0.5rem;
+  }
+}

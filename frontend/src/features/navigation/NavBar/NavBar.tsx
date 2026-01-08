@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/contexts/ModalContext";
 import Button from "@/elements/Button/Button";
 import LogOutButton from "@/features/auth/LogOutButton/LogOutButton";
+import HamburgerMenu from "@/elements/HamburgerMenu/HamburgerMenu";
 
 export default function NavBar() {
   const { openModal } = useModal();
@@ -15,6 +16,7 @@ export default function NavBar() {
     "unauthorized"
   );
   const router = useRouter();
+  const [openHamburger, setOpenHamburger] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -45,22 +47,39 @@ export default function NavBar() {
   return (
     <nav className={styles.navBarWrapper}>
       <h1 onClick={handleLogoClick} className={styles.navLogo}>Ateljé</h1>
+      
       <div className={styles.navButtons}>
         <Button onClick={handleDesignerClick} name="designerButton" variant="snowdrop" buttonText="Design tool"/>
-      {status == "unauthorized" && (
-        <>
-          <Button onClick={handleLoginClick} name="loginButton" variant="snowdrop" buttonText="Sign in"/>
-          <Button onClick={handleRegisterClick} name="registerButton" variant="snowdrop" buttonText="Sign up"/>
-        </>
-      )}
-
-      {status == "authorized" && (
-        <>
-        <Button onClick={handleProfileClick} name="profileButton" variant="snowdrop" buttonText="Profile"/>
-        <LogOutButton/>
-        </>
-      )}
+        {status == "unauthorized" && (
+          <>
+            <Button onClick={handleLoginClick} name="loginButton" variant="snowdrop" buttonText="Sign in"/>
+            <Button onClick={handleRegisterClick} name="registerButton" variant="snowdrop" buttonText="Sign up"/>
+          </>
+        )}
+        {status == "authorized" && (
+          <>
+            <Button onClick={handleProfileClick} name="profileButton" variant="snowdrop" buttonText="Profile"/>
+            <LogOutButton/>
+          </>
+        )}
       </div>
+
+      {/* Mobile menu */}
+      <HamburgerMenu isOpen={openHamburger} onToggle={() => setOpenHamburger(!openHamburger)}>
+        <Button onClick={handleDesignerClick} name="designerButton" variant="snowdrop" buttonText="Design tool"/>
+        {status == "unauthorized" && (
+          <>
+            <Button onClick={handleLoginClick} name="loginButton" variant="snowdrop" buttonText="Sign in"/>
+            <Button onClick={handleRegisterClick} name="registerButton" variant="snowdrop" buttonText="Sign up"/>
+          </>
+        )}
+        {status == "authorized" && (
+          <>
+            <Button onClick={handleProfileClick} name="profileButton" variant="snowdrop" buttonText="Profile"/>
+            <LogOutButton/>
+          </>
+        )}
+      </HamburgerMenu>
     </nav>
   );
 }

@@ -34,7 +34,12 @@ export default function ModalManager() {
 
   return (
     <div onClick={closeModal} className={styles.backdrop}>
-      <div onClick={(e) => e.stopPropagation()} className={styles.modalContent} style={{backgroundColor: modalState.type == "about-us" ? "var(--vanilla)" : "var(--snowdrop)"}}>
+      <div onClick={(e) => e.stopPropagation()} 
+        className={`
+          ${styles.modalContent} 
+          ${modalState.type == "about-us" ? styles.aboutUsModal : ""}
+          ${modalState.type == "register" ? styles.registerModal : ""}
+        `}>
         {modalMap[modalState.type]}
       </div>
     </div>

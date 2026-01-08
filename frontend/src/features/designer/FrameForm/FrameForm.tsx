@@ -106,7 +106,7 @@ export default function FrameForm({
   };
 
   return (
-    <ScrollBar contentClassName={styles.frameForm}>
+    <ScrollBar variant="lightSunflowerSeed" contentClassName={styles.frameForm}>
       {frameSizes.map(({ size, label }) => (
         <div key={size}>
           <button 
