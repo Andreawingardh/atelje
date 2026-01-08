@@ -1,11 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./AboutUsModal.module.css";
+import { ScrollBar } from "@/elements/ScrollBar/ScrollBar";
 
 export default function AboutUsModal() {
   return (
+    <ScrollBar variant="darkVanilla" className={styles.aboutUsScrollbar}>
     <div className={styles.aboutUsContainer}>
-      <h1>About us</h1>
+      <h1 className={styles.aboutUsH1}>About us</h1>
       <p>
         This is Ateljé, a project built by Jennie, Andrea and Josefine. With a
         keen eye for interior design, Jennie identified a need for a product
@@ -82,5 +84,6 @@ export default function AboutUsModal() {
         </div>
       </div>
     </div>
+    </ScrollBar>
   );
 }

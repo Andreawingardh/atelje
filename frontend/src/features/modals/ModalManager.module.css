@@ -25,3 +25,24 @@
   min-width: 300px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+/* Mobile */
+@media (max-width: 480px) {
+
+  .modalContent {
+    padding: 0rem;
+    border-radius: 0.75rem;
+    min-width: 10px;
+    width: 90%;
+    height: 75%;
+    overflow: scroll;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .aboutUsModal {
+    background: var(--vanilla);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}

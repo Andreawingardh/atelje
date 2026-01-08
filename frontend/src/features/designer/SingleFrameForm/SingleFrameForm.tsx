@@ -101,7 +101,7 @@ export default function SingleFrameForm({
   }, [imageUrl]);
 
   return (
-      <ScrollBar>
+      <ScrollBar variant="lightSunflowerSeed">
         <div className={styles.singleFrameForm}>
           <label className={styles.singleFrameLabel}>Color
             <div className={styles.colorPickerContainer}>

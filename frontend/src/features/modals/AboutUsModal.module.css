@@ -1,6 +1,5 @@
 .aboutUsContainer {
   max-width: 50rem;
-  background-color: var(--vanilla);
 }
 
 .aboutUsLink {
@@ -50,4 +49,38 @@
 .aboutUsLinkIcon {
     transform: rotate(180deg);
     color: var(--snowdrop);
+}
+
+
+/* Mobile */
+@media (max-width: 480px) {
+
+  .aboutUsContainer {
+    padding: 0rem 2rem 2rem 1rem;
+  }
+
+  .aboutUsScrollbar {
+    padding: 1rem 0 1rem 1rem;
+  }
+
+  .aboutUsH1 {
+    margin-bottom: 1rem;
+  }
+
+  .aboutUsLinksWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0 0 0;
+    gap: 1rem;
+  }
+
+  .creatorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+  
 }

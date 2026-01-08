@@ -4,14 +4,18 @@ import styles from './ScrollBar.module.css';
 interface ScrollBarProps {
   children: ReactNode;
   maxHeight?: string;
+  variant?: 'lightSunflowerSeed' | 'darkVanilla';
   contentClassName?: string;
+  className?: string;
   style?: CSSProperties;
 }
 
 export const ScrollBar: React.FC<ScrollBarProps> = ({ 
   children, 
   maxHeight = 'auto',
+  variant = 'lightSunflowerSeed',
   contentClassName = '',
+  className = '',
   style = {}
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -20,6 +24,16 @@ export const ScrollBar: React.FC<ScrollBarProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [thumbHeight, setThumbHeight] = useState(0);
   const [thumbTop, setThumbTop] = useState(0);
+
+  const variantClassScrollTrack = {
+    lightSunflowerSeed: styles.lightSunflowerSeedScrollTrack,
+    darkVanilla: styles.darkVanillaScrollTrack,
+  }[variant];
+
+  const variantClassScrollThumb = {
+    lightSunflowerSeed: styles.lightSunflowerSeedScrollThumb,
+    darkVanilla: styles.darkVanillaScrollThumb,
+  }[variant];
 
   // Save scroll position before re-render
   useEffect(() => {
@@ -120,12 +134,12 @@ export const ScrollBar: React.FC<ScrollBarProps> = ({
   };
 
   return (
-    <div className={styles.scrollBarWrapper}>
+    <div className={`${styles.scrollBarWrapper} ${className}`}>
       {thumbHeight > 0 && (
-        <div className={styles.scrollTrack} onClick={handleTrackClick}>
+        <div className={`${styles.scrollTrack} ${variantClassScrollTrack}`} onClick={handleTrackClick}>
           <div
             ref={thumbRef}
-            className={`${styles.scrollThumb} ${isDragging ? styles.scrollThumbDragging : ''}`}
+            className={`${styles.scrollTrack} ${variantClassScrollThumb} ${isDragging ? styles.scrollThumbDragging : ''}`}
             style={{
               height: `${thumbHeight}px`,
               top: `${thumbTop}px`,
