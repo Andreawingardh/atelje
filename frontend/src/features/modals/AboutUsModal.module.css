@@ -52,8 +52,8 @@
 }
 
 
-/* Mobile */
-@media (max-width: 480px) {
+/* Mobile and tablet*/
+@media (max-width: 830px) {
 
   .aboutUsContainer {
     padding: 0rem 2rem 2rem 1rem;

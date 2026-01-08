@@ -27,7 +27,7 @@
 }
 
 /* Mobile */
-@media (max-width: 480px) {
+@media (max-width: 830px) {
 
   .modalContent {
     padding: 0rem;
