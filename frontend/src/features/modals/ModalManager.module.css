@@ -27,7 +27,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Mobile */
+/* Tablet */
 @media (max-width: 830px) {
 
   .aboutUsModal {
@@ -47,5 +47,13 @@
     height: 75%;
     overflow: scroll;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Mobile */
+@media (max-width: 430px) {
+
+  .modalContent {
+    padding: 1rem;
   }
 }

@@ -7,6 +7,8 @@ import UserInfo from "@/features/user/UserInfo";
 import { useModal } from "@/contexts/ModalContext";
 import styles from "./page.module.css";
 import CircleButton from "@/elements/CircleButton/CircleButton";
+import TextInput from "@/elements/TextInput/TextInput";
+import Button from "@/elements/Button/Button";
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();

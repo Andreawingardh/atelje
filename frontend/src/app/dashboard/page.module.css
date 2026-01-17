@@ -32,3 +32,68 @@
         transform: rotate(0deg);
     }
 }
+
+/* Tablet */
+
+@media (max-width: 830px) {
+    .content {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 1.5rem;
+        gap: 2rem;
+    }
+
+    .dashboardDivider {
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        justify-content: center;
+    }
+
+    .aboutUsButton {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 1000;
+        transform-origin: center;
+    }
+}
+
+/* Tablet flex-warp breakpoint */
+
+@media (max-width: 700px) {
+    .content {
+        flex-wrap: wrap;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 430px) {
+    .content {
+        flex-direction: column;
+        align-items: center;
+        flex-wrap: nowrap;
+        padding: 1.5rem;
+        gap: 2rem;
+    }
+
+    .designsGrid {
+        padding-left: 0;
+    }
+
+    .dashboardDivider {
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        justify-content: center;
+    }
+
+    .aboutUsButton {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 1000;
+        transform-origin: center;
+    }
+}

@@ -23,3 +23,22 @@
     align-items: center;
     gap: 1rem;
 }
+
+
+/* Mobile and tablet */
+
+@media (max-width: 700px) {
+    .informationWrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-top: 0;
+    }
+
+    .actionDivider:nth-child(1) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

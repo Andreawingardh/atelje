@@ -53,3 +53,11 @@
     font-weight: 500;
     color: var(--charcoal);
 }
+
+/* Mobile */
+
+@media (max-width: 430px) {
+    .designsGrid {
+        padding-left: 1rem;
+    }
+}
