@@ -2,6 +2,7 @@ import styles from "./FurnitureForm.module.css";
 import React, { useState, useEffect } from "react";
 import { useDebouncedNumericInput } from "../../designs/useDebouncedNumericInput";
 import UnitInput from "@/elements/UnitInput/UnitInput";
+import { ScrollBar } from "@/elements/ScrollBar/ScrollBar";
 
 interface FurnitureColor {
   sofa: string;
@@ -107,75 +108,77 @@ export default function FurnitureForm({
 
 
   return (
-    <form className={styles.furnitureForm}>
-      <div className={styles.colorGroup}>
-        <label className={styles.colorLabel}>Color</label>
-        <div className={styles.colorPickerContainer}>
-          <div 
-            className={styles.colorInputWrapper}
-            onClick={() => document.getElementById('sofaColor')?.click()}
-          >
+    <ScrollBar variant="lightSunflowerSeed" contentClassName={styles.frameForm}>
+      <form className={styles.furnitureForm}>
+        <div className={styles.colorGroup}>
+          <label className={styles.colorLabel}>Color</label>
+          <div className={styles.colorPickerContainer}>
             <div 
-              className={styles.colorInputDisplay}
-              style={{ backgroundColor: furnitureColor.sofa }}
+              className={styles.colorInputWrapper}
+              onClick={() => document.getElementById('sofaColor')?.click()}
+            >
+              <div 
+                className={styles.colorInputDisplay}
+                style={{ backgroundColor: furnitureColor.sofa }}
+              />
+            </div>
+            <input
+              id="sofaColor"
+              type="color"
+              value={furnitureColor.sofa}
+              onChange={handleSofaColorChange}
+              className={styles.colorInput}
             />
           </div>
-          <input
-            id="sofaColor"
-            type="color"
-            value={furnitureColor.sofa}
-            onChange={handleSofaColorChange}
-            className={styles.colorInput}
+          <UnitInput
+            value={hexInputValue}
+            units="HEX"
+            onChange={handleHexInputChange}
+            placeholder="000000"
           />
         </div>
-        <UnitInput
-          value={hexInputValue}
-          units="HEX"
-          onChange={handleHexInputChange}
-          placeholder="000000"
-        />
-      </div>
-        <hr className={styles.formDivider} />
-        <div className={styles.measurmentsGroup}>
-          <h3>Measurments</h3>
-          <label htmlFor="furnitureWidth">Width
-            <UnitInput
-              id="furnitureWidth"
-              type="number"
-              units="cm"
-              min={MIN_FURNITURE_WIDTH}
-              max={MAX_FURNITURE_WIDTH}
-              value={furnitureWidthContrl.inputValue}
-              onChange={furnitureWidthContrl.handleChange}
-              className={styles.input}
-            />
-          </label>
-          <label htmlFor="furnitureDepth">Depth
-            <UnitInput
-              id="furnitureDepth"
-              type="number"
-              units="cm"
-              min={MIN_FURNITURE_DEPTH}
-              max={MAX_FURNITURE_DEPTH}
-              value={furnitureDepthControl.inputValue}
-              onChange={furnitureDepthControl.handleChange}
-              className={styles.input}
-            />
-          </label>
-          <label htmlFor="furnitureHeight">Height
-            <UnitInput
-              id="furnitureHeight"
-              type="number"
-              units="cm"
-              min={MIN_FURNITURE_HEIGHT}
-              max={MAX_FURNITURE_HEIGHT}
-              value={furnitureHeightControl.inputValue}
-              onChange={furnitureHeightControl.handleChange}
-              className={styles.input}
-            />
-          </label>
-        </div>
-    </form>
+          <hr className={styles.formDivider} />
+          <div className={styles.measurmentsGroup}>
+            <h3>Measurments</h3>
+            <label htmlFor="furnitureWidth">Width
+              <UnitInput
+                id="furnitureWidth"
+                type="number"
+                units="cm"
+                min={MIN_FURNITURE_WIDTH}
+                max={MAX_FURNITURE_WIDTH}
+                value={furnitureWidthContrl.inputValue}
+                onChange={furnitureWidthContrl.handleChange}
+                className={styles.input}
+              />
+            </label>
+            <label htmlFor="furnitureDepth">Depth
+              <UnitInput
+                id="furnitureDepth"
+                type="number"
+                units="cm"
+                min={MIN_FURNITURE_DEPTH}
+                max={MAX_FURNITURE_DEPTH}
+                value={furnitureDepthControl.inputValue}
+                onChange={furnitureDepthControl.handleChange}
+                className={styles.input}
+              />
+            </label>
+            <label htmlFor="furnitureHeight">Height
+              <UnitInput
+                id="furnitureHeight"
+                type="number"
+                units="cm"
+                min={MIN_FURNITURE_HEIGHT}
+                max={MAX_FURNITURE_HEIGHT}
+                value={furnitureHeightControl.inputValue}
+                onChange={furnitureHeightControl.handleChange}
+                className={styles.input}
+              />
+            </label>
+          </div>
+      </form>
+    </ScrollBar>
   );
 }
 
